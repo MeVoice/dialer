@@ -32,7 +32,7 @@ public class OutgoingCallRewrite extends BroadcastReceiver {
         Log.i(TAG, "result data is: " + phoneNumber);
         if(phoneNumber.startsWith(prefix)){
             new_phoneNumber = phoneNumber.substring(prefix.length());
-            Toast.makeText(context, "Dialed number: " + phoneNumber + "\nCalled number: " + new_phoneNumber, Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Dialed: " + phoneNumber + "\nCalled: " + new_phoneNumber, Toast.LENGTH_LONG).show();
             setResultData(new_phoneNumber);
         }
     }

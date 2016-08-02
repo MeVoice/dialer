@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class EditCalledNumber extends AppCompatActivity {
+public class EditDialedNumber extends AppCompatActivity {
     private static final String TAG = "EditCalledNumber";
     private CharSequence phoneNumber;
     private Button button;
