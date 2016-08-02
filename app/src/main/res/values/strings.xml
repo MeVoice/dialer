@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">DialerIntent</string>
+    <string name="call">Call</string>
+    <string name="enable">enable</string>
+    <string name="label_prefix">prefix</string>
+    <string name="label_enable_edit">enable edit number</string>
+    <string name="label_enable_reroute">enable reroute call</string>
+    <string name="value_prefix">prefix</string>
+    <string name="value_enable_edit">enable_edit</string>
+    <string name="value_enable_reroute">enable_reroute</string>
+    <string name="shared_pref">app_data</string>
+</resources>
