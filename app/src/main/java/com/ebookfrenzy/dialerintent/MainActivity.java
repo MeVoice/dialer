@@ -2,7 +2,6 @@ package com.ebookfrenzy.dialerintent;
 
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -23,6 +22,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.ebookfrenzy.dialerintent.model.AppData;
+
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "DialIntent";
@@ -30,40 +31,44 @@ public class MainActivity extends AppCompatActivity {
     private Boolean enable_edit = false;
     private Boolean enable_reroute = false;
     private String prefix;
-    private SharedPreferences sharedPref;
     private CheckBox checkbox_edit, checkbox_reroute;
     private EditText edittext;
     private Button okButton;
     private Context context;
+    private AppData appdata;
     private String[] requiredPermissions = new String[] {Manifest.permission.PROCESS_OUTGOING_CALLS, Manifest.permission.CALL_PHONE};
-
+    private AppDataAccess globalVariable;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.i(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         context = getApplicationContext();
+        globalVariable = AppDataAccess.getInstance(context);
+        appdata = globalVariable.getAppdata();
+        if(appdata.isRerouteCall()){
+            System.out.println("reroute call");
+        }else{
+            System.out.println("not reroute call");
+        }
         setContentView(R.layout.activity_main);
         //initialize checkbox and prefix with values from storage
-        sharedPref = context.getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE);
+
+        /*
         enable_edit = sharedPref.getBoolean(getString(R.string.value_enable_edit), false);
         enable_reroute = sharedPref.getBoolean(getString(R.string.value_enable_reroute), false);
         prefix = sharedPref.getString(getString(R.string.value_prefix), null);
+        */
+        enable_edit = appdata.isEditNumber();
+        enable_reroute = appdata.isRerouteCall();
+        prefix = appdata.getProfix();
 
         checkbox_edit = (CheckBox) findViewById(R.id.checkbox_edit);
         checkbox_reroute = (CheckBox) findViewById(R.id.checkbox_reroute);
         edittext = (EditText) findViewById(R.id.editText2);
         okButton = (Button) findViewById(R.id.button2);
 
-        if(enable_edit ==null || !enable_edit.booleanValue()){
-            checkbox_edit.setChecked(false);
-        }else{
-            checkbox_edit.setChecked(true);
-        }
-        if(enable_reroute ==null || !enable_reroute.booleanValue()){
-            checkbox_reroute.setChecked(false);
-        }else{
-            checkbox_reroute.setChecked(true);
-        }
+        checkbox_edit.setChecked(enable_edit.booleanValue());
+        checkbox_reroute.setChecked(enable_reroute.booleanValue());
         if(prefix!=null) {
             edittext.setText(prefix);
         }
@@ -172,11 +177,10 @@ public class MainActivity extends AppCompatActivity {
                     PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
         }
         //save preference
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putBoolean(getString(R.string.value_enable_edit), checkbox_edit.isChecked());
-        editor.putBoolean(getString(R.string.value_enable_reroute), checkbox_reroute.isChecked());
-        editor.putString(getString(R.string.value_prefix), edittext.getText().toString());
-        editor.commit();
+        appdata.setEditNumber(checkbox_edit.isChecked());
+        appdata.setRerouteCall(checkbox_reroute.isChecked());
+        appdata.setProfix(edittext.getText().toString());
+        globalVariable.saveAppData(appdata);
         finish();
     }
 }
