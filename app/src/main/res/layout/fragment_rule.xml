@@ -20,4 +20,5 @@
     android:orientation="vertical">
     <include layout="@layout/rule_add"/>
     <include layout="@layout/recycler_view"/>
+    <include layout="@layout/test_reroute"/>
 </LinearLayout>

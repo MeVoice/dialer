@@ -44,7 +44,9 @@ public class RuleUnitTest extends TestCase{
         assertFalse(rule001.validate());
         rule001=new Rule("bad match char", "1212D{123}", "+123{M12}M3");
         assertFalse(rule001.validate());
-        rule001=new Rule("too many matches in formula", "1212D{123}", "+123{M1}{M2}");
+        rule001=new Rule("too many matches in formula0", "1212D{123}", "+123{M1}{M2}");
+        assertFalse(rule001.validate());
+        rule001=new Rule("too many matches in formula1", "1212123", "+123{M1}");
         assertFalse(rule001.validate());
     }
 

@@ -2,12 +2,6 @@ package com.ebookfrenzy.dialerintent;
 
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.res.Resources;
-import android.content.res.TypedArray;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,24 +10,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ebookfrenzy.dialerintent.R;
 import com.ebookfrenzy.dialerintent.events.ClickEvent;
 import com.ebookfrenzy.dialerintent.model.AppData;
-import com.ebookfrenzy.dialerintent.model.Rule;
 import com.ebookfrenzy.dialerintent.model.RuleGroup;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -41,6 +27,7 @@ import java.util.List;
  */
 public class GroupsFragment extends Fragment {
     public Context context;
+    static public int MAX_GROUPS=8;
     public AppDataAccess appdataaccess;
     public AppData appdata;
     public EditText group_add_name;
@@ -93,6 +80,10 @@ public class GroupsFragment extends Fragment {
         }
     }
     public void addGroup(){
+        if(appdata.getRuleGroups().size()==MAX_GROUPS){
+            Toast.makeText(context, "can have no more than "+MAX_GROUPS+" rule groups", Toast.LENGTH_SHORT).show();
+            return;
+        }
         RuleGroup rg = new RuleGroup(group_add_name.getText().toString());
         if(validateGroup(rg, -1)){
             appdata.addRuleGroup(rg);
@@ -115,7 +106,7 @@ public class GroupsFragment extends Fragment {
         Toast.makeText(context, "group removed", Toast.LENGTH_SHORT).show();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class GroupViewHolder extends RecyclerView.ViewHolder {
         public EditText group_name;
         public CheckBox group_inuse;
         public ImageButton group_edit_rules;
@@ -123,7 +114,7 @@ public class GroupsFragment extends Fragment {
         public ImageButton group_edit_button;
         public ImageButton group_edit_done;
         public ImageButton group_edit_cancel;
-        public ViewHolder(LayoutInflater inflater, ViewGroup parent) {
+        public GroupViewHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.group_edit, parent, false));
             //itemView is from Parent class, represent any view within the holder
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -143,7 +134,7 @@ public class GroupsFragment extends Fragment {
             group_edit_cancel = (ImageButton) itemView.findViewById(R.id.group_edit_cancel);
         }
     }
-    public class ContentAdapter extends RecyclerView.Adapter<ViewHolder> {
+    public class ContentAdapter extends RecyclerView.Adapter<GroupViewHolder> {
         // Set numbers of List in RecyclerView.
         private final List<RuleGroup> mItems;
         private final Context mContext;
@@ -155,21 +146,21 @@ public class GroupsFragment extends Fragment {
         }
 
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new ViewHolder(LayoutInflater.from(parent.getContext()), parent);
+        public GroupViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            return new GroupViewHolder(LayoutInflater.from(parent.getContext()), parent);
         }
 
         @Override
-        public void onBindViewHolder(final ViewHolder holder, final int position) {
+        public void onBindViewHolder(final GroupViewHolder holder, final int position) {
             holder.group_name.setText(mItems.get(position).getName());
             holder.group_inuse.setChecked(mItems.get(position).isInUse());
             holder.group_edit_rules.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     removePosition=-1;
-                    HashMap p=new HashMap();
-                    p.put("username", "nice");
-                    ClickEvent ev = new ClickEvent(p);
+                    ClickEvent ev = new ClickEvent();
+                    appdata.setGroupInEdit(position);
+                    ev.put("action", AppData.ACTION_EDIT_RULES);
                     bus.postSticky(ev);
                 }
             });

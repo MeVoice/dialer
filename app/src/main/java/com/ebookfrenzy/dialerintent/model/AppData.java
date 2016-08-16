@@ -11,8 +11,28 @@ public class AppData {
     private boolean rerouteCall=false;
     private boolean confirmReroute =false;
     private boolean permissionGranted=false;
+    private int groupInEdit=-1;
+    private int ruleInEdit=-1;
+
+    public int getGroupInEdit() {
+        return groupInEdit;
+    }
+
+    public void setGroupInEdit(int groupInEdit) {
+        this.groupInEdit = groupInEdit;
+    }
+
+    public int getRuleInEdit() {
+        return ruleInEdit;
+    }
+
+    public void setRuleInEdit(int ruleInEdit) {
+        this.ruleInEdit = ruleInEdit;
+    }
+
     public static final int ERROR_GROUPNAME_TOOSHORT=1;
     public static final int ERROR_GROUPNAME_DUP=2;
+    public static final String ACTION_EDIT_RULES="ACTION_EDIT_RULE";
 
     private List<RuleGroup> ruleGroups=new ArrayList();;
 
@@ -67,6 +87,9 @@ public class AppData {
     }
     public void setGroup(int position, RuleGroup rg){
         this.ruleGroups.set(position, rg);
+    }
+    public RuleGroup getRuleGroup(int position){
+        return this.ruleGroups.get(position);
     }
 
     public int validateRuleGroup(RuleGroup rg, int position){

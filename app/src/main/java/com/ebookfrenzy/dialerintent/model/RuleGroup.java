@@ -64,6 +64,9 @@ public class RuleGroup {
     public Rule getRule(int position){
         return this.rules.get(position);
     }
+    public void setRule (int position, Rule rule){
+        rules.set(position, rule);
+    }
     private void setRuleSequence(){
         for(int i=0;i<rules.size();i++){
             rules.get(i).setSequence(i);

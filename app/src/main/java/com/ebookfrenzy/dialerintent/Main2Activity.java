@@ -59,8 +59,10 @@ public class Main2Activity extends AppCompatActivity {
 
     @Subscribe
     public void onClickEvent(ClickEvent event){
-        HashMap params = event.getParameters();
-        Toast.makeText(getApplicationContext(), "show rules for group " + params.get("username"), Toast.LENGTH_SHORT).show();
+        if(event.get("action")==AppData.ACTION_EDIT_RULES){
+            showFragment("rules", true);
+            //Toast.makeText(getApplicationContext(), "show rules for group " + appdata.getGroupInEdit(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -80,7 +82,7 @@ public class Main2Activity extends AppCompatActivity {
         String fragmentName = (String) fragmentIDs.get(id);
         //user should use either menu OR back button, not both
         clearBackStack();
-        showFragment(fragmentName);
+        showFragment(fragmentName, false);
         return super.onOptionsItemSelected(item);
     }
 
@@ -102,9 +104,9 @@ public class Main2Activity extends AppCompatActivity {
         fragmentTitles.put("groups", "Groups");
         fragmentIDs.put(R.id.action_groups, "groups");
         fragments.put("rules", new RulesFragment());
-        fragmentTitles.put("features", "Manage Rules");
+        fragmentTitles.put("rules", "Manage Rules");
 
-        showFragment("features");
+        showFragment("features", false);
     }
     public void clearBackStack(){
         FragmentManager fm = getSupportFragmentManager();
@@ -113,12 +115,14 @@ public class Main2Activity extends AppCompatActivity {
             fm.popBackStack(first.getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
     }
-    public void showFragment(String key){
+    public void showFragment(String key, boolean addToStack){
         getSupportActionBar().setTitle((String) fragmentTitles.get(key));
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.content, (Fragment) fragments.get(key));
-        ft.addToBackStack(null);
+        if(addToStack) {
+            ft.addToBackStack(null);
+        }
         ft.commit();
     }
 }

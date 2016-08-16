@@ -6,13 +6,15 @@ import java.util.HashMap;
  * Created by Admin on 8/16/2016.
  */
 public class ClickEvent {
-    public HashMap getParameters() {
-        return parameters;
+    public Object get(Object key) {
+        return event.get(key);
     }
 
-    public final HashMap parameters;
+    public final HashMap event=new HashMap();
 
-    public ClickEvent(HashMap parameters) {
-        this.parameters = parameters;
+    public ClickEvent() {
+    }
+    public void put(Object key, Object value) {
+        event.put(key, value);
     }
 }

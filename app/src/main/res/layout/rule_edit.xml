@@ -2,71 +2,97 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     tools:context=".GroupEditFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <EditText
-        android:id="@+id/rule_edit_name"
-        android:layout_width="wrap_content"
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:background="#000000" />
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="1"
-        android:enabled="false" />
+        android:orientation="horizontal"
+        tools:context=".GroupEditFragment">
 
+        <!-- TODO: Update blank fragment layout -->
+        <EditText
+            android:id="@+id/rule_edit_pattern"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3"
+            android:enabled="false" />
 
-    <CheckBox
-        android:id="@+id/rule_edit_inuse"
-        android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/rule_edit_formula"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.7"
+            android:enabled="false" />
+    </LinearLayout>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical|right"
-        android:enabled="false"
-        android:text="" />
+        android:orientation="horizontal"
+        tools:context=".GroupEditFragment">
 
-    <ImageButton
-        android:id="@+id/rule_edit_rules"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical|right"
-        android:src="@drawable/ic_hint" />
+        <EditText
+            android:id="@+id/rule_edit_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:enabled="false" />
 
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent">
-
-        <ImageButton
-            android:id="@+id/rule_edit_done"
+        <CheckBox
+            android:id="@+id/rule_edit_inuse"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|right"
-            android:visibility="invisible"
-            android:src="@drawable/ic_done" />
+            android:enabled="false"
+            android:text="use" />
 
-        <ImageButton
-            android:id="@+id/rule_edit_button"
+        <FrameLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|right"
-            android:src="@drawable/ic_edit" />
-    </FrameLayout>
+            android:layout_height="match_parent">
 
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent">
+            <ImageButton
+                android:id="@+id/rule_edit_done"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|right"
+                android:src="@drawable/ic_done"
+                android:visibility="invisible" />
 
-        <ImageButton
-            android:id="@+id/rule_edit_delete_button"
+            <ImageButton
+                android:id="@+id/rule_edit_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|right"
+                android:src="@drawable/ic_edit" />
+        </FrameLayout>
+
+        <FrameLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|right"
-            android:src="@drawable/ic_minus" />
+            android:layout_height="match_parent">
 
-        <ImageButton
-            android:id="@+id/rule_edit_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|right"
-            android:visibility="invisible"
-            android:src="@drawable/ic_cancel" />
-    </FrameLayout>
+            <ImageButton
+                android:id="@+id/rule_edit_delete_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|right"
+                android:src="@drawable/ic_minus" />
+
+            <ImageButton
+                android:id="@+id/rule_edit_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|right"
+                android:src="@drawable/ic_cancel"
+                android:visibility="invisible" />
+        </FrameLayout>
+    </LinearLayout>
+
 </LinearLayout>

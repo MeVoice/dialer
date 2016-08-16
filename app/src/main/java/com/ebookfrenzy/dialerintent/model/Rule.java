@@ -98,6 +98,7 @@ public class Rule {
             }
         }
         String[][] errorPatterns = {
+                {"^.{0,2}$", "both", "%s is too short"},
                 {"^[^\\{]+\\+", "both", "'+' can only be the first character in %s"},
                 {"[DX]%[^\\}]+$", "pattern", "'D%%' or 'X%%' should be at the end of %s"},
                 {"[DX]%[^\\}]+$", "pattern", "'D%%' or 'X%%' should be at the end of %s"},
@@ -150,7 +151,7 @@ public class Rule {
                 max_idx_match = idx_match;
             }
         }
-        if(max_idx_match>max_idx_match){
+        if(max_idx_match>pCount1){
             validationResult = "max match index in formula exceeded number of matches in pattern";
             return false;
         }
