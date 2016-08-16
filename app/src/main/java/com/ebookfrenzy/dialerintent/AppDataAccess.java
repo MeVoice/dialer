@@ -2,8 +2,10 @@ package com.ebookfrenzy.dialerintent;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.provider.Settings;
 
 import com.ebookfrenzy.dialerintent.model.AppData;
+import com.ebookfrenzy.dialerintent.model.RuleGroup;
 import com.google.gson.Gson;
 
 /**
@@ -34,6 +36,9 @@ public class AppDataAccess {
         prefEditor = sharedPref.edit();
     }
     public static AppDataAccess getInstance(Context context){
+        if(context==null){
+            System.out.println("context is null");
+        }
         if(instance == null){
             instance = new AppDataAccess(context);
         }
@@ -51,6 +56,11 @@ public class AppDataAccess {
         appdata = gson.fromJson(json, AppData.class);
         if(appdata==null){
             appdata = new AppData();
+            appdata.addRuleGroup(new RuleGroup("group1"));
+        }
+        if(appdata.getRuleGroups().size()==0) {
+            appdata.addRuleGroup(new RuleGroup("group1"));
+            appdata.addRuleGroup(new RuleGroup("group2"));
         }
         return appdata;
     }

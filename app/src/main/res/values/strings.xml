@@ -1,12 +1,30 @@
 <resources>
-    <string name="app_name">DialerIntent</string>
+    <string name="app_name">Call Router</string>
     <string name="call">Call</string>
     <string name="enable">enable</string>
     <string name="label_prefix">prefix</string>
-    <string name="label_enable_edit">enable edit number</string>
-    <string name="label_enable_reroute">enable reroute call</string>
+    <string name="label_enable_edit">edit number</string>
+    <string name="label_enable_reroute">reroute call</string>
     <string name="value_prefix">prefix</string>
     <string name="value_enable_edit">enable_edit</string>
     <string name="value_enable_reroute">enable_reroute</string>
     <string name="shared_pref">app_data</string>
+    <string name="settings">settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="save">Save</string>
+    <string name="confirm_reroute">confirm reroute</string>
+    <array name="dummy_items">
+        <item>One</item>
+        <item>Two</item>
+        <item>Three</item>
+        <item>Four</item>
+        <item>Five</item>
+        <item>Six</item>
+        <item>Seven</item>
+        <item>Eight</item>
+        <item>Nine</item>
+        <item>Ten</item>
+    </array>
 </resources>

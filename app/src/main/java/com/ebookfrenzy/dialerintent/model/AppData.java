@@ -1,5 +1,6 @@
 package com.ebookfrenzy.dialerintent.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -8,29 +9,22 @@ import java.util.List;
 public class AppData {
     private boolean editNumber=false;
     private boolean rerouteCall=false;
-    private boolean confirmBeforeReroute=false;
+    private boolean confirmReroute =false;
     private boolean permissionGranted=false;
+    public static final int ERROR_GROUPNAME_TOOSHORT=1;
+    public static final int ERROR_GROUPNAME_DUP=2;
 
-    public String getProfix() {
-        return profix;
-    }
-
-    public void setProfix(String profix) {
-        this.profix = profix;
-    }
-
-    private String profix="";
-    private List<RuleGroup> ruleGroups=null;
+    private List<RuleGroup> ruleGroups=new ArrayList();;
 
     public AppData(){
     }
 
-    public boolean isConfirmBeforeReroute() {
-        return confirmBeforeReroute;
+    public boolean isConfirmReroute() {
+        return confirmReroute;
     }
 
-    public void setConfirmBeforeReroute(boolean confirmBeforeReroute) {
-        this.confirmBeforeReroute = confirmBeforeReroute;
+    public void setConfirmReroute(boolean confirmReroute) {
+        this.confirmReroute = confirmReroute;
     }
 
     public boolean isEditNumber() {
@@ -63,5 +57,32 @@ public class AppData {
 
     public void setRuleGroups(List<RuleGroup> ruleGroups) {
         this.ruleGroups = ruleGroups;
+    }
+
+    public void addRuleGroup(RuleGroup rg){
+        this.ruleGroups.add(rg);
+    }
+    public void removeGroup(int position){
+        this.ruleGroups.remove(position);
+    }
+    public void setGroup(int position, RuleGroup rg){
+        this.ruleGroups.set(position, rg);
+    }
+
+    public int validateRuleGroup(RuleGroup rg, int position){
+        //name is not blank
+        if(rg.getName().length()<5){
+            return ERROR_GROUPNAME_TOOSHORT;
+        }
+        //no name duplicate
+        for(int i=0;i<this.ruleGroups.size();i++){
+            if(i==position){
+                continue;
+            }
+            if(ruleGroups.get(i).getName().equalsIgnoreCase(rg.getName())){
+                return ERROR_GROUPNAME_DUP;
+            }
+        }
+        return 0;
     }
 }

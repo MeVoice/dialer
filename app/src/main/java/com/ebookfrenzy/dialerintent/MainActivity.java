@@ -35,6 +35,11 @@ public class MainActivity extends AppCompatActivity {
     private EditText edittext;
     private Button okButton;
     private Context context;
+
+    public AppData getAppdata() {
+        return appdata;
+    }
+
     private AppData appdata;
     private String[] requiredPermissions = new String[] {Manifest.permission.PROCESS_OUTGOING_CALLS, Manifest.permission.CALL_PHONE};
     private AppDataAccess globalVariable;
@@ -60,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
         */
         enable_edit = appdata.isEditNumber();
         enable_reroute = appdata.isRerouteCall();
-        prefix = appdata.getProfix();
 
         checkbox_edit = (CheckBox) findViewById(R.id.checkbox_edit);
         checkbox_reroute = (CheckBox) findViewById(R.id.checkbox_reroute);
@@ -179,7 +183,6 @@ public class MainActivity extends AppCompatActivity {
         //save preference
         appdata.setEditNumber(checkbox_edit.isChecked());
         appdata.setRerouteCall(checkbox_reroute.isChecked());
-        appdata.setProfix(edittext.getText().toString());
         globalVariable.saveAppData(appdata);
         finish();
     }

@@ -1,5 +1,6 @@
 package com.ebookfrenzy.dialerintent.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -7,8 +8,8 @@ import java.util.List;
  */
 public class RuleGroup {
     private String name;
-    private boolean inUse;
-    List<Rule> rules;
+    private boolean inUse=false;
+    List<Rule> rules=new ArrayList<>();
 
     public boolean isInUse() {
         return inUse;
