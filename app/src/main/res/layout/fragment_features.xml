@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:textAppearance="?android:attr/textAppearanceSmall"
-    tools:context="com.ebookfrenzy.dialerintent.FeaturesFragment">
+    tools:context=".FeaturesFragment">
 
     <CheckBox
         android:layout_width="wrap_content"

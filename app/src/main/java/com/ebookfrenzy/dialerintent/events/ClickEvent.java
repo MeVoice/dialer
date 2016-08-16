@@ -1,12 +1,18 @@
 package com.ebookfrenzy.dialerintent.events;
 
+import java.util.HashMap;
+
 /**
  * Created by Admin on 8/16/2016.
  */
 public class ClickEvent {
-    public final String userName;
+    public HashMap getParameters() {
+        return parameters;
+    }
 
-    public ClickEvent(String userName) {
-        this.userName = userName;
+    public final HashMap parameters;
+
+    public ClickEvent(HashMap parameters) {
+        this.parameters = parameters;
     }
 }

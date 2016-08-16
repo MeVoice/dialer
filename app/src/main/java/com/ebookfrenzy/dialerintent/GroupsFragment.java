@@ -33,6 +33,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -166,7 +167,9 @@ public class GroupsFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     removePosition=-1;
-                    ClickEvent ev = new ClickEvent(String.valueOf(position));
+                    HashMap p=new HashMap();
+                    p.put("username", "nice");
+                    ClickEvent ev = new ClickEvent(p);
                     bus.postSticky(ev);
                 }
             });

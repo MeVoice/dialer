@@ -5,6 +5,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -41,6 +42,8 @@ public class Main2Activity extends AppCompatActivity {
     private AppDataAccess appDataAccess;
     private EventBus bus = EventBus.getDefault();
     private HashMap fragments = new HashMap();
+    private HashMap fragmentTitles = new HashMap();
+    private HashMap fragmentIDs = new HashMap();
 
     @Override
     public void onStart() {
@@ -56,7 +59,8 @@ public class Main2Activity extends AppCompatActivity {
 
     @Subscribe
     public void onClickEvent(ClickEvent event){
-        Toast.makeText(getApplicationContext(), "show rules for group " + event.userName, Toast.LENGTH_SHORT).show();
+        HashMap params = event.getParameters();
+        Toast.makeText(getApplicationContext(), "show rules for group " + params.get("username"), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -73,9 +77,10 @@ public class Main2Activity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+        String fragmentName = (String) fragmentIDs.get(id);
+        //user should use either menu OR back button, not both
+        clearBackStack();
+        showFragment(fragmentName);
         return super.onOptionsItemSelected(item);
     }
 
@@ -91,47 +96,29 @@ public class Main2Activity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         // Setting ViewPager for each Tabs
         fragments.put("features", new FeaturesFragment());
+        fragmentTitles.put("features", "Choose Features");
+        fragmentIDs.put(R.id.action_features, "features");
         fragments.put("groups", new GroupsFragment());
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-        setupViewPager(viewPager);
-        // Set Tabs inside Toolbar
-        TabLayout tabs = (TabLayout) findViewById(R.id.tabs);
-        tabs.setupWithViewPager(viewPager);
+        fragmentTitles.put("groups", "Groups");
+        fragmentIDs.put(R.id.action_groups, "groups");
+        fragments.put("rules", new RulesFragment());
+        fragmentTitles.put("features", "Manage Rules");
+
+        showFragment("features");
     }
-    // Add Fragments to Tabs
-    private void setupViewPager(ViewPager viewPager) {
-        Adapter adapter = new Adapter(getSupportFragmentManager());
-        adapter.addFragment(new FeaturesFragment(), "Features");
-        adapter.addFragment(new GroupsFragment(), "Groups");
-        viewPager.setAdapter(adapter);
-    }
-    static class Adapter extends FragmentPagerAdapter {
-        private final List<Fragment> mFragmentList = new ArrayList<>();
-        private final List<String> mFragmentTitleList = new ArrayList<>();
-
-        public Adapter(FragmentManager manager) {
-            super(manager);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return mFragmentList.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return mFragmentList.size();
-        }
-
-        public void addFragment(Fragment fragment, String title) {
-            mFragmentList.add(fragment);
-            mFragmentTitleList.add(title);
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return mFragmentTitleList.get(position);
+    public void clearBackStack(){
+        FragmentManager fm = getSupportFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+            FragmentManager.BackStackEntry first = fm.getBackStackEntryAt(0);
+            fm.popBackStack(first.getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
     }
-
+    public void showFragment(String key){
+        getSupportActionBar().setTitle((String) fragmentTitles.get(key));
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.replace(R.id.content, (Fragment) fragments.get(key));
+        ft.addToBackStack(null);
+        ft.commit();
+    }
 }
