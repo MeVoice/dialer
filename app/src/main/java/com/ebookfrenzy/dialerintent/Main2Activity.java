@@ -1,16 +1,23 @@
 package com.ebookfrenzy.dialerintent;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.SystemClock;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Adapter;
@@ -29,9 +36,12 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Main2Activity extends AppCompatActivity {
+
     public AppData getAppdata() {
         return appdata;
     }
+
+    private static final int PERMISSION_REQUEST_CODE = 101;
 
     private AppData appdata;
 
@@ -42,8 +52,9 @@ public class Main2Activity extends AppCompatActivity {
     private AppDataAccess appDataAccess;
     private EventBus bus = EventBus.getDefault();
     private HashMap fragments = new HashMap();
-    private HashMap fragmentTitles = new HashMap();
     private HashMap fragmentIDs = new HashMap();
+    private String[] requiredPermissions = new String[] {Manifest.permission.PROCESS_OUTGOING_CALLS, Manifest.permission.CALL_PHONE};
+
 
     @Override
     public void onStart() {
@@ -58,10 +69,13 @@ public class Main2Activity extends AppCompatActivity {
     }
 
     @Subscribe
-    public void onClickEvent(ClickEvent event){
-        if(event.get("action")==AppData.ACTION_EDIT_RULES){
-            showFragment("rules", true);
+    public void onClickEvent(ClickEvent event) {
+        if (event.get("action") == Constant.ACTION_EDIT_RULES) {
+            showFragment("rules", true, "Rules - " + appdata.getRuleGroups().get(appdata.getGroupInEdit()).getName());
             //Toast.makeText(getApplicationContext(), "show rules for group " + appdata.getGroupInEdit(), Toast.LENGTH_SHORT).show();
+        }
+        if (event.get("action") == Constant.ACTION_REQUEST_PERMISSION) {
+            checkAndRequestPermissions(requiredPermissions, PERMISSION_REQUEST_CODE);
         }
     }
 
@@ -82,7 +96,15 @@ public class Main2Activity extends AppCompatActivity {
         String fragmentName = (String) fragmentIDs.get(id);
         //user should use either menu OR back button, not both
         clearBackStack();
-        showFragment(fragmentName, false);
+        String title = "";
+        if (fragmentName == "features") {
+            title = "Choose Features";
+        }
+        if (fragmentName == "groups") {
+            title = "Rule Groups";
+        }
+
+        showFragment(fragmentName, false, title);
         return super.onOptionsItemSelected(item);
     }
 
@@ -98,31 +120,75 @@ public class Main2Activity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         // Setting ViewPager for each Tabs
         fragments.put("features", new FeaturesFragment());
-        fragmentTitles.put("features", "Choose Features");
         fragmentIDs.put(R.id.action_features, "features");
         fragments.put("groups", new GroupsFragment());
-        fragmentTitles.put("groups", "Groups");
         fragmentIDs.put(R.id.action_groups, "groups");
         fragments.put("rules", new RulesFragment());
-        fragmentTitles.put("rules", "Manage Rules");
 
-        showFragment("features", false);
+        showFragment("features", false, "Choose Features");
     }
-    public void clearBackStack(){
+
+    public void clearBackStack() {
         FragmentManager fm = getSupportFragmentManager();
         if (fm.getBackStackEntryCount() > 0) {
             FragmentManager.BackStackEntry first = fm.getBackStackEntryAt(0);
             fm.popBackStack(first.getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
     }
-    public void showFragment(String key, boolean addToStack){
-        getSupportActionBar().setTitle((String) fragmentTitles.get(key));
+
+    public void showFragment(String key, boolean addToStack, String title) {
+        getSupportActionBar().setTitle(title);
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.content, (Fragment) fragments.get(key));
-        if(addToStack) {
+        if (addToStack) {
             ft.addToBackStack(null);
         }
         ft.commit();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        System.out.println("called onRequestPermissionsResult");
+        int permission_denied = 0;
+        switch (requestCode) {
+            case PERMISSION_REQUEST_CODE: {
+                if (grantResults.length == 0) {
+                    permission_denied++;
+                } else {
+                    for (int i = 0; i < grantResults.length; i++) {
+                        if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                            permission_denied++;
+                        }
+                    }
+                }
+            }
+        }
+        System.out.println(permission_denied + " permissions denied");
+        ClickEvent ev = new ClickEvent();
+        if (permission_denied > 0) {
+            ev.put("action", Constant.ACTION_PERMISSION_DENIED);
+        } else {
+            ev.put("action", Constant.ACTION_PERMISSION_GRANTED);
+        }
+        bus.post(ev);
+    }
+    protected void checkAndRequestPermissions(String[] permissions, int requestcode){
+        List<String> permList = new ArrayList<String>();
+        for(int i=0; i<permissions.length; i++){
+            int isGranted = ContextCompat.checkSelfPermission(getApplicationContext(), permissions[i]);
+            if(isGranted!= PackageManager.PERMISSION_GRANTED){
+                permList.add(permissions[i]);
+            }
+        }
+        if(permList.size()>0) {
+            ActivityCompat.requestPermissions(this, permList.toArray(new String[permList.size()]), requestcode);
+            System.out.println("calling requestPermissions");
+        }else{
+            ClickEvent ev = new ClickEvent();
+            ev.put("action", Constant.ACTION_PERMISSION_GRANTED);
+            bus.post(ev);
+        }
     }
 }

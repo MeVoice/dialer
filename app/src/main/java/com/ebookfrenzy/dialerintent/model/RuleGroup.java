@@ -72,4 +72,17 @@ public class RuleGroup {
             rules.get(i).setSequence(i);
         }
     }
+
+    public boolean transform(MatchNumber number){
+        for(int i=0;i<rules.size();i++){
+            Rule r=rules.get(i);
+            if(!r.isInUse()){
+                continue;
+            }
+            if(r.transform(number)){
+                return true;
+            }
+        }
+        return false;
+    }
 }

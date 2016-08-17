@@ -80,6 +80,7 @@ public class Rule {
     private static final String FormulaMatchFormat = "\\{M\\d+\\}";
 
     public boolean validate(){
+        // % has to be the last token in pattern
         //only valid characters are allowed
         String patternCharacters = PhoneCharacters.concat(PatternCharacters);
         String formularCharacters = PhoneCharacters.concat(FormulaCharacters);
@@ -100,8 +101,8 @@ public class Rule {
         String[][] errorPatterns = {
                 {"^.{0,2}$", "both", "%s is too short"},
                 {"^[^\\{]+\\+", "both", "'+' can only be the first character in %s"},
-                {"[DX]%[^\\}]+$", "pattern", "'D%%' or 'X%%' should be at the end of %s"},
-                {"[DX]%[^\\}]+$", "pattern", "'D%%' or 'X%%' should be at the end of %s"},
+                {"%[^\\}]+.*$", "pattern", "'%%' should be at the end of %s"},
+                {"^[\\+\\{]%", "pattern", "'%' should not be at the beginning of %s"},
                 {"\\{[^\\}]?\\{", "both", "'curly brackets should be in pairs in %s"},
                 {"\\}[^\\{]?\\}", "both", "'curly brackets should be in pairs in %s"},
                 {"[\\}\\{]{2}", "both", "'curly brackets should be in pairs in %s"},
@@ -187,17 +188,26 @@ public class Rule {
         matches.add(inputNumber);
         for(idx_number=0; idx_number<inputNumber.length(); idx_number++) {
             charMatched = false;
+            if(idx_pattern>=pattern.length()){
+                return false;
+            }
             if (matchState == StateOpen && pattern.charAt(idx_pattern) == '{') {
                 wildCharType = WildCharNone;
                 matchState = StateInMatch;
                 match = "";
                 idx_pattern++;
+                if(idx_pattern>=pattern.length()){
+                    return false;
+                }
             }
             if (matchState == StateInMatch && pattern.charAt(idx_pattern) == '}') {
                 wildCharType = WildCharNone;
                 matchState = StateOpen;
                 matches.add(match);
                 idx_pattern++;
+                if(idx_pattern>=pattern.length()){
+                    return false;
+                }
             }
             if (pattern.charAt(idx_pattern) == 'D') {
                 wildCharType = WildCharDigit;
@@ -233,9 +243,21 @@ public class Rule {
                 match += inputNumber.charAt(idx_number);
             }
         }
+        if(!charMatched){
+            return false;
+        }
         if(matchState == StateInMatch){
             matches.add(match);
+            if(idx_pattern<pattern.length()) {
+                if (pattern.substring(idx_pattern).equals("}") || pattern.substring(idx_pattern).equals("%}")) {
+                    idx_pattern = pattern.length();
+                }
+            }
         }
+        if(idx_pattern<pattern.length()){
+            return false;
+        }
+
         //combine matches from number and literals from formula
         //formulaParts.size() is an odd number, odd positions are {M1}, even positions are literals from formula
         String resultNumber = "";
@@ -246,7 +268,6 @@ public class Rule {
                 int idx_match = Integer.valueOf(formulaParts.get(i).substring(2, formulaParts.get(i).length()-1));
                 resultNumber += matches.get(idx_match);
             }
-
         }
         //remove any space characters
         resultNumber = resultNumber.replace(" ", "");

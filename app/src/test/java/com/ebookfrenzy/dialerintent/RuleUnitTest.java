@@ -29,7 +29,9 @@ public class RuleUnitTest extends TestCase{
         rule001=new Rule("D% at end", "121{2D%}", "+123");
         assertTrue(rule001.validate());
         rule001=new Rule("1% not at end", "12121%2", "+123");
-        assertTrue(rule001.validate());
+        assertFalse(rule001.validate());
+        rule001=new Rule("% not at end", "{DDDDDD} %{DDDD}", "+123");
+        assertFalse(rule001.validate());
         rule001=new Rule("unmatched bracket", "121{2D%{1", "+123");
         assertFalse(rule001.validate());
         rule001=new Rule("unmatched bracket", "121{2}D%{1", "+123");
@@ -48,6 +50,8 @@ public class RuleUnitTest extends TestCase{
         assertFalse(rule001.validate());
         rule001=new Rule("too many matches in formula1", "1212123", "+123{M1}");
         assertFalse(rule001.validate());
+        rule001=new Rule("% at beginning of pattern", "+{%}1212123", "+123{M1}");
+        assertFalse(rule001.validate());
     }
 
     public void test_breakByPattern(){
@@ -64,6 +68,7 @@ public class RuleUnitTest extends TestCase{
         MatchNumber number_001 = new MatchNumber("+8611123456");
         assertTrue(rule_001.transform(number_001));
         assertTrue(number_001.getResult().equals("+1238611123456"));
+
         Rule rule_002 = new Rule("rule002", "+{1D%}", "17910,87878787#,00{M1}#");
         MatchNumber number_002 = new MatchNumber("+18001234567");
         assertTrue(rule_002.transform(number_002));
@@ -71,5 +76,29 @@ public class RuleUnitTest extends TestCase{
         rule_002 = new Rule("rule002 space characters", "+{1D%}", "17910 ,87878787#,00{M1}#");
         assertTrue(rule_002.transform(number_002));
         assertTrue(number_002.getResult().equals("17910,87878787#,0018001234567#"));
+        rule_002 = new Rule("rule002 leading bracket", "+{X%}", "17910 ,87878787#,00{M1}#");
+        assertTrue(rule_002.transform(number_002));
+        assertTrue(number_002.getResult().equals("17910,87878787#,0018001234567#"));
+
+
+        MatchNumber number_003 = new MatchNumber("");
+        Rule rule_003 = new Rule("rule003 all literal", "123", "1791087");
+        assertFalse(rule_003.transform(number_003));
+        number_003 = new MatchNumber("123");
+        assertTrue(rule_003.transform(number_003));
+        assertTrue(number_003.getResult().equals("1791087"));
+        number_003 = new MatchNumber("1234");
+        assertFalse(rule_003.transform(number_003));
+
+        MatchNumber number_004 = new MatchNumber("671234");
+        Rule rule_004 = new Rule("rule004 office number expansion", "67{DDDD}", "1 800 980 9891,{M1}#");
+        assertTrue(rule_004.transform(number_004));
+        assertTrue(number_004.getResult().equals("18009809891,1234#"));
+        number_004 = new MatchNumber("6712345");
+        assertFalse(rule_004.transform(number_004));
+        rule_004 = new Rule("rule004 conf number", "{DDDDDDDD} {DDDD}", "1 800 980 9891,{M1}#,7,{M2}#");
+        number_004 = new MatchNumber("12345678 1234");
+        assertTrue(rule_004.transform(number_004));
+        assertTrue(number_004.getResult().equals("18009809891,12345678#,7,1234#"));
     }
 }

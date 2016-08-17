@@ -2,30 +2,39 @@ package com.ebookfrenzy.dialerintent;
 
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ebookfrenzy.dialerintent.helper.ItemTouchHelperAdapter;
+import com.ebookfrenzy.dialerintent.helper.ItemTouchHelperViewHolder;
+import com.ebookfrenzy.dialerintent.helper.OnStartDragListener;
+import com.ebookfrenzy.dialerintent.helper.SimpleItemTouchHelperCallback;
 import com.ebookfrenzy.dialerintent.model.AppData;
+import com.ebookfrenzy.dialerintent.model.MatchNumber;
 import com.ebookfrenzy.dialerintent.model.Rule;
 import com.ebookfrenzy.dialerintent.model.RuleGroup;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RulesFragment extends Fragment {
+public class RulesFragment extends Fragment  implements OnStartDragListener {
     public Context context;
     public AppDataAccess appdataaccess;
     public AppData appdata;
@@ -34,9 +43,10 @@ public class RulesFragment extends Fragment {
     public EditText rule_add_formula;
     public ImageButton rule_add_button;
     public static int MAX_RULES=10;
+    public EditText test_reroute_number;
     private int removePosition=-1;
     private RuleGroup ruleGroup;
-    private int inEditCount=0;
+    private ItemTouchHelper mItemTouchHelper;
 
     ContentAdapter adapter;
     private EventBus bus = EventBus.getDefault();
@@ -63,6 +73,11 @@ public class RulesFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
+        mItemTouchHelper = new ItemTouchHelper(callback);
+        mItemTouchHelper.attachToRecyclerView(recyclerView);
+
         rule_add_name = (EditText) v.findViewById(R.id.rule_add_name);
         rule_add_pattern = (EditText) v.findViewById(R.id.rule_add_pattern);
         rule_add_formula = (EditText) v.findViewById(R.id.rule_add_formula);
@@ -73,8 +88,29 @@ public class RulesFragment extends Fragment {
                 addRule();
             }
         });
+        test_reroute_number = (EditText) v.findViewById(R.id.test_reroute_number);
+        ImageButton test_reroute_button = (ImageButton) v.findViewById(R.id.test_reroute_button);
+        test_reroute_button.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                MatchNumber number = new MatchNumber(test_reroute_number.getText().toString());
+                String matching_pattern = "None";
+                String result = number.getNumber();
+                if(ruleGroup.transform(number)){
+                    matching_pattern = number.getMatchingRule().getPattern();
+                    result = number.getResult();
+                }
+                Toast.makeText(context, "Matching pattern: " + matching_pattern + "\nresult: " + result, Toast.LENGTH_SHORT).show();
+            }
+        });
         return v;
     }
+
+    @Override
+    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
+        mItemTouchHelper.startDrag(viewHolder);
+    }
+
     public boolean validateRule(Rule rule, int position){
         if(!rule.validate()){
             Toast.makeText(context, rule.getValidationResult(), Toast.LENGTH_SHORT).show();
@@ -112,7 +148,7 @@ public class RulesFragment extends Fragment {
         Toast.makeText(context, "rule removed", Toast.LENGTH_SHORT).show();
     }
 
-    public class RuleViewHolder extends RecyclerView.ViewHolder {
+    public class RuleViewHolder extends RecyclerView.ViewHolder implements ItemTouchHelperViewHolder {
         public EditText rule_name;
         public EditText rule_pattern;
         public EditText rule_formula;
@@ -141,9 +177,18 @@ public class RulesFragment extends Fragment {
             rule_edit_done = (ImageButton) itemView.findViewById(R.id.rule_edit_done);
             rule_edit_cancel = (ImageButton) itemView.findViewById(R.id.rule_edit_cancel);
         }
+        @Override
+        public void onItemSelected() {
+            itemView.setBackgroundColor(Color.LTGRAY);
+        }
+
+        @Override
+        public void onItemClear() {
+            itemView.setBackgroundColor(0);
+        }
     }
 
-    public class ContentAdapter extends RecyclerView.Adapter<RuleViewHolder> {
+    public class ContentAdapter extends RecyclerView.Adapter<RuleViewHolder> implements ItemTouchHelperAdapter {
         // Set numbers of List in RecyclerView.
         private final List<Rule> mItems;
         private final Context mContext;
@@ -205,7 +250,7 @@ public class RulesFragment extends Fragment {
                     }
                     ruleGroup.setRule(holder.getLayoutPosition(), rule);
                     appdataaccess.saveAppData(appdata);
-                    Toast.makeText(context, "group changed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "rule changed", Toast.LENGTH_SHORT).show();
 
                     holder.rule_name.setEnabled(false);
                     holder.rule_pattern.setEnabled(false);
@@ -239,6 +284,20 @@ public class RulesFragment extends Fragment {
         @Override
         public int getItemCount() {
             return mItems.size();
+        }
+        @Override
+        public void onItemDismiss(int position) {
+            mItems.remove(position);
+            notifyItemRemoved(position);
+            appdataaccess.saveAppData(appdata);
+        }
+
+        @Override
+        public boolean onItemMove(int fromPosition, int toPosition) {
+            Collections.swap(mItems, fromPosition, toPosition);
+            notifyItemMoved(fromPosition, toPosition);
+            appdataaccess.saveAppData(appdata);
+            return true;
         }
     }
 }

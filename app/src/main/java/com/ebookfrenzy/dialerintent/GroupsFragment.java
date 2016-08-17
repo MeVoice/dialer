@@ -69,10 +69,10 @@ public class GroupsFragment extends Fragment {
 
     public boolean validateGroup(RuleGroup rg, int position){
         switch(appdata.validateRuleGroup(rg, position)) {
-            case AppData.ERROR_GROUPNAME_TOOSHORT:
+            case Constant.ERROR_GROUPNAME_TOOSHORT:
                 Toast.makeText(context, "group name at least 5 characters long", Toast.LENGTH_SHORT).show();
                 return false;
-            case AppData.ERROR_GROUPNAME_DUP:
+            case Constant.ERROR_GROUPNAME_DUP:
                 Toast.makeText(context, "group name already in use", Toast.LENGTH_SHORT).show();
                 return false;
             default:
@@ -142,7 +142,6 @@ public class GroupsFragment extends Fragment {
         public ContentAdapter(Context context, List<RuleGroup> groups) {
             mContext = context;
             mItems = groups;
-            System.out.println("group count: " + groups.size());
         }
 
         @Override
@@ -160,7 +159,7 @@ public class GroupsFragment extends Fragment {
                     removePosition=-1;
                     ClickEvent ev = new ClickEvent();
                     appdata.setGroupInEdit(position);
-                    ev.put("action", AppData.ACTION_EDIT_RULES);
+                    ev.put("action", Constant.ACTION_EDIT_RULES);
                     bus.postSticky(ev);
                 }
             });
@@ -197,6 +196,7 @@ public class GroupsFragment extends Fragment {
                     if(!validateGroup(rg, holder.getLayoutPosition())){
                         return;
                     }
+                    rg.setRules(currRG.getRules());
                     appdata.setGroup(holder.getLayoutPosition(), rg);
                     for(int i=0;i<mItems.size();i++){
                         if(holder.getLayoutPosition()==i){

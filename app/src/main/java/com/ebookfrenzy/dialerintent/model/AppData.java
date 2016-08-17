@@ -1,5 +1,7 @@
 package com.ebookfrenzy.dialerintent.model;
 
+import com.ebookfrenzy.dialerintent.Constant;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,10 +31,6 @@ public class AppData {
     public void setRuleInEdit(int ruleInEdit) {
         this.ruleInEdit = ruleInEdit;
     }
-
-    public static final int ERROR_GROUPNAME_TOOSHORT=1;
-    public static final int ERROR_GROUPNAME_DUP=2;
-    public static final String ACTION_EDIT_RULES="ACTION_EDIT_RULE";
 
     private List<RuleGroup> ruleGroups=new ArrayList();;
 
@@ -95,7 +93,7 @@ public class AppData {
     public int validateRuleGroup(RuleGroup rg, int position){
         //name is not blank
         if(rg.getName().length()<5){
-            return ERROR_GROUPNAME_TOOSHORT;
+            return Constant.ERROR_GROUPNAME_TOOSHORT;
         }
         //no name duplicate
         for(int i=0;i<this.ruleGroups.size();i++){
@@ -103,9 +101,17 @@ public class AppData {
                 continue;
             }
             if(ruleGroups.get(i).getName().equalsIgnoreCase(rg.getName())){
-                return ERROR_GROUPNAME_DUP;
+                return Constant.ERROR_GROUPNAME_DUP;
             }
         }
         return 0;
+    }
+    public RuleGroup getRuleGroupInUse(){
+        for(int i=0;i<ruleGroups.size();i++){
+            if(ruleGroups.get(i).isInUse()){
+                return ruleGroups.get(i);
+            }
+        }
+        return null;
     }
 }

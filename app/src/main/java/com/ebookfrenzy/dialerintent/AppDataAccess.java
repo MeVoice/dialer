@@ -58,10 +58,6 @@ public class AppDataAccess {
             appdata = new AppData();
             appdata.addRuleGroup(new RuleGroup("group1"));
         }
-        if(appdata.getRuleGroups().size()==0) {
-            appdata.addRuleGroup(new RuleGroup("group1"));
-            appdata.addRuleGroup(new RuleGroup("group2"));
-        }
         return appdata;
     }
 }
