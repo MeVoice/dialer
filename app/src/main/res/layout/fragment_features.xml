@@ -7,39 +7,41 @@
     tools:context=".FeaturesFragment">
 
     <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/label_enable_edit"
         android:id="@+id/features_edit_number"
-        android:checked="false"/>
-
-    <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/label_enable_reroute"
+        android:checked="false"
+        android:text="@string/label_enable_edit" />
+
+    <CheckBox
         android:id="@+id/features_reroute_call"
-        android:checked="false" />
-
-    <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/confirm_reroute"
+        android:checked="false"
+        android:text="@string/label_enable_reroute" />
+
+    <CheckBox
         android:id="@+id/features_confirm"
-        android:checked="false" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checked="false"
+        android:text="@string/confirm_reroute" />
 
     <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="permission granted"
         android:id="@+id/features_permission"
-        android:checked="false" />
-
-    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/save"
+        android:checked="false"
+        android:text="permission granted" />
+
+    <ImageButton
+        android:layout_margin="40dp"
         android:id="@+id/features_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="left|center_vertical"
+        android:src="@drawable/ic_save" />
 
 </LinearLayout>

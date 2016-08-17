@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.ebookfrenzy.dialerintent.events.ClickEvent;
@@ -31,7 +32,7 @@ public class FeaturesFragment extends Fragment {
 
     private AppData appdata;
     private CheckBox view_features_edit_number, view_features_reroute_call, view_features_confirm, view_features_permission;
-    private Button view_features_save;
+    private ImageButton view_features_save;
     private View rootView;
     private Context context;
     private EventBus bus = EventBus.getDefault();
@@ -73,7 +74,7 @@ public class FeaturesFragment extends Fragment {
         view_features_confirm = (CheckBox) rootView.findViewById(R.id.features_confirm);
         view_features_confirm.setChecked(appdata.isConfirmReroute());
         view_features_permission = (CheckBox) rootView.findViewById(R.id.features_permission);
-        view_features_save = (Button) rootView.findViewById(R.id.features_save);
+        view_features_save = (ImageButton) rootView.findViewById(R.id.features_save);
         view_features_save.setOnClickListener( new Button.OnClickListener(){
             public void onClick(View v){
                 handleSaveButtonClick(v);
