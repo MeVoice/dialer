@@ -20,9 +20,6 @@ import com.ebookfrenzy.dialerintent.model.AppData;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.ArrayList;
-import java.util.List;
-
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,7 +28,7 @@ public class FeaturesFragment extends Fragment {
     private static final int PERMISSION_REQUEST_CODE = 101;
 
     private AppData appdata;
-    private CheckBox view_features_edit_number, view_features_reroute_call, view_features_confirm, view_features_permission;
+    private CheckBox view_features_edit_number, view_features_reroute_call;
     private ImageButton view_features_save;
     private View rootView;
     private Context context;
@@ -65,15 +62,12 @@ public class FeaturesFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         context = getActivity();
-        appdata = ((Main2Activity) context).getAppdata();
+        appdata = ((MainActivity) context).getAppdata();
         rootView = getView();
         view_features_edit_number = (CheckBox) rootView.findViewById(R.id.features_edit_number);
         view_features_edit_number.setChecked(appdata.isEditNumber());
         view_features_reroute_call = (CheckBox) rootView.findViewById(R.id.features_reroute_call);
         view_features_reroute_call.setChecked(appdata.isRerouteCall());
-        view_features_confirm = (CheckBox) rootView.findViewById(R.id.features_confirm);
-        view_features_confirm.setChecked(appdata.isConfirmReroute());
-        view_features_permission = (CheckBox) rootView.findViewById(R.id.features_permission);
         view_features_save = (ImageButton) rootView.findViewById(R.id.features_save);
         view_features_save.setOnClickListener( new Button.OnClickListener(){
             public void onClick(View v){
@@ -105,7 +99,7 @@ public class FeaturesFragment extends Fragment {
         //save preference
         appdata.setEditNumber(view_features_edit_number.isChecked());
         appdata.setRerouteCall(view_features_reroute_call.isChecked());
-        ((Main2Activity) context).getAppDataAccess().saveAppData(appdata);
+        ((MainActivity) context).getAppDataAccess().saveAppData(appdata);
         Toast.makeText(context, "changes saved", Toast.LENGTH_SHORT).show();
     }
     @Subscribe

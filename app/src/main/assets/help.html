@@ -1,0 +1,209 @@
+<html>
+<body>
+<h2>What does this app do?</h2>
+<p>The router checks any outgoing call's number against a list of patterns. If there is a match, the router re-combines pieces from the&nbsp;original number, and a formula to generate a new phone number and dials this new number instead.</p>
+<h2>Why another dialer?</h2>
+<p><strong>Transparent</strong>. You can set it up, test it, then forget it. The&nbsp;router does the look-up and re-generation for every outgoing call in the background. You don't have to pay attention in order to save money.</p>
+<p><strong>Flexible</strong>. At the router's core is an&nbsp;algrithm that matches and transforms&nbsp;phone numbers, its&nbsp;flexibility is endless.</p>
+<h2>Terminologies:</h2>
+<p>&nbsp;</p>
+<p><strong>Pattern</strong>: what to look for in the phone number, and what parts to capture&nbsp;for later use.</p>
+<p><strong>Formula</strong>: how to generate a&nbsp;new number.</p>
+<p><strong>Rule</strong>: The combination of a pattern and a formula. If&nbsp;the pattern matches a&nbsp;phone number, then the formula generates a new number.</p>
+<p><strong>Group</strong>: A list of rules. Matching is attempted from top to bottom.&nbsp;The original number&nbsp;is used&nbsp;if there is no match. Multiple groups can be configured, but only one can be in use at a time. A group is likely related&nbsp;to a location or a carrier. i.e. One group if you are with AT&amp;T and in New York, another group when you are with Orange in London.</p>
+<h2>Sample scenarios and rules:</h2>
+<p>1. dial a US number as-is</p>
+<table border="1">
+    <tbody>
+    <tr>
+        <td>pattern (P)</td>
+        <td>+1{X%}</td>
+    </tr>
+    <tr>
+        <td>formula (F)</td>
+        <td>1{M1}</td>
+    </tr>
+    <tr>
+        <td>original number (ON)</td>
+        <td>+18008008888</td>
+    </tr>
+    <tr>
+        <td>new number (NN)</td>
+        <td>18008008888</td>
+    </tr>
+    <tr>
+        <td>explanation</td>
+        <td>
+            <p>X matches any ONE character</p>
+            <p>X% matches any character til the end</p>
+            <p>{} in P captures the&nbsp;matched characters ("8008008888")&nbsp;</p>
+            <p>{M1} in F uses the captured characters</p>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<p>&nbsp;2. make an international call&nbsp;via a calling card (CC)</p>
+<table border="1">
+    <tbody>
+    <tr>
+        <td>pattern (P)</td>
+        <td>+{X%}</td>
+    </tr>
+    <tr>
+        <td>formula (F)</td>
+        <td>1800 123 4567,56565656#, 011{M1}#</td>
+    </tr>
+    <tr>
+        <td>original number (ON)</td>
+        <td>+86212323232323</td>
+    </tr>
+    <tr>
+        <td>new number (NN)</td>
+        <td>1800 123 4567,56565656#, 01186212323232323#</td>
+    </tr>
+    <tr>
+        <td>explanation</td>
+        <td>
+            <p>1800 123 4567 is the CC's gateway number</p>
+            <p>"," is a pause in dialing</p>
+            <p>"56565656#" is the user's pin code.</p>
+            <p>"011" is internation dialing sequence from the US.</p>
+            <p>"{%X}" in P captures "86212323232323" from ON</p>
+            <p>"{M1}" in F refers to&nbsp;the captured characters</p>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<p>3. dial an office extension through&nbsp;an gateway</p>
+<table border="1">
+    <tbody>
+    <tr>
+        <td>pattern (P)</td>
+        <td>67{DDDD}</td>
+    </tr>
+    <tr>
+        <td>formula (F)</td>
+        <td>1800 234 5567,78787878#,{M1}#</td>
+    </tr>
+    <tr>
+        <td>original number (ON)</td>
+        <td>675656</td>
+    </tr>
+    <tr>
+        <td>new number (NN)</td>
+        <td>1800 234 5567,78787878#,{5656}#</td>
+    </tr>
+    <tr>
+        <td>explanation</td>
+        <td>
+            <p>"1800 234 5567" is the gateway number</p>
+            <p>"78787878#" is user's pin code</p>
+            <p>{DDDD} in P captures any 4&nbsp;digits</p>
+            <p>{M1} in formula uses the captures digits</p>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<p>&nbsp;4.&nbsp;call into a&nbsp;conference using&nbsp;meeting&nbsp;ID and pin</p>
+<table border="1">
+    <tbody>
+    <tr>
+        <td>pattern (P)</td>
+        <td>{DDDDDD} {DDDD}</td>
+    </tr>
+    <tr>
+        <td>formula (F)</td>
+        <td>1800 234 7878,{M1}#,1,{M2}#</td>
+    </tr>
+    <tr>
+        <td>original number (ON)</td>
+        <td>54545454 2323</td>
+    </tr>
+    <tr>
+        <td>new number (NN)</td>
+        <td>1800234 7878,54545454#,1,2323#</td>
+    </tr>
+    <tr>
+        <td>explanation</td>
+        <td>
+            <p>{DDDDDD} matches and captures the conference ID</p>
+            <p>{DDDD} matches and captures the pin code</p>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<p>&nbsp;</p>
+<h2>Pattern and formula syntax:</h2>
+<table border="1">
+    <tbody>
+    <tr>
+        <td><strong>characters</strong></td>
+        <td><strong>explanation</strong></td>
+    </tr>
+    <tr>
+        <td>0123456789#*,;</td>
+        <td>characters that can be actually dialed. "," is to pause, ";" is to wait for user</td>
+    </tr>
+    <tr>
+        <td>0123456789#*,;{} DX%</td>
+        <td>these are the characters permitted in a pattern;&nbsp;"D" and "X" are&nbsp;uppercase;</td>
+    </tr>
+    <tr>
+        <td>0123456789#*,;{} *M</td>
+        <td>these are the characters permitted in a&nbsp;formula;&nbsp;"M" is&nbsp;uppercase;</td>
+    </tr>
+    <tr>
+        <td>" "</td>
+        <td>white space, use for formatting and in pattern matching, but dropped before dialling</td>
+    </tr>
+    <tr>
+        <td>D</td>
+        <td>any ONE digit</td>
+    </tr>
+    <tr>
+        <td>X</td>
+        <td>any ONE character</td>
+    </tr>
+    <tr>
+        <td>{ and }</td>
+        <td>captures matched characters&nbsp;between the brackets, and use the captures in formula.</td>
+    </tr>
+    <tr>
+        <td>M</td>
+        <td>has to be&nbsp;in format like "{M1}", "{M2}". "{M1}" is the first captured characters. "{M2}" is the second. "{M0}" is special, it represents the complete original number.</td>
+    </tr>
+    <tr>
+        <td>%</td>
+        <td>repeat&nbsp;the previous character zero or more times, til the end of the original number. Can only be used at the end of a pattern</td>
+    </tr>
+    <tr>
+        <td>D%</td>
+        <td>
+            <p>matches all digits til the end</p>
+            <p>"12D%" does not matches "12"</p>
+            <p>"12D%" matches "122"</p>
+            <p>"12D%" matches "122334"</p>
+            <p>"12D%" does not match "1223,34", because "," is not a digit</p>
+        </td>
+    </tr>
+    <tr>
+        <td>X%</td>
+        <td>
+            <p>matches all characters&nbsp;til the end, no match</p>
+            <p>"12X%" matches "122334", and&nbsp;"1223,34"</p>
+        </td>
+    </tr>
+    <tr>
+        <td>1%</td>
+        <td>
+            <p>matches all "1" til the end</p>
+            <p>"12%" matches "12222", but not "12223".</p>
+            <p>"12%" matches "12"</p>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+</body>
+</html>

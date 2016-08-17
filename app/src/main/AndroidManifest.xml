@@ -29,7 +29,6 @@
                 <data android:scheme="tel" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"/>
         <receiver
             android:name=".OutgoingCallRewrite"
             android:enabled="true"
@@ -39,7 +38,8 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".Main2Activity">
+        <activity android:name=".MainActivity"
+            android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

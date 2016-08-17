@@ -17,6 +17,7 @@
     <string name="confirm_reroute">confirm reroute</string>
     <string name="action_groups">Groups</string>
     <string name="action_features">Features</string>
+    <string name="action_help">Help</string>
     <array name="dummy_items">
         <item>One</item>
         <item>Two</item>
