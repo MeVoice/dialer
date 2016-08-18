@@ -197,17 +197,23 @@ public class GroupsFragment extends Fragment {
                         return;
                     }
                     rg.setRules(currRG.getRules());
-                    appdata.setGroup(holder.getLayoutPosition(), rg);
-                    for(int i=0;i<mItems.size();i++){
-                        if(holder.getLayoutPosition()==i){
-                            continue;
-                        }
-                        if(mItems.get(i).isInUse()){
-                            mItems.get(i).setInUse(false);
-                            notifyItemChanged(i);
-                        }
+                    int inUseIndex = appdata.getRuleGroupInUse();
+                    if(rg.isInUse() && inUseIndex>=0 && inUseIndex!=holder.getLayoutPosition()){
+                        mItems.get(inUseIndex).setInUse(false);
+                        notifyItemChanged(inUseIndex);
                     }
-
+                    appdata.setGroup(holder.getLayoutPosition(), rg);
+                    int newInUseIndex = appdata.getRuleGroupInUse();
+                    if(inUseIndex != newInUseIndex) {
+                        ClickEvent ev = new ClickEvent();
+                        ev.put("action", Constant.ACTION_ROUTER_ON_OFF);
+                        if (inUseIndex >= 0 && newInUseIndex < 0) {
+                            ev.put("ON_OFF", new Boolean(false));
+                        } else if (inUseIndex < 0 && newInUseIndex >= 0) {
+                            ev.put("ON_OFF", new Boolean(true));
+                        }
+                        bus.post(ev);
+                    }
                     appdataaccess.saveAppData(appdata);
                     Toast.makeText(context, "group changed", Toast.LENGTH_SHORT).show();
 

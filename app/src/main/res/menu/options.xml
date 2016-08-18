@@ -4,18 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
     <item
-        android:id="@+id/action_features"
-        android:title="@string/action_features"
+        android:id="@+id/action_help"
+        android:title="@string/action_help"
         android:orderInCategory="100"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_groups"
         android:title="@string/action_groups"
-        android:orderInCategory="100"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/action_help"
-        android:title="@string/action_help"
         android:orderInCategory="100"
         app:showAsAction="never" />
 </menu>

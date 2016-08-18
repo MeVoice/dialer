@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.ebookfrenzy.dialerintent.events.ClickEvent;
 import com.ebookfrenzy.dialerintent.model.AppData;
 import com.ebookfrenzy.dialerintent.model.MatchNumber;
 import com.ebookfrenzy.dialerintent.model.RuleGroup;
@@ -25,10 +26,11 @@ import com.ebookfrenzy.dialerintent.model.TransformLog;
  * Created by Admin on 7/30/2016.
  */
 public class OutgoingCallRewrite extends BroadcastReceiver {
+
     @Override
     public void onReceive(Context context, Intent intent) {
         AppData appdata = AppDataAccess.getInstance(context).getAppdata();
-        RuleGroup rg = appdata.getRuleGroupInUse();
+        RuleGroup rg = appdata.getRuleGroup(appdata.getRuleGroupInUse());
         String phoneNumber;
         String new_phoneNumber;
         phoneNumber = getResultData();
@@ -37,9 +39,9 @@ public class OutgoingCallRewrite extends BroadcastReceiver {
             if(rg.transform(number)){
                 new_phoneNumber = number.getResult();
                 String rule_comment = number.getMatchingRule().getName();
-                setResultData(new_phoneNumber);
                 Toast.makeText(context, "Dialed: " + phoneNumber + "\nCalled: " + new_phoneNumber, Toast.LENGTH_LONG).show();
                 if(!new_phoneNumber.equals(phoneNumber)){
+                    setResultData(new_phoneNumber);
                     //TransformLog log = new TransformLog(phoneNumber, new_phoneNumber, new Date());
                     //appdata.addTransformLog(log);
                     if(new_phoneNumber.indexOf(",")>=0 || new_phoneNumber.indexOf(";")>=0) {
@@ -47,7 +49,6 @@ public class OutgoingCallRewrite extends BroadcastReceiver {
                     }
                     AddNumToCallLog(context.getContentResolver(),phoneNumber, CallLog.Calls.OUTGOING_TYPE, System.currentTimeMillis(), rule_comment);
                 }
-                return;
             }
         }
         setResultData(phoneNumber);

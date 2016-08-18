@@ -1,6 +1,8 @@
 package com.ebookfrenzy.dialerintent;
 
 import android.Manifest;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -26,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     public AppData getAppdata() {
         return appdata;
     }
+    private Context context;
     private AppData appdata;
 
     public AppDataAccess getAppDataAccess() {
@@ -57,6 +60,11 @@ public class MainActivity extends AppCompatActivity {
             showFragment("rules", true, "Rules - " + appdata.getRuleGroups().get(appdata.getGroupInEdit()).getName());
             //Toast.makeText(getApplicationContext(), "show rules for group " + appdata.getGroupInEdit(), Toast.LENGTH_SHORT).show();
         }
+        if (event.get("action") == Constant.ACTION_ROUTER_ON_OFF) {
+            Boolean on_off = (Boolean) event.get("ON_OFF");
+            updateReceiverStatus(on_off.booleanValue());
+        }
+
     }
 
     @Override
@@ -94,16 +102,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        appDataAccess = AppDataAccess.getInstance(getApplicationContext());
+        context = getApplicationContext();
+        appDataAccess = AppDataAccess.getInstance(context);
         appdata = appDataAccess.getAppdata();
 
         setContentView(R.layout.activity_main);
         // Adding Toolbar to Main screen
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        // Setting ViewPager for each Tabs
-        fragments.put("features", new FeaturesFragment());
-        fragmentIDs.put(R.id.action_features, "features");
 
         fragments.put("groups", new GroupsFragment());
         fragmentIDs.put(R.id.action_groups, "groups");
@@ -113,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
         fragments.put("help", new HelpFragment());
         fragmentIDs.put(R.id.action_help, "help");
 
-        showFragment("features", false, "Choose Features");
+        showFragment("help", false, "Help & Feedback");
     }
 
     public void clearBackStack() {
@@ -133,5 +139,16 @@ public class MainActivity extends AppCompatActivity {
             ft.addToBackStack(null);
         }
         ft.commit();
+    }
+
+    public void updateReceiverStatus(boolean enable){
+        PackageManager pm = context.getPackageManager();
+        if(enable){
+            pm.setComponentEnabledSetting(new ComponentName(context, OutgoingCallRewrite.class),
+                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+        }else{
+            pm.setComponentEnabledSetting(new ComponentName(context, OutgoingCallRewrite.class),
+                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+        }
     }
 }
