@@ -19,18 +19,13 @@ import org.greenrobot.eventbus.Subscribe;
 import com.ebookfrenzy.dialerintent.events.ClickEvent;
 import com.ebookfrenzy.dialerintent.model.AppData;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     public AppData getAppdata() {
         return appdata;
     }
-
-    private static final int PERMISSION_REQUEST_CODE = 101;
-
     private AppData appdata;
 
     public AppDataAccess getAppDataAccess() {
@@ -61,9 +56,6 @@ public class MainActivity extends AppCompatActivity {
         if (event.get("action") == Constant.ACTION_EDIT_RULES) {
             showFragment("rules", true, "Rules - " + appdata.getRuleGroups().get(appdata.getGroupInEdit()).getName());
             //Toast.makeText(getApplicationContext(), "show rules for group " + appdata.getGroupInEdit(), Toast.LENGTH_SHORT).show();
-        }
-        if (event.get("action") == Constant.ACTION_REQUEST_PERMISSION) {
-            checkAndRequestPermissions(requiredPermissions, PERMISSION_REQUEST_CODE);
         }
     }
 
@@ -141,50 +133,5 @@ public class MainActivity extends AppCompatActivity {
             ft.addToBackStack(null);
         }
         ft.commit();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        System.out.println("called onRequestPermissionsResult");
-        int permission_denied = 0;
-        switch (requestCode) {
-            case PERMISSION_REQUEST_CODE: {
-                if (grantResults.length == 0) {
-                    permission_denied++;
-                } else {
-                    for (int i = 0; i < grantResults.length; i++) {
-                        if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
-                            permission_denied++;
-                        }
-                    }
-                }
-            }
-        }
-        System.out.println(permission_denied + " permissions denied");
-        ClickEvent ev = new ClickEvent();
-        if (permission_denied > 0) {
-            ev.put("action", Constant.ACTION_PERMISSION_DENIED);
-        } else {
-            ev.put("action", Constant.ACTION_PERMISSION_GRANTED);
-        }
-        bus.post(ev);
-    }
-    protected void checkAndRequestPermissions(String[] permissions, int requestcode){
-        List<String> permList = new ArrayList<String>();
-        for(int i=0; i<permissions.length; i++){
-            int isGranted = ContextCompat.checkSelfPermission(getApplicationContext(), permissions[i]);
-            if(isGranted!= PackageManager.PERMISSION_GRANTED){
-                permList.add(permissions[i]);
-            }
-        }
-        if(permList.size()>0) {
-            ActivityCompat.requestPermissions(this, permList.toArray(new String[permList.size()]), requestcode);
-            System.out.println("calling requestPermissions");
-        }else{
-            ClickEvent ev = new ClickEvent();
-            ev.put("action", Constant.ACTION_PERMISSION_GRANTED);
-            bus.post(ev);
-        }
     }
 }

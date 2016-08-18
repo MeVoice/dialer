@@ -16,6 +16,15 @@ public class AppData {
     private int groupInEdit=-1;
     private int ruleInEdit=-1;
 
+    public List<TransformLog> getTransformLog() {
+        return transformLog;
+    }
+
+    private List<TransformLog> transformLog=new ArrayList<>() ;
+    public void addTransformLog(TransformLog log){
+        transformLog.add(log);
+    }
+
     public int getGroupInEdit() {
         return groupInEdit;
     }

@@ -74,9 +74,6 @@ public class FeaturesFragment extends Fragment {
                 handleSaveButtonClick(v);
             }
         });
-        ClickEvent ev = new ClickEvent();
-        ev.put("action", Constant.ACTION_REQUEST_PERMISSION);
-        bus.post(ev);
     }
 
     private void handleSaveButtonClick(View v){
@@ -105,22 +102,5 @@ public class FeaturesFragment extends Fragment {
     @Subscribe
     public void onClickEvent(ClickEvent event) {
         System.out.println("received event: " + event.get("action"));
-        if (event.get("action") == Constant.ACTION_PERMISSION_GRANTED) {
-            view_features_edit_number.setEnabled(true);
-            view_features_reroute_call.setEnabled(true);
-        }
-        if (event.get("action") == Constant.ACTION_PERMISSION_DENIED) {
-            //disable activities when permission's denied
-            PackageManager pm = context.getPackageManager();
-            pm.setComponentEnabledSetting(new ComponentName(context, com.ebookfrenzy.dialerintent.EditDialedNumber.class),
-                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
-            pm.setComponentEnabledSetting(new ComponentName(context, OutgoingCallRewrite.class),
-                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
-            view_features_edit_number.setChecked(false);
-            view_features_reroute_call.setChecked(false);
-            view_features_edit_number.setEnabled(false);
-            view_features_reroute_call.setEnabled(false);
-            Toast.makeText(context, "disabled features due to lack of permissions", Toast.LENGTH_SHORT).show();
-        }
     }
 }
