@@ -1,7 +1,7 @@
 <html>
 <body>
 <h2>What does this app do?</h2>
-<p>The router checks any outgoing call's number with a list of patterns. If there is a match, the router extracts parts from the original phone number, and use a formula to generate a new phone number, then dials this new number instead.</p>
+<p>The router matches&nbsp;any outgoing call's number against&nbsp;a list of patterns. If there is a match, the router extracts parts from the original phone number, and use a formula to generate a new phone number, then dials this new number instead.</p>
 <h2>Why another dialer?</h2>
 <p><strong>Better Efficiency</strong>. The router does the match and re-generation for every outgoing call, behind the scene. After the initial setup, you can leave the app and it does the rest for you.</p>
 <p><strong>Wider Application</strong>. At the router's core is an algorithm that matches and transforms phone numbers - each digit can be individually matched and re-arranged into a new sequence.</p>
@@ -22,21 +22,24 @@
     <tr>
         <td>0123456789#*,;</td>
         <td>
-            <p>these are characters that can be actually dialed from a dial pad. "," is to pause, ";" is to wait for user input.</p>
-            <p>characters in the original number not found here are only for formatting. These characters (e.g. ".", "-") will be dropped before matching.</p>
+            <p>these are characters that can be dialed from a dial pad (dialable). "," is to pause, ";" is to wait for user input.</p>
         </td>
     </tr>
     <tr>
-        <td>0123456789#*,;{} DX%</td>
+        <td>dialable and "{}DX% +"</td>
         <td>these are characters permitted in a pattern; "D" and "X" are uppercase;</td>
     </tr>
     <tr>
-        <td>0123456789#*,;{} M</td>
+        <td>dialable and "{}M +"</td>
         <td>these are characters permitted in a formula; "M" is uppercase;</td>
     </tr>
     <tr>
+        <td>dialable and ",;+"</td>
+        <td>these are characters android allows in the original number, other characters such as ".", "-", " " are only for formatting and are dropped before dialing takes place.</td>
+    </tr>
+    <tr>
         <td>" "</td>
-        <td>a white space ia used for formatting only. it's dropped&nbsp;before matching.</td>
+        <td>white space is permitted in pattern and formula, it's used for formatting only and is dropped&nbsp;before matching. i.e. "+1 800 800 8080" and "+18008008080" are the same.</td>
     </tr>
     <tr>
         <td>D</td>
@@ -186,7 +189,7 @@
     <tbody>
     <tr>
         <td>pattern</td>
-        <td>{DDDDDDDD} {DDDD}</td>
+        <td>{DDDDDDDD},{DDDD}</td>
     </tr>
     <tr>
         <td>formula</td>
@@ -194,7 +197,7 @@
     </tr>
     <tr>
         <td>original number</td>
-        <td>54545454 2323</td>
+        <td>54545454,2323</td>
     </tr>
     <tr>
         <td>new number</td>
@@ -257,11 +260,6 @@
     </tr>
     </tbody>
 </table>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>

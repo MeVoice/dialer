@@ -96,10 +96,10 @@ public class RuleUnitTest extends TestCase{
         assertTrue(number_004.getResult().equals("18009809891,1234#"));
         number_004 = new MatchNumber("6712345");
         assertFalse(rule_004.transform(number_004));
-        rule_004 = new Rule("rule004 conf number", "{DDDDDDDD} {DDDD}", "1 800 980 9891,{M1}#,7,{M2}#");
-        number_004 = new MatchNumber("12345678 1234");
+        rule_004 = new Rule("rule004 conf number", "{DDD} {DDD}", "1 800 980 9891,{M1}#,7,{M2}#");
+        number_004 = new MatchNumber("123456");
         assertTrue(rule_004.transform(number_004));
-        assertTrue(number_004.getResult().equals("18009809891,12345678#,7,1234#"));
+        assertTrue(number_004.getResult().equals("18009809891,123#,7,456#"));
         rule_004 = new Rule("rule004 number contains non digit", "12{D%}", "1 800 980 9891,{M1}");
         number_004 = new MatchNumber("123,44");
         assertFalse(rule_004.transform(number_004));

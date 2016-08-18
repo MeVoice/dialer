@@ -74,9 +74,9 @@ public class Rule {
         this.formulaParts = breakByPattern(formula, FormulaMatchFormat);
     }
 
-    private static final String PhoneCharacters = "0123456789#*,;+ ";
-    private static final String PatternCharacters = "XD%{}";
-    private static final String FormulaCharacters = "M{}";
+    private static final String PhoneCharacters = "0123456789#*,;";
+    private static final String PatternCharacters = "{}DX% +";
+    private static final String FormulaCharacters = "{}M +";
     private static final String FormulaMatchFormat = "\\{M\\d+\\}";
 
     public boolean validate(){
@@ -135,9 +135,10 @@ public class Rule {
         }
         //only {M\d+} in formula
         String[] matches = formula.split("\\{M\\d+\\}");
+        String temp = PhoneCharacters+" +";
         for(int i=0;i<matches.length;i++) {
             for (int j = 0; j < matches[i].length(); j++) {
-                if (PhoneCharacters.indexOf(matches[i].charAt(j)) < 0) {
+                if (temp.indexOf(matches[i].charAt(j)) < 0) {
                     validationResult = "invalid format found in formula";
                     return false;
                 }
@@ -179,6 +180,7 @@ public class Rule {
         //X matches on character
         //X* matches any sequence of characters, towards the end of number
         String inputNumber = number.getNumber();
+        String pattern = this.pattern.replace(" ", "");
         int matchState=StateOpen;
         int wildCharType=WildCharNone;
         int idx_number = 0, idx_pattern = 0, idx_formula=0;
@@ -191,19 +193,19 @@ public class Rule {
             if(idx_pattern>=pattern.length()){
                 return false;
             }
-            if (matchState == StateOpen && pattern.charAt(idx_pattern) == '{') {
+            if (matchState == StateInMatch && pattern.charAt(idx_pattern) == '}') {
                 wildCharType = WildCharNone;
-                matchState = StateInMatch;
-                match = "";
+                matchState = StateOpen;
+                matches.add(match);
                 idx_pattern++;
                 if(idx_pattern>=pattern.length()){
                     return false;
                 }
             }
-            if (matchState == StateInMatch && pattern.charAt(idx_pattern) == '}') {
+            if (matchState == StateOpen && pattern.charAt(idx_pattern) == '{') {
                 wildCharType = WildCharNone;
-                matchState = StateOpen;
-                matches.add(match);
+                matchState = StateInMatch;
+                match = "";
                 idx_pattern++;
                 if(idx_pattern>=pattern.length()){
                     return false;
