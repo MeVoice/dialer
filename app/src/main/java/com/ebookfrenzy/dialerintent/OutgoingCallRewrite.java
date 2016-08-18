@@ -48,6 +48,7 @@ public class OutgoingCallRewrite extends BroadcastReceiver {
                         AddNumToCallLog(context.getContentResolver(), new_phoneNumber, CallLog.Calls.OUTGOING_TYPE, System.currentTimeMillis(), rule_comment);
                     }
                     AddNumToCallLog(context.getContentResolver(),phoneNumber, CallLog.Calls.OUTGOING_TYPE, System.currentTimeMillis(), rule_comment);
+                    return;
                 }
             }
         }
