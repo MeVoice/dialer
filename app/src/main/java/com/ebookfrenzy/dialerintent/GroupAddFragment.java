@@ -51,7 +51,7 @@ public class GroupAddFragment extends CommonFragment {
 
     public void addGroup() {
         if (appdata.getRuleGroups().size() == Constant.MAX_GROUPS) {
-            Toast.makeText(context, "can have no more than " + Constant.MAX_GROUPS + " rule groups", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "maximum " + Constant.MAX_GROUPS + " groups", Toast.LENGTH_SHORT).show();
             return;
         }
         RuleGroup rg = new RuleGroup(group_add_name.getText().toString());

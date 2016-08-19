@@ -193,6 +193,10 @@ public class MainActivity extends AppCompatActivity {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if(appdata.getRuleGroups().size()>=Constant.MAX_GROUPS){
+                        Toast.makeText(context, "maximum " + Constant.MAX_GROUPS + " groups", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     showFragment(Constant.FRAGMENT_KEY_GROUP_ADD, true);
                 }
             });
@@ -204,6 +208,10 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     RuleGroup rg = appdata.getRuleGroups().get(appdata.getGroupInEdit());
+                    if(rg.getRules().size()>=Constant.MAX_RULES){
+                        Toast.makeText(context, "maximum " + Constant.MAX_RULES + " rules per group", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     fragmentTitles.put(Constant.FRAGMENT_KEY_RULE_ADD, "+ Rule - " + rg.getName());
                     showFragment(Constant.FRAGMENT_KEY_RULE_ADD, true);
                 }

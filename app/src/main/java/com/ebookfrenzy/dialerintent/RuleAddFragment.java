@@ -22,7 +22,6 @@ public class RuleAddFragment extends CommonFragment {
     public EditText rule_add_pattern;
     public EditText rule_add_formula;
     public ImageButton rule_add_button;
-    public static int MAX_RULES=10;
 
     public RuleAddFragment() {
         // Required empty public constructor
@@ -49,10 +48,11 @@ public class RuleAddFragment extends CommonFragment {
     }
     public void addRule(){
         RuleGroup ruleGroup = appdata.getRuleGroup(appdata.getGroupInEdit());
-        if(ruleGroup.getRules().size()==MAX_RULES){
-            Toast.makeText(context, "can have no more than "+MAX_RULES+" rules", Toast.LENGTH_SHORT).show();
+        if(ruleGroup.getRules().size()>=Constant.MAX_RULES){
+            Toast.makeText(context, "maximum " + Constant.MAX_RULES + " rules per group", Toast.LENGTH_SHORT).show();
             return;
         }
+
         Rule rule = new Rule(rule_add_name.getText().toString(),
                 rule_add_pattern.getText().toString(),
                 rule_add_formula.getText().toString());
