@@ -1,19 +1,20 @@
 package com.ebookfrenzy.dialerintent;
 
-import android.Manifest;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.support.v4.app.ActivityCompat;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -25,22 +26,16 @@ import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
-    public AppData getAppdata() {
-        return appdata;
-    }
     private Context context;
     private AppData appdata;
 
-    public AppDataAccess getAppDataAccess() {
-        return appDataAccess;
-    }
+    private FloatingActionButton fab;
 
     private AppDataAccess appDataAccess;
     private EventBus bus = EventBus.getDefault();
     private HashMap fragments = new HashMap();
+    private HashMap fragmentTitles = new HashMap();
     private HashMap fragmentIDs = new HashMap();
-    private String[] requiredPermissions = new String[] {Manifest.permission.PROCESS_OUTGOING_CALLS, Manifest.permission.CALL_PHONE};
-
 
     @Override
     public void onStart() {
@@ -56,15 +51,15 @@ public class MainActivity extends AppCompatActivity {
 
     @Subscribe
     public void onClickEvent(ClickEvent event) {
-        if (event.get("action") == Constant.ACTION_EDIT_RULES) {
-            showFragment("rules", true, "Rules - " + appdata.getRuleGroups().get(appdata.getGroupInEdit()).getName());
+        if (event.get("action").equals(Constant.ACTION_EDIT_RULES)) {
+            fragmentTitles.put(Constant.FRAGMENT_KEY_RULES, "Rules - " + appdata.getRuleGroups().get(appdata.getGroupInEdit()).getName());
+            showFragment(Constant.FRAGMENT_KEY_RULES, true);
             //Toast.makeText(getApplicationContext(), "show rules for group " + appdata.getGroupInEdit(), Toast.LENGTH_SHORT).show();
         }
-        if (event.get("action") == Constant.ACTION_ROUTER_ON_OFF) {
+        if (event.get("action").equals(Constant.ACTION_ROUTER_ON_OFF)) {
             Boolean on_off = (Boolean) event.get("ON_OFF");
             updateReceiverStatus(on_off.booleanValue());
         }
-
     }
 
     @Override
@@ -84,18 +79,8 @@ public class MainActivity extends AppCompatActivity {
         String fragmentName = (String) fragmentIDs.get(id);
         //user should use either menu OR back button, not both
         clearBackStack();
-        String title = "";
-        if (fragmentName == "features") {
-            title = "Choose Features";
-        }
-        if (fragmentName == "groups") {
-            title = "Rule Groups";
-        }
-        if (fragmentName == "help") {
-            title = "Help & Feedback";
-        }
 
-        showFragment(fragmentName, false, title);
+        showFragment(fragmentName, false);
         return super.onOptionsItemSelected(item);
     }
 
@@ -111,15 +96,60 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        fragments.put("groups", new GroupsFragment());
-        fragmentIDs.put(R.id.action_groups, "groups");
+        this.fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Snackbar.make(v, "Hello Snackbar!",
+                        Snackbar.LENGTH_LONG).show();
+            }
+        });
+        fragments.put(Constant.FRAGMENT_KEY_GROUPS, new GroupsFragment());
+        fragmentIDs.put(R.id.action_groups, Constant.FRAGMENT_KEY_GROUPS);
+        fragmentTitles.put(Constant.FRAGMENT_KEY_GROUPS, "Rule Groups");
 
-        fragments.put("rules", new RulesFragment());
+        fragments.put(Constant.FRAGMENT_KEY_GROUP_ADD, new GroupAddFragment());
+        fragmentIDs.put(R.id.action_add_groups, Constant.FRAGMENT_KEY_GROUP_ADD);
+        fragmentTitles.put(Constant.FRAGMENT_KEY_GROUP_ADD, "+ Rule Group");
 
-        fragments.put("help", new HelpFragment());
-        fragmentIDs.put(R.id.action_help, "help");
+        fragments.put(Constant.FRAGMENT_KEY_RULES, new RulesFragment());
 
-        showFragment("help", false, "Help & Feedback");
+        fragments.put(Constant.FRAGMENT_KEY_HELP, new HelpFragment());
+        fragmentIDs.put(R.id.action_help, Constant.FRAGMENT_KEY_HELP);
+        fragmentTitles.put(Constant.FRAGMENT_KEY_HELP, "Help & Feedback");
+
+        getSupportFragmentManager().addOnBackStackChangedListener(
+                new FragmentManager.OnBackStackChangedListener() {
+                    public void onBackStackChanged() {
+                        onFragmentBack();
+                        //Toast.makeText(getApplicationContext(), "onBackStackChanged", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        showFragment(Constant.FRAGMENT_KEY_HELP, false);
+    }
+
+    public void onFragmentBack(){
+        //reset title text and fab visibility based on fragment key
+        System.out.println("onFragmentBack");
+        Fragment f = getSupportFragmentManager().findFragmentById(R.id.content);
+        String key="";
+        if (f instanceof HelpFragment) {
+            key = Constant.FRAGMENT_KEY_HELP;
+        }
+        if (f instanceof GroupsFragment) {
+            key = Constant.FRAGMENT_KEY_GROUPS;
+        }
+        if (f instanceof GroupAddFragment) {
+            key = Constant.FRAGMENT_KEY_GROUP_ADD;
+        }
+        if (f instanceof RulesFragment) {
+            key = Constant.FRAGMENT_KEY_RULES;
+        }
+        System.out.println(key);
+        String title = (String) fragmentTitles.get(key);
+        showFab(key);
+        getSupportActionBar().setTitle(title);
     }
 
     public void clearBackStack() {
@@ -130,16 +160,46 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void showFragment(String key, boolean addToStack, String title) {
+    public void showFragment(String key, boolean addToStack) {
+        String title = (String) fragmentTitles.get(key);
         getSupportActionBar().setTitle(title);
+        System.out.println(title);
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.content, (Fragment) fragments.get(key));
         if (addToStack) {
             ft.addToBackStack(null);
         }
+        showFab(key);
         ft.commit();
     }
+
+    public void showFab(String key) {
+        if (key.equals(Constant.FRAGMENT_KEY_GROUPS)) {
+            fab.setVisibility(View.VISIBLE);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showFragment(Constant.FRAGMENT_KEY_GROUP_ADD, true);
+                }
+            });
+            return;
+        }
+        if (key.equals(Constant.FRAGMENT_KEY_RULES)) {
+            fab.setVisibility(View.VISIBLE);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    fragmentTitles.put(Constant.FRAGMENT_KEY_RULE_ADD, appdata.getRuleGroups().get(appdata.getGroupInEdit()).getName());
+                    showFragment(Constant.FRAGMENT_KEY_RULE_ADD, true);
+                }
+            });
+            return;
+        }
+        fab.setVisibility(View.INVISIBLE);
+        return;
+    }
+
 
     public void updateReceiverStatus(boolean enable){
         PackageManager pm = context.getPackageManager();

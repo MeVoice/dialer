@@ -13,4 +13,9 @@
         android:title="@string/action_groups"
         android:orderInCategory="100"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_add_groups"
+        android:title="@string/action_add_groups"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
 </menu>

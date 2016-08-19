@@ -27,11 +27,8 @@ import java.util.List;
  */
 public class GroupsFragment extends Fragment {
     public Context context;
-    static public int MAX_GROUPS=8;
     public AppDataAccess appdataaccess;
     public AppData appdata;
-    public EditText group_add_name;
-    public ImageButton group_add_button;
     private int removePosition=-1;
     ContentAdapter adapter;
     private EventBus bus = EventBus.getDefault();
@@ -46,7 +43,6 @@ public class GroupsFragment extends Fragment {
         context = getActivity();
         appdataaccess = AppDataAccess.getInstance(context);
         appdata = appdataaccess.getAppdata();
-
         View v = inflater.inflate(R.layout.fragment_group, container, false);
 
         // Inflate the layout for this fragment
@@ -55,15 +51,6 @@ public class GroupsFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        //return recyclerView;
-        group_add_name = (EditText) v.findViewById(R.id.group_add_name);
-        group_add_button = (ImageButton) v.findViewById(R.id.group_add_button);
-        group_add_button.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                addGroup();
-            }
-        });
         return v;
     }
 
@@ -77,20 +64,6 @@ public class GroupsFragment extends Fragment {
                 return false;
             default:
                 return true;
-        }
-    }
-    public void addGroup(){
-        if(appdata.getRuleGroups().size()==MAX_GROUPS){
-            Toast.makeText(context, "can have no more than "+MAX_GROUPS+" rule groups", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        RuleGroup rg = new RuleGroup(group_add_name.getText().toString());
-        if(validateGroup(rg, -1)){
-            appdata.addRuleGroup(rg);
-            adapter.notifyItemInserted(appdata.getRuleGroups().size()-1);
-            appdataaccess.saveAppData(appdata);
-            group_add_name.setText("");
-            Toast.makeText(context, "group added", Toast.LENGTH_SHORT).show();
         }
     }
 

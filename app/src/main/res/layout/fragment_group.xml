@@ -18,6 +18,5 @@
     android:layout_height="match_parent"
     android:layout_gravity="left|top"
     android:orientation="vertical">
-    <include layout="@layout/group_add"/>
     <include layout="@layout/recycler_view"/>
 </LinearLayout>

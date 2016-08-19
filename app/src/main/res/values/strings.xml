@@ -18,6 +18,7 @@
     <string name="action_groups">Groups</string>
     <string name="action_features">Features</string>
     <string name="action_help">Help</string>
+    <string name="action_add_groups">add group</string>
     <array name="dummy_items">
         <item>One</item>
         <item>Two</item>

@@ -8,6 +8,8 @@ import com.ebookfrenzy.dialerintent.model.AppData;
 import com.ebookfrenzy.dialerintent.model.RuleGroup;
 import com.google.gson.Gson;
 
+import java.util.HashMap;
+
 /**
  * Created by Admin on 8/11/2016.
  */
@@ -28,6 +30,16 @@ public class AppDataAccess {
     private SharedPreferences sharedPref;
     private Context appContext;
     private SharedPreferences.Editor prefEditor;
+
+    public Object getRuntimeData(String key) {
+        return runtimeData.get(key);
+    }
+    public void setRuntimeData(String key, Object data) {
+        runtimeData.put(key, data);
+    }
+
+    private HashMap runtimeData=new HashMap();
+
     static private final String preferenceName="e.164 dialer AppData";
     static private final String appDataName="gson_AppData";
     protected AppDataAccess(Context context){
