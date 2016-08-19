@@ -4,14 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center_vertical"
-    android:textAppearance="?android:attr/textAppearanceSmall">
+    android:textAppearance="?android:attr/textAppearanceSmall"
+    android:background="#ffffff">
     <!-- TODO: Update blank fragment layout -->
 
         <EditText
             android:id="@+id/group_add_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="top|center_vertical"
             android:layout_weight="1"
             android:hint="Group Name"
             android:width="60dp" />
@@ -21,6 +22,6 @@
             android:id="@+id/group_add_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|right"
+            android:layout_gravity="top|center_vertical|right"
             android:src="@drawable/ic_plus" />
 </LinearLayout>

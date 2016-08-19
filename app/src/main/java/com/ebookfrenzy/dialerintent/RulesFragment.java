@@ -35,10 +35,6 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class RulesFragment extends CommonFragment  implements OnStartDragListener {
-    public EditText rule_add_name;
-    public EditText rule_add_pattern;
-    public EditText rule_add_formula;
-    public ImageButton rule_add_button;
     public static int MAX_RULES=10;
     public EditText test_reroute_number;
     private int removePosition=-1;
@@ -72,16 +68,6 @@ public class RulesFragment extends CommonFragment  implements OnStartDragListene
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
 
-        rule_add_name = (EditText) v.findViewById(R.id.rule_add_name);
-        rule_add_pattern = (EditText) v.findViewById(R.id.rule_add_pattern);
-        rule_add_formula = (EditText) v.findViewById(R.id.rule_add_formula);
-        rule_add_button = (ImageButton) v.findViewById(R.id.rule_add_button);
-        rule_add_button.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                addRule();
-            }
-        });
         test_reroute_number = (EditText) v.findViewById(R.id.test_reroute_number);
         ImageButton test_reroute_button = (ImageButton) v.findViewById(R.id.test_reroute_button);
         test_reroute_button.setOnClickListener(new View.OnClickListener(){
@@ -111,24 +97,6 @@ public class RulesFragment extends CommonFragment  implements OnStartDragListene
             return false;
         }
         return true;
-    }
-    public void addRule(){
-        if(ruleGroup.getRules().size()==MAX_RULES){
-            Toast.makeText(context, "can have no more than "+MAX_RULES+" rules", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        Rule rule = new Rule(rule_add_name.getText().toString(),
-                rule_add_pattern.getText().toString(),
-                rule_add_formula.getText().toString());
-        if(validateRule(rule, -1)){
-            ruleGroup.addRule(rule);
-            adapter.notifyItemInserted(ruleGroup.getRules().size()-1);
-            appdataaccess.saveAppData(appdata);
-            rule_add_name.setText("");
-            rule_add_pattern.setText("");
-            rule_add_formula.setText("");
-            Toast.makeText(context, "rule added", Toast.LENGTH_SHORT).show();
-        }
     }
     public void removeRule(int position){
         if(removePosition!=position){

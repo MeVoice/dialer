@@ -10,7 +10,7 @@
         android:ems="10"
         android:id="@+id/test_reroute_number"
         android:layout_weight="1"
-        android:hint="test phone#"
+        android:hint="enter a number to test"
         android:layout_margin="8dp" />
 
     <ImageButton

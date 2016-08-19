@@ -17,8 +17,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="left|top"
-    android:orientation="vertical">
-    <include layout="@layout/rule_add"/>
+    android:orientation="vertical"
+    android:background="#ffffff">
     <include layout="@layout/test_reroute"/>
     <include layout="@layout/recycler_view"/>
 </LinearLayout>

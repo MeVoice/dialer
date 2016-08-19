@@ -21,6 +21,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import com.ebookfrenzy.dialerintent.events.ClickEvent;
 import com.ebookfrenzy.dialerintent.model.AppData;
+import com.ebookfrenzy.dialerintent.model.RuleGroup;
 
 import java.util.HashMap;
 
@@ -52,8 +53,14 @@ public class MainActivity extends AppCompatActivity {
     @Subscribe
     public void onClickEvent(ClickEvent event) {
         if (event.get("action").equals(Constant.ACTION_EDIT_RULES)) {
-            fragmentTitles.put(Constant.FRAGMENT_KEY_RULES, "Rules - " + appdata.getRuleGroups().get(appdata.getGroupInEdit()).getName());
-            showFragment(Constant.FRAGMENT_KEY_RULES, true);
+            RuleGroup rg = appdata.getRuleGroups().get(appdata.getGroupInEdit());
+            if(rg.getRules().size()>0) {
+                fragmentTitles.put(Constant.FRAGMENT_KEY_RULES, "Rules - " + rg.getName());
+                showFragment(Constant.FRAGMENT_KEY_RULES, true);
+            }else{
+                fragmentTitles.put(Constant.FRAGMENT_KEY_RULE_ADD, "+ Rule - " + rg.getName());
+                showFragment(Constant.FRAGMENT_KEY_RULE_ADD, true);
+            }
             //Toast.makeText(getApplicationContext(), "show rules for group " + appdata.getGroupInEdit(), Toast.LENGTH_SHORT).show();
         }
         if (event.get("action").equals(Constant.ACTION_ROUTER_ON_OFF)) {
@@ -109,14 +116,16 @@ public class MainActivity extends AppCompatActivity {
         fragmentTitles.put(Constant.FRAGMENT_KEY_GROUPS, "Rule Groups");
 
         fragments.put(Constant.FRAGMENT_KEY_GROUP_ADD, new GroupAddFragment());
-        fragmentIDs.put(R.id.action_add_groups, Constant.FRAGMENT_KEY_GROUP_ADD);
         fragmentTitles.put(Constant.FRAGMENT_KEY_GROUP_ADD, "+ Rule Group");
 
         fragments.put(Constant.FRAGMENT_KEY_RULES, new RulesFragment());
+        fragments.put(Constant.FRAGMENT_KEY_RULE_ADD, new RuleAddFragment());
+
 
         fragments.put(Constant.FRAGMENT_KEY_HELP, new HelpFragment());
         fragmentIDs.put(R.id.action_help, Constant.FRAGMENT_KEY_HELP);
         fragmentTitles.put(Constant.FRAGMENT_KEY_HELP, "Help & Feedback");
+
 
         getSupportFragmentManager().addOnBackStackChangedListener(
                 new FragmentManager.OnBackStackChangedListener() {
@@ -146,8 +155,12 @@ public class MainActivity extends AppCompatActivity {
         if (f instanceof RulesFragment) {
             key = Constant.FRAGMENT_KEY_RULES;
         }
+        if (f instanceof RuleAddFragment) {
+            key = Constant.FRAGMENT_KEY_RULE_ADD;
+        }
         System.out.println(key);
         String title = (String) fragmentTitles.get(key);
+        System.out.println("found title:" + title);
         showFab(key);
         getSupportActionBar().setTitle(title);
     }
@@ -190,7 +203,8 @@ public class MainActivity extends AppCompatActivity {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    fragmentTitles.put(Constant.FRAGMENT_KEY_RULE_ADD, appdata.getRuleGroups().get(appdata.getGroupInEdit()).getName());
+                    RuleGroup rg = appdata.getRuleGroups().get(appdata.getGroupInEdit());
+                    fragmentTitles.put(Constant.FRAGMENT_KEY_RULE_ADD, "+ Rule - " + rg.getName());
                     showFragment(Constant.FRAGMENT_KEY_RULE_ADD, true);
                 }
             });
