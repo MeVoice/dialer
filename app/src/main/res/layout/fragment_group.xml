@@ -19,5 +19,11 @@
     android:layout_gravity="left|top"
     android:orientation="vertical"
     android:background="#ffffff">
-    <include layout="@layout/recycler_view"/>
+    <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/my_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:scrollbars="vertical">
+    </android.support.v7.widget.RecyclerView>
 </LinearLayout>

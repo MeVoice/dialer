@@ -4,6 +4,7 @@ package com.ebookfrenzy.dialerintent;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -77,7 +78,9 @@ public class RulesFragment extends CommonFragment  implements OnStartDragListene
                     matching_pattern = number.getMatchingRule().getPattern();
                     result = number.getResult();
                 }
-                Toast.makeText(context, "Matching pattern: " + matching_pattern + "\nresult: " + result, Toast.LENGTH_SHORT).show();
+                String message = "Matching pattern: " + matching_pattern + "\nresult: " + result;
+                Snackbar.make(v, message, Snackbar.LENGTH_INDEFINITE).show();
+                //Toast.makeText(context, "Matching pattern: " + matching_pattern + "\nresult: " + result, Toast.LENGTH_SHORT).show();
             }
         });
         return v;

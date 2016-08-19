@@ -38,14 +38,14 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|right"
             android:visibility="invisible"
-            android:src="@drawable/ic_done" />
+            android:src="@android:drawable/ic_menu_save" />
 
         <ImageButton
             android:id="@+id/group_edit_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|right"
-            android:src="@drawable/ic_edit" />
+            android:src="@android:drawable/ic_menu_edit" />
     </FrameLayout>
 
     <FrameLayout
@@ -57,7 +57,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|right"
-            android:src="@drawable/ic_minus" />
+            android:src="@android:drawable/ic_menu_delete" />
 
         <ImageButton
             android:id="@+id/group_edit_cancel"
@@ -65,6 +65,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|right"
             android:visibility="invisible"
-            android:src="@drawable/ic_cancel" />
+            android:src="@android:drawable/ic_menu_close_clear_cancel" />
     </FrameLayout>
 </LinearLayout>
