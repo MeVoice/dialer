@@ -4,7 +4,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -104,13 +103,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         this.fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Snackbar.make(v, "Hello Snackbar!",
-                        Snackbar.LENGTH_LONG).show();
-            }
-        });
+
         fragments.put(Constant.FRAGMENT_KEY_GROUPS, new GroupsFragment());
         fragmentIDs.put(R.id.action_groups, Constant.FRAGMENT_KEY_GROUPS);
         fragmentTitles.put(Constant.FRAGMENT_KEY_GROUPS, "Rule Groups");
@@ -125,7 +118,6 @@ public class MainActivity extends AppCompatActivity {
         fragments.put(Constant.FRAGMENT_KEY_HELP, new HelpFragment());
         fragmentIDs.put(R.id.action_help, Constant.FRAGMENT_KEY_HELP);
         fragmentTitles.put(Constant.FRAGMENT_KEY_HELP, "Help & Feedback");
-
 
         getSupportFragmentManager().addOnBackStackChangedListener(
                 new FragmentManager.OnBackStackChangedListener() {

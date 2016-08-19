@@ -2,6 +2,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#FFFFFF"
+    android:layout_alignParentBottom="true"
+    android:id="@+id/pagination_btns"
     android:orientation="horizontal">
 
     <EditText

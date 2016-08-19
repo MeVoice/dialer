@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ebookfrenzy.dialerintent.helper.ItemTouchHelperAdapter;
@@ -35,7 +34,6 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class RulesFragment extends CommonFragment  implements OnStartDragListener {
-    public static int MAX_RULES=10;
     public EditText test_reroute_number;
     private int removePosition=-1;
     private RuleGroup ruleGroup;
@@ -49,7 +47,6 @@ public class RulesFragment extends CommonFragment  implements OnStartDragListene
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -57,7 +54,7 @@ public class RulesFragment extends CommonFragment  implements OnStartDragListene
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_rule, container, false);
 
-        RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.my_recycler_view);
+        RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.rules_recycler_view);
         ruleGroup = appdata.getRuleGroup(appdata.getGroupInEdit());
         adapter = new ContentAdapter(recyclerView.getContext(), ruleGroup.getRules());
         recyclerView.setAdapter(adapter);
@@ -153,10 +150,8 @@ public class RulesFragment extends CommonFragment  implements OnStartDragListene
     public class ContentAdapter extends RecyclerView.Adapter<RuleViewHolder> implements ItemTouchHelperAdapter {
         // Set numbers of List in RecyclerView.
         private final List<Rule> mItems;
-        private final Context mContext;
 
         public ContentAdapter(Context context, List<Rule> rules) {
-            mContext = context;
             mItems = rules;
             System.out.println("rule count: " + rules.size());
         }
