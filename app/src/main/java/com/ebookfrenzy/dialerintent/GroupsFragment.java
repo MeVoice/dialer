@@ -93,7 +93,9 @@ public class GroupsFragment extends CommonFragment {
                 }
             });
             group_name = (EditText) itemView.findViewById(R.id.group_edit_name);
+            group_name.setAlpha(0.5f);
             group_inuse = (CheckBox) itemView.findViewById(R.id.group_edit_inuse);
+            group_inuse.setAlpha(0.5f);
 
             group_edit_rules = (ImageButton) itemView.findViewById(R.id.group_edit_rules);
             group_edit_delete_button = (ImageButton) itemView.findViewById(R.id.group_edit_delete_button);
@@ -121,6 +123,16 @@ public class GroupsFragment extends CommonFragment {
         public void onBindViewHolder(final GroupViewHolder holder, final int position) {
             holder.group_name.setText(mItems.get(position).getName());
             holder.group_inuse.setChecked(mItems.get(position).isInUse());
+            holder.group_name.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    removePosition=-1;
+                    ClickEvent ev = new ClickEvent();
+                    appdata.setGroupInEdit(position);
+                    ev.put("action", Constant.ACTION_EDIT_RULES);
+                    bus.postSticky(ev);
+                }}
+            );
             holder.group_edit_rules.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -142,8 +154,8 @@ public class GroupsFragment extends CommonFragment {
                 @Override
                 public void onClick(View v) {
                     removePosition=-1;
-                    holder.group_name.setEnabled(true);
-                    holder.group_inuse.setEnabled(true);
+                    setViewStatus(holder.group_name, true);
+                    setViewStatus(holder.group_inuse, true);
                     holder.group_edit_cancel.setVisibility(View.VISIBLE);
                     holder.group_edit_done.setVisibility(View.VISIBLE);
                     holder.group_edit_button.setVisibility(View.INVISIBLE);
@@ -185,8 +197,8 @@ public class GroupsFragment extends CommonFragment {
                     appdataaccess.saveAppData(appdata);
                     Toast.makeText(context, "group changed", Toast.LENGTH_SHORT).show();
 
-                    holder.group_name.setEnabled(false);
-                    holder.group_inuse.setEnabled(false);
+                    setViewStatus(holder.group_name, false);
+                    setViewStatus(holder.group_inuse, false);
                     holder.group_edit_cancel.setVisibility(View.INVISIBLE);
                     holder.group_edit_done.setVisibility(View.INVISIBLE);
                     holder.group_edit_button.setVisibility(View.VISIBLE);
@@ -200,8 +212,8 @@ public class GroupsFragment extends CommonFragment {
                     removePosition=-1;
                     holder.group_name.setText(mItems.get(holder.getLayoutPosition()).getName());
                     holder.group_inuse.setChecked(mItems.get(holder.getLayoutPosition()).isInUse());
-                    holder.group_name.setEnabled(false);
-                    holder.group_inuse.setEnabled(false);
+                    setViewStatus(holder.group_name, false);
+                    setViewStatus(holder.group_inuse, false);
                     holder.group_edit_cancel.setVisibility(View.INVISIBLE);
                     holder.group_edit_done.setVisibility(View.INVISIBLE);
                     holder.group_edit_button.setVisibility(View.VISIBLE);
@@ -214,5 +226,12 @@ public class GroupsFragment extends CommonFragment {
         public int getItemCount() {
             return mItems.size();
         }
+    }
+
+    public void setViewStatus(View view, boolean enable){
+        float alpha = enable?1:0.5f;
+        view.setFocusable(enable);
+        view.setClickable(!enable);
+        view.setAlpha(alpha);
     }
 }
