@@ -25,10 +25,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GroupsFragment extends Fragment {
-    public Context context;
-    public AppDataAccess appdataaccess;
-    public AppData appdata;
+public class GroupsFragment extends CommonFragment {
     private int removePosition=-1;
     ContentAdapter adapter;
     private EventBus bus = EventBus.getDefault();
@@ -40,9 +37,7 @@ public class GroupsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        context = getActivity();
-        appdataaccess = AppDataAccess.getInstance(context);
-        appdata = appdataaccess.getAppdata();
+        initAppData();
         View v = inflater.inflate(R.layout.fragment_group, container, false);
 
         // Inflate the layout for this fragment

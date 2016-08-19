@@ -22,10 +22,7 @@ import java.util.HashMap;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GroupAddFragment extends Fragment {
-    public Context context;
-    public AppDataAccess appdataaccess;
-    public AppData appdata;
+public class GroupAddFragment extends CommonFragment {
     public EditText group_add_name;
     public ImageButton group_add_button;
 
@@ -38,9 +35,7 @@ public class GroupAddFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        context = getActivity();
-        appdataaccess = AppDataAccess.getInstance(context);
-        appdata = appdataaccess.getAppdata();
+        initAppData();
 
         View rootView = inflater.inflate(R.layout.fragment_group_add, container, false);
         group_add_name = (EditText) rootView.findViewById(R.id.group_add_name);
@@ -69,8 +64,8 @@ public class GroupAddFragment extends Fragment {
         }
     }
 
-    public boolean validateGroup(RuleGroup rg, int position){
-        switch(appdata.validateRuleGroup(rg, position)) {
+    public boolean validateGroup(RuleGroup rg, int position) {
+        switch (appdata.validateRuleGroup(rg, position)) {
             case Constant.ERROR_GROUPNAME_TOOSHORT:
                 Toast.makeText(context, "group name at least 5 characters long", Toast.LENGTH_SHORT).show();
                 return false;
@@ -81,6 +76,4 @@ public class GroupAddFragment extends Fragment {
                 return true;
         }
     }
-
-
 }

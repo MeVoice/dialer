@@ -34,10 +34,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RulesFragment extends Fragment  implements OnStartDragListener {
-    public Context context;
-    public AppDataAccess appdataaccess;
-    public AppData appdata;
+public class RulesFragment extends CommonFragment  implements OnStartDragListener {
     public EditText rule_add_name;
     public EditText rule_add_pattern;
     public EditText rule_add_formula;
@@ -60,10 +57,7 @@ public class RulesFragment extends Fragment  implements OnStartDragListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        context = getActivity();
-        appdataaccess = AppDataAccess.getInstance(context);
-        appdata = appdataaccess.getAppdata();
+        initAppData();
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_rule, container, false);
 

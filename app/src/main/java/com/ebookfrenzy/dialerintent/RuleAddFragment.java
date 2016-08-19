@@ -10,10 +10,10 @@ import android.view.ViewGroup;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GroupEditFragment extends Fragment {
+public class RuleAddFragment extends CommonFragment {
 
 
-    public GroupEditFragment() {
+    public RuleAddFragment() {
         // Required empty public constructor
     }
 
@@ -21,6 +21,7 @@ public class GroupEditFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        initAppData();
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.group_edit, container, false);
     }
