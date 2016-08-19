@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-        showFragment(Constant.FRAGMENT_KEY_HELP, false);
+        showFragment(Constant.FRAGMENT_KEY_GROUPS, false);
     }
 
     public void onFragmentBack(){
