@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:id="@+id/rule_edit_layout"
     tools:context=".RuleAddFragment">
     <View
         android:layout_width="fill_parent"
@@ -30,6 +31,13 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="0.7"
             android:enabled="false" />
+        <ImageButton
+            android:id="@+id/rule_drag_handle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:layout_gravity="center_vertical|right"
+            android:src="@drawable/ic_drag_handle_black_24px"/>
     </LinearLayout>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
@@ -52,7 +60,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|right"
             android:enabled="false"
-            android:text="use" />
+            android:visibility="visible"
+            android:text="" />
 
         <FrameLayout
             android:layout_width="wrap_content"
@@ -62,6 +71,7 @@
                 android:id="@+id/rule_edit_done"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@null"
                 android:layout_gravity="center_vertical|right"
                 android:src="@android:drawable/ic_menu_save"
                 android:visibility="invisible" />
@@ -70,6 +80,7 @@
                 android:id="@+id/rule_edit_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@null"
                 android:layout_gravity="center_vertical|right"
                 android:src="@android:drawable/ic_menu_edit" />
         </FrameLayout>
@@ -82,6 +93,7 @@
                 android:id="@+id/rule_edit_delete_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@null"
                 android:layout_gravity="center_vertical|right"
                 android:src="@android:drawable/ic_menu_delete" />
 
@@ -89,6 +101,7 @@
                 android:id="@+id/rule_edit_cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@null"
                 android:layout_gravity="center_vertical|right"
                 android:src="@android:drawable/ic_menu_close_clear_cancel"
                 android:visibility="invisible" />

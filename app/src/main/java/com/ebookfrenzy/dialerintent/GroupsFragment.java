@@ -2,6 +2,7 @@ package com.ebookfrenzy.dialerintent;
 
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.ebookfrenzy.dialerintent.events.ClickEvent;
@@ -82,6 +84,7 @@ public class GroupsFragment extends CommonFragment {
         public ImageButton group_edit_button;
         public ImageButton group_edit_done;
         public ImageButton group_edit_cancel;
+        public LinearLayout group_edit_layout;
         public GroupViewHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.group_edit, parent, false));
             //itemView is from Parent class, represent any view within the holder
@@ -92,6 +95,7 @@ public class GroupsFragment extends CommonFragment {
             group_edit_button = (ImageButton) itemView.findViewById(R.id.group_edit_button);
             group_edit_done = (ImageButton) itemView.findViewById(R.id.group_edit_done);
             group_edit_cancel = (ImageButton) itemView.findViewById(R.id.group_edit_cancel);
+            group_edit_layout = (LinearLayout) itemView.findViewById(R.id.group_edit_layout);
         }
     }
     public class ContentAdapter extends RecyclerView.Adapter<GroupViewHolder> {
@@ -113,6 +117,11 @@ public class GroupsFragment extends CommonFragment {
         public void onBindViewHolder(final GroupViewHolder holder, final int position) {
             holder.group_name.setText(mItems.get(position).getName());
             holder.group_inuse.setChecked(mItems.get(position).isInUse());
+            if(mItems.get(position).isInUse()){
+                holder.group_edit_layout.setBackgroundColor(getResources().getColor(R.color.activeItem));
+            }else{
+                holder.group_edit_layout.setBackgroundColor(Color.TRANSPARENT);
+            }
             holder.group_edit_rules.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -140,6 +149,7 @@ public class GroupsFragment extends CommonFragment {
                     holder.group_edit_done.setVisibility(View.VISIBLE);
                     holder.group_edit_button.setVisibility(View.INVISIBLE);
                     holder.group_edit_delete_button.setVisibility(View.INVISIBLE);
+                    //holder.group_inuse.setVisibility(View.VISIBLE);
                 }
             });
             holder.group_edit_done.setOnClickListener(new View.OnClickListener() {
@@ -164,13 +174,15 @@ public class GroupsFragment extends CommonFragment {
                     }
                     appdata.setGroup(holder.getLayoutPosition(), rg);
                     int newInUseIndex = appdata.getRuleGroupInUse();
-                    if(inUseIndex != newInUseIndex) {
+                    boolean wasInUse = inUseIndex>=0;
+                    boolean nowInUse = newInUseIndex>=0;
+                    if(wasInUse != nowInUse) {
                         ClickEvent ev = new ClickEvent();
                         ev.put("action", Constant.ACTION_ROUTER_ON_OFF);
-                        if (inUseIndex >= 0 && newInUseIndex < 0) {
-                            ev.put("ON_OFF", new Boolean(false));
-                        } else if (inUseIndex < 0 && newInUseIndex >= 0) {
+                        if (nowInUse) {
                             ev.put("ON_OFF", new Boolean(true));
+                        }else{
+                            ev.put("ON_OFF", new Boolean(false));
                         }
                         bus.post(ev);
                     }
@@ -183,6 +195,7 @@ public class GroupsFragment extends CommonFragment {
                     holder.group_edit_done.setVisibility(View.INVISIBLE);
                     holder.group_edit_button.setVisibility(View.VISIBLE);
                     holder.group_edit_delete_button.setVisibility(View.VISIBLE);
+                    //holder.group_inuse.setVisibility(View.VISIBLE);
                     adapter.notifyItemChanged(holder.getLayoutPosition());
                 }
             });
@@ -198,6 +211,7 @@ public class GroupsFragment extends CommonFragment {
                     holder.group_edit_done.setVisibility(View.INVISIBLE);
                     holder.group_edit_button.setVisibility(View.VISIBLE);
                     holder.group_edit_delete_button.setVisibility(View.VISIBLE);
+                    //holder.group_inuse.setVisibility(View.VISIBLE);
                 }
             });
         }

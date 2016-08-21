@@ -8,8 +8,7 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFFFFF"
-        android:layout_alignParentTop="true"
+        android:background="@null"
         android:id="@+id/test_reroute_layout"
         android:orientation="horizontal">
         <EditText
@@ -26,6 +25,7 @@
             android:id="@+id/test_reroute_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@null"
             android:layout_gravity="right"
             android:src="@android:drawable/ic_media_play" />
     </LinearLayout>

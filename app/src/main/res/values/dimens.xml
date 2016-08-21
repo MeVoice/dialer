@@ -18,4 +18,5 @@
     <dimen name="list_body">14sp</dimen>
     <dimen name="navheader_height">222dp</dimen>
     <dimen name="text_margin">16dp</dimen>
+    <dimen name="nav_drawer_width">260dp</dimen>
 </resources>

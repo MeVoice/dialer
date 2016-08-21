@@ -15,7 +15,9 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.ebookfrenzy.dialerintent.helper.ItemTouchHelperAdapter;
 import com.ebookfrenzy.dialerintent.helper.ItemTouchHelperViewHolder;
@@ -68,6 +70,8 @@ public class RulesFragment extends CommonFragment  implements OnStartDragListene
 
         test_reroute_number = (EditText) v.findViewById(R.id.test_reroute_number);
         ImageButton test_reroute_button = (ImageButton) v.findViewById(R.id.test_reroute_button);
+
+
         test_reroute_button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -119,6 +123,8 @@ public class RulesFragment extends CommonFragment  implements OnStartDragListene
         public ImageButton rule_edit_button;
         public ImageButton rule_edit_done;
         public ImageButton rule_edit_cancel;
+        public LinearLayout rule_edit_layout;
+        public boolean isActive;
         public RuleViewHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.rule_edit, parent, false));
             //itemView is from Parent class, represent any view within the holder
@@ -138,6 +144,7 @@ public class RulesFragment extends CommonFragment  implements OnStartDragListene
             rule_edit_button = (ImageButton) itemView.findViewById(R.id.rule_edit_button);
             rule_edit_done = (ImageButton) itemView.findViewById(R.id.rule_edit_done);
             rule_edit_cancel = (ImageButton) itemView.findViewById(R.id.rule_edit_cancel);
+            rule_edit_layout = (LinearLayout) itemView.findViewById(R.id.rule_edit_layout);
         }
         @Override
         public void onItemSelected() {
@@ -146,7 +153,11 @@ public class RulesFragment extends CommonFragment  implements OnStartDragListene
 
         @Override
         public void onItemClear() {
-            itemView.setBackgroundColor(0);
+            if(this.isActive) {
+                itemView.setBackgroundColor(getResources().getColor(R.color.activeItem));
+            }else{
+                itemView.setBackgroundColor(Color.TRANSPARENT);
+            }
         }
     }
 
@@ -166,6 +177,12 @@ public class RulesFragment extends CommonFragment  implements OnStartDragListene
 
         @Override
         public void onBindViewHolder(final RuleViewHolder holder, final int position) {
+            holder.isActive = mItems.get(position).isInUse();
+            if(holder.isActive ) {
+                holder.rule_edit_layout.setBackgroundColor(getResources().getColor(R.color.activeItem));
+            }else{
+                holder.rule_edit_layout.setBackgroundColor(Color.TRANSPARENT);
+            }
             holder.rule_name.setText(mItems.get(position).getName());
             holder.rule_pattern.setText(mItems.get(position).getPattern());
             holder.rule_formula.setText(mItems.get(position).getFormula());

@@ -12,23 +12,10 @@
     <string name="settings">settings</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="save">Save</string>
     <string name="confirm_reroute">confirm reroute</string>
     <string name="action_groups">Groups</string>
     <string name="action_features">Features</string>
     <string name="action_help">Help</string>
     <string name="action_add_groups">add group</string>
-    <array name="dummy_items">
-        <item>One</item>
-        <item>Two</item>
-        <item>Three</item>
-        <item>Four</item>
-        <item>Five</item>
-        <item>Six</item>
-        <item>Seven</item>
-        <item>Eight</item>
-        <item>Nine</item>
-        <item>Ten</item>
-    </array>
 </resources>
