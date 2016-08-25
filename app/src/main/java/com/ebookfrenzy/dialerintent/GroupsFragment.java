@@ -149,7 +149,6 @@ public class GroupsFragment extends CommonFragment {
                     holder.group_edit_done.setVisibility(View.VISIBLE);
                     holder.group_edit_button.setVisibility(View.INVISIBLE);
                     holder.group_edit_delete_button.setVisibility(View.INVISIBLE);
-                    //holder.group_inuse.setVisibility(View.VISIBLE);
                 }
             });
             holder.group_edit_done.setOnClickListener(new View.OnClickListener() {
@@ -195,7 +194,6 @@ public class GroupsFragment extends CommonFragment {
                     holder.group_edit_done.setVisibility(View.INVISIBLE);
                     holder.group_edit_button.setVisibility(View.VISIBLE);
                     holder.group_edit_delete_button.setVisibility(View.VISIBLE);
-                    //holder.group_inuse.setVisibility(View.VISIBLE);
                     adapter.notifyItemChanged(holder.getLayoutPosition());
                 }
             });
@@ -211,7 +209,6 @@ public class GroupsFragment extends CommonFragment {
                     holder.group_edit_done.setVisibility(View.INVISIBLE);
                     holder.group_edit_button.setVisibility(View.VISIBLE);
                     holder.group_edit_delete_button.setVisibility(View.VISIBLE);
-                    //holder.group_inuse.setVisibility(View.VISIBLE);
                 }
             });
         }
