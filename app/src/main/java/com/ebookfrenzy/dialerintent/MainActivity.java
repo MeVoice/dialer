@@ -1,8 +1,11 @@
 package com.ebookfrenzy.dialerintent;
 
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -21,7 +24,14 @@ import org.greenrobot.eventbus.Subscribe;
 import com.ebookfrenzy.dialerintent.events.ClickEvent;
 import com.ebookfrenzy.dialerintent.model.AppData;
 import com.ebookfrenzy.dialerintent.model.RuleGroup;
+import com.google.gson.Gson;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
@@ -85,9 +95,76 @@ public class MainActivity extends AppCompatActivity {
         String fragmentName = (String) fragmentIDs.get(id);
         //user should use either menu OR back button, not both
         clearBackStack();
-
-        showFragment(fragmentName, false);
+        if(id==R.id.action_send_email){
+            //save setting to file and email the file
+            exportSettings();
+        }else if(id==R.id.action_import) {
+            importSettings();
+        }else{
+            showFragment(fragmentName, false);
+        }
         return super.onOptionsItemSelected(item);
+    }
+
+    public boolean exportSettings(){
+        try {
+            File outputFile = File.createTempFile("call_router", ".json", context.getExternalCacheDir() );
+            String fileName = outputFile.getAbsolutePath();
+            Gson gson = new Gson();
+            FileOutputStream fOut =  new FileOutputStream(fileName);
+            String str = gson.toJson(appdata);
+            fOut.write(str.getBytes());
+            fOut.close();
+            //invoke email with attachment intent
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            intent.putExtra(Intent.EXTRA_SUBJECT, "setting export");
+            intent.putExtra(Intent.EXTRA_TEXT, "setting export");
+            File file = new File(fileName);
+            if (!file.exists() || !file.canRead()) {
+                Toast.makeText(this, "Attachment Error", Toast.LENGTH_SHORT).show();
+            } else {
+                intent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + file));
+                this.startActivity(Intent.createChooser(intent,
+                        "Sending email..."));
+            }
+            return true;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+    private static final int OPEN_REQUEST_CODE = 41;
+
+    public void importSettings(){
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("*/*");
+        startActivityForResult(intent, OPEN_REQUEST_CODE);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent resultData){
+        Uri currentUri;
+        if(resultCode== Activity.RESULT_OK){
+            if(requestCode==OPEN_REQUEST_CODE){
+                if(resultData!=null){
+                    currentUri=resultData.getData();
+                    try {
+                        InputStream inputStream = getContentResolver().openInputStream(currentUri);
+                        final Gson gson = new Gson();
+                        final BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+                        appdata = gson.fromJson(reader, AppData.class);
+                        appDataAccess.setAppdata(appdata);
+                        appDataAccess.saveAppData(appdata);
+                        Toast.makeText(getApplicationContext(), "settings successfully imported, restarting app", Toast.LENGTH_SHORT).show();
+                        recreate();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
     }
 
     @Override

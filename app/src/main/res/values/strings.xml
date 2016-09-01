@@ -18,4 +18,6 @@
     <string name="action_features">Features</string>
     <string name="action_help">Help</string>
     <string name="action_add_groups">add group</string>
+    <string name="action_send_email">export settings</string>
+    <string name="action_import">import settings</string>
 </resources>
