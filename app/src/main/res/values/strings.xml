@@ -18,6 +18,8 @@
     <string name="action_features">Features</string>
     <string name="action_help">Help</string>
     <string name="action_add_groups">add group</string>
-    <string name="action_send_email">export settings</string>
-    <string name="action_import">import settings</string>
+    <string name="action_send_email">Export</string>
+    <string name="action_import">Import</string>
+    <string name="navigation_drawer_open">drawer_open</string>
+    <string name="navigation_drawer_close">drawer_close</string>
 </resources>

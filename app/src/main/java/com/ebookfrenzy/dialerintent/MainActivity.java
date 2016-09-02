@@ -7,9 +7,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.util.ArrayMap;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -46,6 +50,9 @@ public class MainActivity extends AppCompatActivity {
     private HashMap fragments = new HashMap();
     private HashMap fragmentTitles = new HashMap();
     private HashMap fragmentIDs = new HashMap();
+    private HashMap options_menu_groups = new HashMap();
+    private String activeFragment;
+    private int[] option_menu_groups = {R.id.options_groups, R.id.options_help};
 
     @Override
     public void onStart() {
@@ -63,10 +70,10 @@ public class MainActivity extends AppCompatActivity {
     public void onClickEvent(ClickEvent event) {
         if (event.get("action").equals(Constant.ACTION_EDIT_RULES)) {
             RuleGroup rg = appdata.getRuleGroups().get(appdata.getGroupInEdit());
-            if(rg.getRules().size()>0) {
+            if (rg.getRules().size() > 0) {
                 fragmentTitles.put(Constant.FRAGMENT_KEY_RULES, "Rules - " + rg.getName());
                 showFragment(Constant.FRAGMENT_KEY_RULES, true);
-            }else{
+            } else {
                 fragmentTitles.put(Constant.FRAGMENT_KEY_RULE_ADD, "+ Rule - " + rg.getName());
                 showFragment(Constant.FRAGMENT_KEY_RULE_ADD, true);
             }
@@ -86,6 +93,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        for(int i=0; i<option_menu_groups.length;i++){
+            Integer groupID = (Integer) options_menu_groups.get(activeFragment);
+            if(groupID ==null || groupID.intValue()!=option_menu_groups[i]){
+                menu.setGroupVisible(option_menu_groups[i], false);
+            }else{
+                menu.setGroupVisible(option_menu_groups[i], true);
+            }
+        }
+        super.onPrepareOptionsMenu(menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -95,23 +116,23 @@ public class MainActivity extends AppCompatActivity {
         String fragmentName = (String) fragmentIDs.get(id);
         //user should use either menu OR back button, not both
         clearBackStack();
-        if(id==R.id.action_send_email){
+        if (id == R.id.action_send_email) {
             //save setting to file and email the file
             exportSettings();
-        }else if(id==R.id.action_import) {
+        } else if (id == R.id.action_import) {
             importSettings();
-        }else{
+        } else {
             showFragment(fragmentName, false);
         }
         return super.onOptionsItemSelected(item);
     }
 
-    public boolean exportSettings(){
+    public boolean exportSettings() {
         try {
-            File outputFile = File.createTempFile("call_router", ".json", context.getExternalCacheDir() );
+            File outputFile = File.createTempFile("call_router", ".json", context.getExternalCacheDir());
             String fileName = outputFile.getAbsolutePath();
             Gson gson = new Gson();
-            FileOutputStream fOut =  new FileOutputStream(fileName);
+            FileOutputStream fOut = new FileOutputStream(fileName);
             String str = gson.toJson(appdata);
             fOut.write(str.getBytes());
             fOut.close();
@@ -129,27 +150,27 @@ public class MainActivity extends AppCompatActivity {
                         "Sending email..."));
             }
             return true;
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
     }
+
     private static final int OPEN_REQUEST_CODE = 41;
 
-    public void importSettings(){
+    public void importSettings() {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("*/*");
         startActivityForResult(intent, OPEN_REQUEST_CODE);
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent resultData){
+    public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
         Uri currentUri;
-        if(resultCode== Activity.RESULT_OK){
-            if(requestCode==OPEN_REQUEST_CODE){
-                if(resultData!=null){
-                    currentUri=resultData.getData();
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == OPEN_REQUEST_CODE) {
+                if (resultData != null) {
+                    currentUri = resultData.getData();
                     try {
                         InputStream inputStream = getContentResolver().openInputStream(currentUri);
                         final Gson gson = new Gson();
@@ -167,6 +188,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private DrawerLayout mDrawerLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -179,22 +202,47 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawerLayout.setDrawerListener(toggle);
+        toggle.syncState();
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    // This method will trigger on item Click of navigation menu
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        // Set item in checked state
+                        menuItem.setChecked(true);
+                        // TODO: handle navigation
+                        onOptionsItemSelected(menuItem);
+
+                        // Closing drawer on item click
+                        mDrawerLayout.closeDrawers();
+                        return true;
+                    }
+                });
+
         this.fab = (FloatingActionButton) findViewById(R.id.fab);
 
         fragments.put(Constant.FRAGMENT_KEY_GROUPS, new GroupsFragment());
         fragmentIDs.put(R.id.action_groups, Constant.FRAGMENT_KEY_GROUPS);
         fragmentTitles.put(Constant.FRAGMENT_KEY_GROUPS, "Rule Groups");
+        options_menu_groups.put(Constant.FRAGMENT_KEY_GROUPS, new Integer(R.id.options_groups));
 
         fragments.put(Constant.FRAGMENT_KEY_GROUP_ADD, new GroupAddFragment());
         fragmentTitles.put(Constant.FRAGMENT_KEY_GROUP_ADD, "+ Rule Group");
+        options_menu_groups.put(Constant.FRAGMENT_KEY_GROUP_ADD, new Integer(R.id.options_groups));
 
         fragments.put(Constant.FRAGMENT_KEY_RULES, new RulesFragment());
         fragments.put(Constant.FRAGMENT_KEY_RULE_ADD, new RuleAddFragment());
+        options_menu_groups.put(Constant.FRAGMENT_KEY_RULE_ADD, new Integer(R.id.options_groups));
 
 
         fragments.put(Constant.FRAGMENT_KEY_HELP, new HelpFragment());
         fragmentIDs.put(R.id.action_help, Constant.FRAGMENT_KEY_HELP);
         fragmentTitles.put(Constant.FRAGMENT_KEY_HELP, "Help & Feedback");
+        //options_menu_groups.put(Constant.FRAGMENT_KEY_HELP, new Integer(R.id.options_help));
 
         getSupportFragmentManager().addOnBackStackChangedListener(
                 new FragmentManager.OnBackStackChangedListener() {
@@ -203,15 +251,15 @@ public class MainActivity extends AppCompatActivity {
                         //Toast.makeText(getApplicationContext(), "onBackStackChanged", Toast.LENGTH_SHORT).show();
                     }
                 });
-
+        activeFragment=Constant.FRAGMENT_KEY_GROUPS;
         showFragment(Constant.FRAGMENT_KEY_GROUPS, false);
     }
 
-    public void onFragmentBack(){
+    public void onFragmentBack() {
         //reset title text and fab visibility based on fragment key
         System.out.println("onFragmentBack");
         Fragment f = getSupportFragmentManager().findFragmentById(R.id.content);
-        String key="";
+        String key = "";
         if (f instanceof HelpFragment) {
             key = Constant.FRAGMENT_KEY_HELP;
         }
@@ -230,6 +278,7 @@ public class MainActivity extends AppCompatActivity {
         System.out.println(key);
         String title = (String) fragmentTitles.get(key);
         System.out.println("found title:" + title);
+        activeFragment=key;
         showFab(key);
         getSupportActionBar().setTitle(title);
     }
@@ -243,6 +292,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showFragment(String key, boolean addToStack) {
+        activeFragment=key;
+        invalidateOptionsMenu();
         String title = (String) fragmentTitles.get(key);
         getSupportActionBar().setTitle(title);
         System.out.println(title);
@@ -262,7 +313,7 @@ public class MainActivity extends AppCompatActivity {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(appdata.getRuleGroups().size()>=Constant.MAX_GROUPS){
+                    if (appdata.getRuleGroups().size() >= Constant.MAX_GROUPS) {
                         Toast.makeText(context, "maximum " + Constant.MAX_GROUPS + " groups", Toast.LENGTH_SHORT).show();
                         return;
                     }
@@ -277,7 +328,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     RuleGroup rg = appdata.getRuleGroups().get(appdata.getGroupInEdit());
-                    if(rg.getRules().size()>=Constant.MAX_RULES){
+                    if (rg.getRules().size() >= Constant.MAX_RULES) {
                         Toast.makeText(context, "maximum " + Constant.MAX_RULES + " rules per group", Toast.LENGTH_SHORT).show();
                         return;
                     }
@@ -292,12 +343,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void updateReceiverStatus(boolean enable){
+    public void updateReceiverStatus(boolean enable) {
         PackageManager pm = context.getPackageManager();
-        if(enable){
+        if (enable) {
             pm.setComponentEnabledSetting(new ComponentName(context, OutgoingCallRewrite.class),
                     PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
-        }else{
+        } else {
             pm.setComponentEnabledSetting(new ComponentName(context, OutgoingCallRewrite.class),
                     PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
         }
