@@ -11,7 +11,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.util.ArrayMap;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -50,9 +49,9 @@ public class MainActivity extends AppCompatActivity {
     private HashMap fragments = new HashMap();
     private HashMap fragmentTitles = new HashMap();
     private HashMap fragmentIDs = new HashMap();
-    private HashMap options_menu_groups = new HashMap();
+    private HashMap option_menu_groups_hashmap = new HashMap();
     private String activeFragment;
-    private int[] option_menu_groups = {R.id.options_groups, R.id.options_help};
+    private int[] option_menu_groups_array = {R.id.options_groups, R.id.options_help};
 
     @Override
     public void onStart() {
@@ -94,12 +93,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        for(int i=0; i<option_menu_groups.length;i++){
-            Integer groupID = (Integer) options_menu_groups.get(activeFragment);
-            if(groupID ==null || groupID.intValue()!=option_menu_groups[i]){
-                menu.setGroupVisible(option_menu_groups[i], false);
+        for(int i=0; i<option_menu_groups_array.length;i++){
+            Integer groupID = (Integer) option_menu_groups_hashmap.get(activeFragment);
+            if(groupID ==null || groupID.intValue()!=option_menu_groups_array[i]){
+                menu.setGroupVisible(option_menu_groups_array[i], false);
             }else{
-                menu.setGroupVisible(option_menu_groups[i], true);
+                menu.setGroupVisible(option_menu_groups_array[i], true);
             }
         }
         super.onPrepareOptionsMenu(menu);
@@ -228,21 +227,21 @@ public class MainActivity extends AppCompatActivity {
         fragments.put(Constant.FRAGMENT_KEY_GROUPS, new GroupsFragment());
         fragmentIDs.put(R.id.action_groups, Constant.FRAGMENT_KEY_GROUPS);
         fragmentTitles.put(Constant.FRAGMENT_KEY_GROUPS, "Rule Groups");
-        options_menu_groups.put(Constant.FRAGMENT_KEY_GROUPS, new Integer(R.id.options_groups));
+        option_menu_groups_hashmap.put(Constant.FRAGMENT_KEY_GROUPS, new Integer(R.id.options_groups));
 
         fragments.put(Constant.FRAGMENT_KEY_GROUP_ADD, new GroupAddFragment());
         fragmentTitles.put(Constant.FRAGMENT_KEY_GROUP_ADD, "+ Rule Group");
-        options_menu_groups.put(Constant.FRAGMENT_KEY_GROUP_ADD, new Integer(R.id.options_groups));
+        option_menu_groups_hashmap.put(Constant.FRAGMENT_KEY_GROUP_ADD, new Integer(R.id.options_groups));
 
         fragments.put(Constant.FRAGMENT_KEY_RULES, new RulesFragment());
         fragments.put(Constant.FRAGMENT_KEY_RULE_ADD, new RuleAddFragment());
-        options_menu_groups.put(Constant.FRAGMENT_KEY_RULE_ADD, new Integer(R.id.options_groups));
+        option_menu_groups_hashmap.put(Constant.FRAGMENT_KEY_RULE_ADD, new Integer(R.id.options_groups));
 
 
         fragments.put(Constant.FRAGMENT_KEY_HELP, new HelpFragment());
         fragmentIDs.put(R.id.action_help, Constant.FRAGMENT_KEY_HELP);
         fragmentTitles.put(Constant.FRAGMENT_KEY_HELP, "Help & Feedback");
-        //options_menu_groups.put(Constant.FRAGMENT_KEY_HELP, new Integer(R.id.options_help));
+        //option_menu_groups_hashmap.put(Constant.FRAGMENT_KEY_HELP, new Integer(R.id.options_help));
 
         getSupportFragmentManager().addOnBackStackChangedListener(
                 new FragmentManager.OnBackStackChangedListener() {

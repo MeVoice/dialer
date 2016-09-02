@@ -4,7 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
     <group android:id="@+id/options_help">
-        <item android:id="@+id/help" android:title="help" />
+        <item android:id="@+id/help_summary" android:title="@string/help_summary" />
+        <item android:id="@+id/help_definition" android:title="@string/help_definition" />
+        <item android:id="@+id/help_syntax" android:title="@string/help_syntax" />
+        <item android:id="@+id/help_sample" android:title="@string/help_sample" />
     </group>
     <group android:id="@+id/options_groups">
         <item

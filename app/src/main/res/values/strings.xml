@@ -22,4 +22,8 @@
     <string name="action_import">Import</string>
     <string name="navigation_drawer_open">drawer_open</string>
     <string name="navigation_drawer_close">drawer_close</string>
+    <string name="help_summary">Summary</string>
+    <string name="help_definition">Definitions</string>
+    <string name="help_syntax">Syntax</string>
+    <string name="help_sample">Samples</string>
 </resources>

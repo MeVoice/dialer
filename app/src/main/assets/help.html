@@ -1,265 +1,341 @@
+<!DOCTYPE html>
 <html>
+<head>
+    <script src="jquery-1.12.4.js"></script>
+    <style>
+        strong {
+            font-style: italic;
+            font-size: 12px;
+        }
+        .expand {
+        font-weight: bold;
+        font-size: 18px;
+        cursor: pointer;
+        }
+        .expandable {
+        display:none;
+        }
+        div {
+        margin: 10px;
+        }
+    </style>
+</head>
 <body>
-<h2>What does this app do?</h2>
-<p>The router matches&nbsp;any outgoing call's number against&nbsp;a list of patterns. If there is a match, the router extracts parts from the original phone number, and use a formula to generate a new phone number, then dials this new number instead.</p>
-<h2>Why another dialer?</h2>
-<p><strong>Better Efficiency</strong>. The router does the match and re-generation for every outgoing call, behind the scene. After the initial setup, you can leave the app and it does the rest for you.</p>
-<p><strong>Wider Application</strong>. At the router's core is an algorithm that matches and transforms phone numbers - each digit can be individually matched and re-arranged into a new sequence.</p>
-<h2>Definitions:</h2>
-<p><strong>Pattern</strong>: specified part(s) to be searched for and extracted from the original number</p>
-<p><strong>Formula</strong>: how to generate a new number.</p>
-<p><strong>Rule</strong>: The combination of a pattern and a formula. If the pattern matches a phone number, then the formula generates a new number.</p>
-<p><strong>Group</strong>: A list of rules. Matching is attempted from top to bottom. The original number is used if there is no match. Multiple groups can be configured, but only one can be in use at a time. A group is likely related to a location or a carrier. i.e. Group "ABB-NY" if you are with carrier ABB and in New York, group "DDC-Shanghai" if you are with carrier DDC in Shanghai.</p>
-<p><strong>Gateway</strong>: an intermediate phone number the user calls in order to reach the final destination. e.g. a calling card service provider's local access number.</p>
-<p><strong>E.164</strong>: A&nbsp;format for keeping&nbsp;phone numbers. In E.164, a number is hierachical, starts with "+", and typically has&nbsp;country code, area code, and local number. e.g. +1 212 234 5678, +86 21 212121212. A number in E.164 is global in that it does not have to be changed with&nbsp;long distance dialing code.</p>
-<h2>Pattern and formula syntax:</h2>
-<table border="1">
-    <tbody>
-    <tr>
-        <td><strong>characters</strong></td>
-        <td><strong>explanation</strong></td>
-    </tr>
-    <tr>
-        <td>0123456789#*,;</td>
-        <td>
-            <p>these are characters that can be dialed from a dial pad (dialable). "," is to pause, ";" is to wait for user input.</p>
-        </td>
-    </tr>
-    <tr>
-        <td>dialable and "{}DX% +"</td>
-        <td>these are characters permitted in a pattern; "D" and "X" are uppercase;</td>
-    </tr>
-    <tr>
-        <td>dialable and "{}M +"</td>
-        <td>these are characters permitted in a formula; "M" is uppercase;</td>
-    </tr>
-    <tr>
-        <td>dialable and ",;+"</td>
-        <td>these are characters android allows in the original number, other characters such as ".", "-", " " are only for formatting and are dropped before dialing takes place.</td>
-    </tr>
-    <tr>
-        <td>" "</td>
-        <td>white space is permitted in pattern and formula, it's used for formatting only and is dropped&nbsp;before matching. i.e. "+1 800 800 8080" and "+18008008080" are the same.</td>
-    </tr>
-    <tr>
-        <td>D</td>
-        <td>any SINGLE digit</td>
-    </tr>
-    <tr>
-        <td>X</td>
-        <td>any SINGLE dialable character or a white space</td>
-    </tr>
-    <tr>
-        <td>{ and }</td>
-        <td>
-            <p>in a pattern the brackets capture matched characters</p>
-            <p>in a formula, the brackets together with "M", represent a captured sequence.</p>
-        </td>
-    </tr>
-    <tr>
-        <td>M</td>
-        <td>Represents captured sequence - has to be in format like "{M1}", "{M2}", "{M3}"...etc. "{M1}" is the first captured sequence. "{M2}" is the second sequence. "{M0}" represents the complete original number.</td>
-    </tr>
-    <tr>
-        <td>%</td>
-        <td>repeat the previous character zero or more times, til the end of the original number. Can only be used at the end of a pattern</td>
-    </tr>
-    <tr>
-        <td>D%</td>
-        <td>
-            <p>Matches all digits until the end</p>
-            <p>"12D%" does not matches "12"</p>
-            <p>"12D%" matches "122"</p>
-            <p>"12D%" matches "122334"</p>
-            <p>"12D%" does not match "1223,34", because "," is not a digit.</p>
-        </td>
-    </tr>
-    <tr>
-        <td>X%</td>
-        <td>
-            <p>matches any characters til the end</p>
-            <p>"12X%" matches "122334", and "1223,34"</p>
-        </td>
-    </tr>
-    <tr>
-        <td>1%</td>
-        <td>
-            <p>matches all "1" til the end</p>
-            <p>"12%" matches "12222", but not "12223".</p>
-            <p>"12%" matches "12"</p>
-        </td>
-    </tr>
-    </tbody>
-</table>
-<h2>Sample scenarios and rules:</h2>
-<p>1. dial the original US number</p>
-<table border="1">
-    <tbody>
-    <tr>
-        <td>pattern</td>
-        <td>+1{X%}</td>
-    </tr>
-    <tr>
-        <td>formula</td>
-        <td>1{M1}</td>
-    </tr>
-    <tr>
-        <td>original number</td>
-        <td>+18008008888</td>
-    </tr>
-    <tr>
-        <td>new number</td>
-        <td>18008008888</td>
-    </tr>
-    <tr>
-        <td>explanation</td>
-        <td>
-            <p>X matches any ONE character</p>
-            <p>X% matches any character til the end</p>
-            <p>{} in P captures the matched characters ("8008008888")</p>
-            <p>{M1} in F represents the captured characters</p>
-        </td>
-    </tr>
-    </tbody>
-</table>
-<p>2. make an international call via a calling card</p>
-<table border="1">
-    <tbody>
-    <tr>
-        <td>pattern</td>
-        <td>+{X%}</td>
-    </tr>
-    <tr>
-        <td>formula</td>
-        <td>1800 123 4567,56565656#, 011{M1}#</td>
-    </tr>
-    <tr>
-        <td>original number</td>
-        <td>+86212323232323</td>
-    </tr>
-    <tr>
-        <td>new number</td>
-        <td>1800 123 4567,56565656#, 01186212323232323#</td>
-    </tr>
-    <tr>
-        <td>explanation</td>
-        <td>
-            <p>"1800 123 4567" is the gateway number</p>
-            <p>"," is a pause in dialing</p>
-            <p>"56565656#" is the user's pin code.</p>
-            <p>"011" is internation dialing sequence from the US.</p>
-            <p>"{%X}" in pattern captures "86212323232323" from original number</p>
-            <p>"{M1}" in formula refers to the captured sequence</p>
-        </td>
-    </tr>
-    </tbody>
-</table>
-<p>3. dial an office extension through an gateway</p>
-<table border="1">
-    <tbody>
-    <tr>
-        <td>pattern</td>
-        <td>67{DDDD}</td>
-    </tr>
-    <tr>
-        <td>formula</td>
-        <td>1800 234 5567,78787878#,{M1}#</td>
-    </tr>
-    <tr>
-        <td>original number</td>
-        <td>675656</td>
-    </tr>
-    <tr>
-        <td>new number</td>
-        <td>1800 234 5567,78787878#,{5656}#</td>
-    </tr>
-    <tr>
-        <td>explanation</td>
-        <td>
-            <p>"1800 234 5567" is the gateway number</p>
-            <p>"78787878#" is user's pin code</p>
-            <p>{DDDD} in pattern captures any 4 digits</p>
-            <p>{M1} in formula refers to the captured sequence</p>
-        </td>
-    </tr>
-    </tbody>
-</table>
-<p>4. call into a conference using meeting ID and pin, by clicking meeting ID and pin in a meeting notification email.</p>
-<table border="1">
-    <tbody>
-    <tr>
-        <td>pattern</td>
-        <td>{DDDDDDDD},{DDDD}</td>
-    </tr>
-    <tr>
-        <td>formula</td>
-        <td>1800 234 7878,{M1}#,1,{M2}#</td>
-    </tr>
-    <tr>
-        <td>original number</td>
-        <td>54545454,2323</td>
-    </tr>
-    <tr>
-        <td>new number</td>
-        <td>1800234 7878,54545454#,1,2323#</td>
-    </tr>
-    <tr>
-        <td>explanation</td>
-        <td>
-            <p>"1800 234 7878" is conference system's main number.</p>
-            <p>{DDDDDD} matches and captures 8 digit conference ID</p>
-            <p>{DDDD} matches and captures the pin code</p>
-            <p>{M1} refers to the first captured sequence, which is the conference ID</p>
-            <p>{M2} refers to the second captured sequence, which is the pin</p>
-        </td>
-    </tr>
-    </tbody>
-</table>
-<p>5. a rule group for a user with the US carrier ABB and homed in New York.</p>
-<table border="1">
-    <tbody>
-    <tr>
-        <td>pattern</td>
-        <td>formula</td>
-        <td>comment</td>
-    </tr>
-    <tr>
-        <td>+1{X%}</td>
-        <td>1{M1}</td>
-        <td>dial original US number</td>
-    </tr>
-    <tr>
-        <td>+{X%}</td>
-        <td>18001234567,12121212#,011{M1}#</td>
-        <td>dial international number through a gateway</td>
-    </tr>
-    </tbody>
-</table>
-<p>6. a rule group for a user with the Chinese (country code 86)&nbsp;carrier DCC&nbsp;and homed in Shanghai (area code 21).</p>
-<table border="1">
-    <tbody>
-    <tr>
-        <td>pattern</td>
-        <td>formula</td>
-        <td>comment</td>
-    </tr>
-    <tr>
-        <td>+8621{X%}</td>
-        <td>{M1}</td>
-        <td>dial Shanghai&nbsp;local number</td>
-    </tr>
-    <tr>
-        <td>+86{X%}</td>
-        <td>17910,232323231212#,0{M1}#</td>
-        <td>use a calling card&nbsp;for domestic long distance in China</td>
-    </tr>
-    <tr>
-        <td>+{X%}</td>
-        <td>17910,232323231212#,00{M1}#</td>
-        <td>use a calling card for intl&nbsp;long distance</td>
-    </tr>
-    </tbody>
-</table>
+
+<div>
+    <h2 class="expand" id="expand-1">What does this app do?</h2>
+</div>
+<div class="expandable" id="expandable-1">
+    <p>The router matches&nbsp;any outgoing call's number against&nbsp;a list of patterns. If there
+        is a match, the router extracts parts from the original phone number, and use a formula to
+        generate a new phone number, then dials this new number instead.</p>
+</div>
+<div>
+    <h2 class="expand" id="expand-2">Why another dialer?</h2>
+</div>
+<div class="expandable" id="expandable-2">
+    <p><strong>Better Efficiency</strong>. The router does the match and re-generation for every
+        outgoing call, behind the scene. After the initial setup, you can leave the app and it does
+        the rest for you.</p>
+    <p><strong>Wider Application</strong>. At the router's core is an algorithm that matches and
+        transforms phone numbers - each digit can be individually matched and re-arranged into a new
+        sequence.</p>
+</div>
+<div>
+    <h2 class="expand" id="expand-3">Definitions</h2>
+</div>
+<div class="expandable" id="expandable-3">
+    <p><strong>Pattern</strong>: specified part(s) to be searched for and extracted from the
+        original number</p>
+    <p><strong>Formula</strong>: how to generate a new number</p>
+    <p><strong>Original number</strong>:&nbsp;The number saved with a contact or initially dialed by
+        user</p>
+    <p><strong>Rule</strong>: The combination of a pattern and a formula. If the pattern matches the
+        original number, then the formula generates a new number.</p>
+    <p><strong>Group</strong>: A list of rules. Matching is attempted from top to bottom. The
+        original number is used if there is no match. Multiple groups can be configured, but only
+        one can be in use at a time. A group is likely related to a location or a carrier. i.e.
+        Group "ABB-NY" if you are with carrier ABB and in New York, group "DDC-Shanghai" if you are
+        with carrier DDC and in Shanghai.</p>
+    <p><strong>Gateway</strong>: an intermediate phone number the user calls in order to reach the
+        final destination. e.g. a calling card provider's local access number.</p>
+    <p><strong>E.164</strong>: A&nbsp;format for keeping&nbsp;phone numbers. In E.164, a number is
+        hierachical, starts with "+", and typically has&nbsp;country code, area code, and local
+        number. e.g. +1 212 234 5678, +86 21 212121212. A number in E.164 is global in that it does
+        not have to be updated&nbsp;with&nbsp;long distance dialing code as the user travels.</p>
+</div>
+<div>
+    <h2 class="expand" id="expand-4">Pattern and formula syntax</h2>
+</div>
+<div class="expandable" id="expandable-4">
+    <table border="1">
+        <tbody>
+        <tr>
+            <td><strong>characters</strong></td>
+            <td><strong>explanation</strong></td>
+        </tr>
+        <tr>
+            <td>0123456789#*,;+</td>
+            <td>
+                <p>these are characters that can be dialed from a dial pad (dialable). "," is to
+                    pause, ";" is to wait for user input, "+" can appear at the beginning,
+                    indicating the number to be in E.164 format. Any other characters such as&nbsp;".",
+                    "-", " " are only for formatting and are removed before dialing.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>dialable and "{}DX% "</td>
+            <td>these are characters permitted in a pattern; "D" and "X" are uppercase;</td>
+        </tr>
+        <tr>
+            <td>dialable and "{}M "</td>
+            <td>these are characters permitted in a formula; "M" is uppercase;</td>
+        </tr>
+        <tr>
+            <td>" "</td>
+            <td>white space is permitted in pattern and formula, it's used for formatting only and
+                is dropped&nbsp;before matching. i.e. "+1 800 800 8080" and "+18008008080" are the
+                same.
+            </td>
+        </tr>
+        <tr>
+            <td>D</td>
+            <td>represent any SINGLE digit</td>
+        </tr>
+        <tr>
+            <td>X</td>
+            <td>represent any SINGLE dialable character</td>
+        </tr>
+        <tr>
+            <td>{ and }</td>
+            <td>
+                <p>in a pattern the brackets capture matched characters</p>
+                <p>in a formula, the brackets together with "M", represent a captured sequence.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>M</td>
+            <td>Represents captured sequence - has to be in format like "{M1}", "{M2}",
+                "{M3}"...etc. "{M1}" is the first captured sequence. "{M2}" is the second sequence.
+                "{M0}" represents the complete original number.
+            </td>
+        </tr>
+        <tr>
+            <td>%</td>
+            <td>repeat the previous character zero or more times, til the end of the original
+                number. Can only be used at the end of a pattern
+            </td>
+        </tr>
+        <tr>
+            <td>D%</td>
+            <td>
+                <p>Matches all digits until the end</p>
+                <p>"12D%" does not matches "12"</p>
+                <p>"12D%" matches "122"</p>
+                <p>"12D%" matches "122334"</p>
+                <p>"12D%" does not match "1223,34", because "," is not a digit.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>X%</td>
+            <td>
+                <p>matches any characters til the end</p>
+                <p>"12X%" matches "122334", and "1223,34"</p>
+            </td>
+        </tr>
+        <tr>
+            <td>1%</td>
+            <td>
+                <p>matches all "1" til the end</p>
+                <p>"12%" matches "12222", but not "12223".</p>
+                <p>"12%" matches "12"</p>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div>
+    <h2 class="expand" id="expand-5">Sample scenarios and rules</h2>
+</div>
+<div class="expandable" id="expandable-5">
+    <p>1. dial the original US number</p>
+    <table border="1">
+        <tbody>
+        <tr>
+            <td>pattern</td>
+            <td>+1{X%}</td>
+        </tr>
+        <tr>
+            <td>formula</td>
+            <td>1{M1}</td>
+        </tr>
+        <tr>
+            <td>original number</td>
+            <td>+18008008888</td>
+        </tr>
+        <tr>
+            <td>new number</td>
+            <td>18008008888</td>
+        </tr>
+        <tr>
+            <td>explanation</td>
+            <td>
+                <p>X matches any ONE character</p>
+                <p>X% matches any character til the end</p>
+                <p>{} in P captures the matched characters ("8008008888")</p>
+                <p>{M1} in F represents the captured characters</p>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <p>2. make an international call via a calling card</p>
+    <table border="1">
+        <tbody>
+        <tr>
+            <td>pattern</td>
+            <td>+{X%}</td>
+        </tr>
+        <tr>
+            <td>formula</td>
+            <td>1800 123 4567,56565656#, 011{M1}#</td>
+        </tr>
+        <tr>
+            <td>original number</td>
+            <td>+86212323232323</td>
+        </tr>
+        <tr>
+            <td>new number</td>
+            <td>1800 123 4567,56565656#, 01186212323232323#</td>
+        </tr>
+        <tr>
+            <td>explanation</td>
+            <td>
+                <p>"1800 123 4567" is the gateway number</p>
+                <p>"," is a pause in dialing</p>
+                <p>"56565656#" is the user's pin code.</p>
+                <p>"011" is internation dialing sequence from the US.</p>
+                <p>"{%X}" in pattern captures "86212323232323" from original number</p>
+                <p>"{M1}" in formula refers to the captured sequence</p>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <p>3. dial an office extension through an gateway</p>
+    <table border="1">
+        <tbody>
+        <tr>
+            <td>pattern</td>
+            <td>67{DDDD}</td>
+        </tr>
+        <tr>
+            <td>formula</td>
+            <td>1800 234 5567,78787878#,{M1}#</td>
+        </tr>
+        <tr>
+            <td>original number</td>
+            <td>675656</td>
+        </tr>
+        <tr>
+            <td>new number</td>
+            <td>1800 234 5567,78787878#,{5656}#</td>
+        </tr>
+        <tr>
+            <td>explanation</td>
+            <td>
+                <p>"1800 234 5567" is the gateway number</p>
+                <p>"78787878#" is user's pin code</p>
+                <p>{DDDD} in pattern captures any 4 digits</p>
+                <p>{M1} in formula refers to the captured sequence</p>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <p>4. call into a conference using meeting ID and pin, by clicking meeting ID and pin in a meeting notification email.</p>
+    <table border="1">
+        <tbody>
+        <tr>
+            <td>pattern</td>
+            <td>{DDDDDDDD},{DDDD}</td>
+        </tr>
+        <tr>
+            <td>formula</td>
+            <td>1800 234 7878,{M1}#,1,{M2}#</td>
+        </tr>
+        <tr>
+            <td>original number</td>
+            <td>54545454,2323</td>
+        </tr>
+        <tr>
+            <td>new number</td>
+            <td>1800234 7878,54545454#,1,2323#</td>
+        </tr>
+        <tr>
+            <td>explanation</td>
+            <td>
+                <p>"1800 234 7878" is conference system's main number.</p>
+                <p>{DDDDDD} matches and captures 8 digit conference ID</p>
+                <p>{DDDD} matches and captures the pin code</p>
+                <p>{M1} refers to the first captured sequence, which is the conference ID</p>
+                <p>{M2} refers to the second captured sequence, which is the pin</p>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <p>5. a rule group for a user with the US carrier ABB and homed in New York.</p>
+    <table border="1">
+        <tbody>
+        <tr>
+            <td>pattern</td>
+            <td>formula</td>
+            <td>comment</td>
+        </tr>
+        <tr>
+            <td>+1{X%}</td>
+            <td>1{M1}</td>
+            <td>dial original US number</td>
+        </tr>
+        <tr>
+            <td>+{X%}</td>
+            <td>18001234567,12121212#,011{M1}#</td>
+            <td>dial international number through a gateway</td>
+        </tr>
+        </tbody>
+    </table>
+    <p>6. a rule group for a user with the Chinese (country code 86)&nbsp;carrier DCC&nbsp;and homed in Shanghai (area code 21).</p>
+    <table border="1">
+        <tbody>
+        <tr>
+            <td>pattern</td>
+            <td>formula</td>
+            <td>comment</td>
+        </tr>
+        <tr>
+            <td>+8621{X%}</td>
+            <td>{M1}</td>
+            <td>dial Shanghai&nbsp;local number</td>
+        </tr>
+        <tr>
+            <td>+86{X%}</td>
+            <td>17910,232323231212#,0{M1}#</td>
+            <td>use a calling card&nbsp;for domestic long distance in China</td>
+        </tr>
+        <tr>
+            <td>+{X%}</td>
+            <td>17910,232323231212#,00{M1}#</td>
+            <td>use a calling card for intl&nbsp;long distance</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>$('.expand').click(function(){
+    target_num = $(this).attr('id').split('-')[1];
+    content_id = '#expandable-'.concat(target_num);
+    $(content_id).slideToggle('fast');
+});
+
+
+</script>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>

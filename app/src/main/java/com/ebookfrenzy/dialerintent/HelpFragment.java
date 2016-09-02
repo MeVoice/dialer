@@ -1,12 +1,14 @@
 package com.ebookfrenzy.dialerintent;
 
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.ebookfrenzy.dialerintent.R;
@@ -33,7 +35,8 @@ public class HelpFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         WebView webView = (WebView) view.findViewById(R.id.help_webview);
-        webView.getSettings().setJavaScriptEnabled(true);
+        WebSettings ws = webView.getSettings();
+        ws.setJavaScriptEnabled(true);
         webView.loadUrl("file:///android_asset/help.html");
     }
 }
