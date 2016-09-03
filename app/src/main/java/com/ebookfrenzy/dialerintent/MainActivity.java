@@ -188,6 +188,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private DrawerLayout mDrawerLayout;
+    private int backStackCount=0, lastBackStackCount=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -248,7 +249,12 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().addOnBackStackChangedListener(
                 new FragmentManager.OnBackStackChangedListener() {
                     public void onBackStackChanged() {
-                        onFragmentBack();
+                        backStackCount = getSupportFragmentManager().getBackStackEntryCount();
+                        System.out.println("backStackCount: " + backStackCount);
+                        if(lastBackStackCount==backStackCount+1) {
+                            onFragmentBack();
+                        }
+                        lastBackStackCount=backStackCount;
                         //Toast.makeText(getApplicationContext(), "onBackStackChanged", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -282,6 +288,7 @@ public class MainActivity extends AppCompatActivity {
         activeFragment=key;
         showFab(key);
         getSupportActionBar().setTitle(title);
+        System.out.println("onFragmentBack title is:" + title);
     }
 
     public void clearBackStack() {
@@ -290,6 +297,7 @@ public class MainActivity extends AppCompatActivity {
             FragmentManager.BackStackEntry first = fm.getBackStackEntryAt(0);
             fm.popBackStack(first.getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
+        lastBackStackCount=0;
     }
 
     public void showFragment(String key, boolean addToStack) {
@@ -297,7 +305,7 @@ public class MainActivity extends AppCompatActivity {
         invalidateOptionsMenu();
         String title = (String) fragmentTitles.get(key);
         getSupportActionBar().setTitle(title);
-        System.out.println(title);
+        System.out.println("title is:" + title);
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.content, (Fragment) fragments.get(key));
