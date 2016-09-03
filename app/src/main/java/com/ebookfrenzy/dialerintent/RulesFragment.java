@@ -2,7 +2,9 @@ package com.ebookfrenzy.dialerintent;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -41,7 +43,7 @@ public class RulesFragment extends CommonFragment  implements OnStartDragListene
     private int removePosition=-1;
     private RuleGroup ruleGroup;
     private ItemTouchHelper mItemTouchHelper;
-
+    private MatchNumber testNumber;
     ContentAdapter adapter;
     private EventBus bus = EventBus.getDefault();
 
@@ -69,22 +71,34 @@ public class RulesFragment extends CommonFragment  implements OnStartDragListene
         mItemTouchHelper.attachToRecyclerView(recyclerView);
 
         test_reroute_number = (EditText) v.findViewById(R.id.test_reroute_number);
-        ImageButton test_reroute_button = (ImageButton) v.findViewById(R.id.test_reroute_button);
-
+        final ImageButton test_reroute_button = (ImageButton) v.findViewById(R.id.test_reroute_button);
+        final ImageButton test_call_button = (ImageButton) v.findViewById(R.id.test_call_button);
 
         test_reroute_button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                MatchNumber number = new MatchNumber(test_reroute_number.getText().toString());
+                testNumber = new MatchNumber(test_reroute_number.getText().toString());
                 String matching_pattern = "None";
-                String result = number.getNumber();
-                if(ruleGroup.transform(number)){
-                    matching_pattern = number.getMatchingRule().getPattern();
-                    result = number.getResult();
+                String result = testNumber.getNumber();
+                if(ruleGroup.transform(testNumber)){
+                    matching_pattern = testNumber.getMatchingRule().getPattern();
+                    result = testNumber.getResult();
+                    test_call_button.setVisibility(View.VISIBLE);
                 }
                 String message = "Matching pattern: " + matching_pattern + "\nresult: " + result;
                 Snackbar.make(v, message, Snackbar.LENGTH_INDEFINITE).show();
                 //Toast.makeText(context, "Matching pattern: " + matching_pattern + "\nresult: " + result, Toast.LENGTH_SHORT).show();
+            }
+        });
+        test_call_button.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                String result = testNumber.getResult();
+                result =  result.replace("*", Uri.encode("*")).replace("#",Uri.encode("#")).replace("#",Uri.encode("+"));
+                Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                callIntent.setData(Uri.parse("tel:" + result));
+                startActivity(callIntent);
+                test_call_button.setVisibility(View.GONE);
             }
         });
         return v;
