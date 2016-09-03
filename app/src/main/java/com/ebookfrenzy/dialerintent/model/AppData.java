@@ -3,6 +3,7 @@ package com.ebookfrenzy.dialerintent.model;
 import com.ebookfrenzy.dialerintent.Constant;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -53,6 +54,24 @@ public class AppData {
     public void addRuleGroup(RuleGroup rg){
         this.ruleGroups.add(rg);
     }
+
+    public String copyRuleGroup(int position){
+        RuleGroup sourceRG = ruleGroups.get(position);
+        List<Rule> sourceRules = sourceRG.getRules();
+        int i = (int) (new Date().getTime()/1000);
+        String rgName = sourceRG.getName()+"-" + i;
+        RuleGroup newRG = new RuleGroup(rgName);
+        List<Rule> rules=new ArrayList<>();
+        for(i=0;i<sourceRules.size();i++){
+            Rule r=new Rule(sourceRules.get(i).getName(), sourceRules.get(i).getPattern(), sourceRules.get(i).getFormula());
+            r.setInUse(sourceRules.get(i).isInUse());
+            rules.add(r);
+        }
+        newRG.setRules(rules);
+        ruleGroups.add(newRG);
+        return rgName;
+    }
+
     public void removeGroup(int position){
         this.ruleGroups.remove(position);
     }
@@ -87,4 +106,5 @@ public class AppData {
         }
         return -1;
     }
+
 }

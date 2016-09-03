@@ -82,6 +82,7 @@ public class GroupsFragment extends CommonFragment {
         public ImageButton group_edit_rules;
         public ImageButton group_edit_delete_button;
         public ImageButton group_edit_button;
+        public ImageButton group_edit_copy;
         public ImageButton group_edit_done;
         public ImageButton group_edit_cancel;
         public LinearLayout group_edit_layout;
@@ -94,6 +95,7 @@ public class GroupsFragment extends CommonFragment {
             group_edit_delete_button = (ImageButton) itemView.findViewById(R.id.group_edit_delete_button);
             group_edit_button = (ImageButton) itemView.findViewById(R.id.group_edit_button);
             group_edit_done = (ImageButton) itemView.findViewById(R.id.group_edit_done);
+            group_edit_copy = (ImageButton) itemView.findViewById(R.id.group_edit_copy);
             group_edit_cancel = (ImageButton) itemView.findViewById(R.id.group_edit_cancel);
             group_edit_layout = (LinearLayout) itemView.findViewById(R.id.group_edit_layout);
         }
@@ -137,6 +139,18 @@ public class GroupsFragment extends CommonFragment {
                 public void onClick(View v) {
                     removeGroup(holder.getLayoutPosition());
                     appdataaccess.saveAppData(appdata);
+                }
+            });
+            holder.group_edit_copy.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (appdata.getRuleGroups().size() >= Constant.MAX_GROUPS) {
+                        Toast.makeText(context, "maximum " + Constant.MAX_GROUPS + " groups", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    String rgName = appdata.copyRuleGroup(holder.getLayoutPosition());
+                    Toast.makeText(context, "group copied to " + rgName, Toast.LENGTH_SHORT).show();
+                    adapter.notifyItemInserted(appdata.getRuleGroups().size()-1);
                 }
             });
             holder.group_edit_button.setOnClickListener(new View.OnClickListener() {

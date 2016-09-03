@@ -33,6 +33,7 @@ import com.ebookfrenzy.dialerintent.model.RuleGroup;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -134,6 +135,7 @@ public class RulesFragment extends CommonFragment  implements OnStartDragListene
         public EditText rule_formula;
         public CheckBox rule_inuse;
         public ImageButton rule_edit_delete_button;
+        public ImageButton rule_edit_copy;
         public ImageButton rule_edit_button;
         public ImageButton rule_edit_done;
         public ImageButton rule_edit_cancel;
@@ -157,6 +159,7 @@ public class RulesFragment extends CommonFragment  implements OnStartDragListene
             rule_edit_delete_button = (ImageButton) itemView.findViewById(R.id.rule_edit_delete_button);
             rule_edit_button = (ImageButton) itemView.findViewById(R.id.rule_edit_button);
             rule_edit_done = (ImageButton) itemView.findViewById(R.id.rule_edit_done);
+            rule_edit_copy = (ImageButton) itemView.findViewById(R.id.rule_edit_copy);
             rule_edit_cancel = (ImageButton) itemView.findViewById(R.id.rule_edit_cancel);
             rule_edit_layout = (LinearLayout) itemView.findViewById(R.id.rule_edit_layout);
         }
@@ -270,6 +273,26 @@ public class RulesFragment extends CommonFragment  implements OnStartDragListene
                     holder.rule_edit_delete_button.setVisibility(View.VISIBLE);
                 }
             });
+            holder.rule_edit_copy.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(ruleGroup.getRules().size()>=Constant.MAX_RULES){
+                        Toast.makeText(context, "maximum " + Constant.MAX_RULES + " rules per group", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    Rule currRule = mItems.get(holder.getLayoutPosition());
+                    int i = (int) (new Date().getTime()/1000);
+                    String newRuleName = currRule.getName()+"-"+i;
+                    Rule rule = new Rule(newRuleName,
+                            currRule.getPattern(),
+                            currRule.getFormula());
+                    ruleGroup.addRule(rule);
+                    appdataaccess.saveAppData(appdata);
+                    Toast.makeText(context, "rule copied to " + newRuleName, Toast.LENGTH_SHORT).show();
+                    adapter.notifyItemInserted(ruleGroup.getRules().size()-1);
+                }
+            });
+
         }
 
         @Override
