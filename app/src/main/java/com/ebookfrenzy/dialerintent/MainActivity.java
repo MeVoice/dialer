@@ -234,6 +234,8 @@ public class MainActivity extends AppCompatActivity {
         option_menu_groups_hashmap.put(Constant.FRAGMENT_KEY_GROUP_ADD, new Integer(R.id.options_groups));
 
         fragments.put(Constant.FRAGMENT_KEY_RULES, new RulesFragment());
+        option_menu_groups_hashmap.put(Constant.FRAGMENT_KEY_RULES, new Integer(R.id.options_groups));
+
         fragments.put(Constant.FRAGMENT_KEY_RULE_ADD, new RuleAddFragment());
         option_menu_groups_hashmap.put(Constant.FRAGMENT_KEY_RULE_ADD, new Integer(R.id.options_groups));
 
