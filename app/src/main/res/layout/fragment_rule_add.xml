@@ -47,6 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|right"
-            android:src="@android:drawable/ic_menu_save"/>
+            android:background="@null"
+            android:src="@drawable/ic_save_black_24px"/>
     </LinearLayout>
 </LinearLayout>

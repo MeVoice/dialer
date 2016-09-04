@@ -8,7 +8,7 @@ public class Constant {
     public static final int ERROR_GROUPNAME_DUP=2;
     public static final String ACTION_EDIT_RULES="ACTION_EDIT_RULE";
     public static final String ACTION_ROUTER_ON_OFF="ACTION_ROUTER_ON_OFF";
-    public static final int MAX_GROUPS=8;
+    public static final int MAX_GROUPS=10;
     public static final int MAX_RULES=30;
     public static final String ACTION_GROUP_VALIDATE = "ACTION_GROUP_VALIDATE";
     public static final String ACTION_GROUP_VALIDATE_RESULT = "ACTION_GROUP_VALIDATE_RESULT";
