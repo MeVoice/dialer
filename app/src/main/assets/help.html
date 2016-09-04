@@ -4,8 +4,8 @@
     <script src="jquery-1.12.4.js"></script>
     <style>
         strong {
-            font-style: italic;
-            font-size: 12px;
+        font-style: italic;
+        font-size: 12px;
         }
         .expand {
         font-weight: bold;
@@ -17,6 +17,20 @@
         }
         div {
         margin: 10px;
+        }
+        .discard {
+        text-decoration: line-through;
+        background-color: lightgrey;
+        }
+        .literal {
+        background-color: lightgreen;
+        text-decoration: underline;
+        }
+        .capture {
+        background-color: pink;
+        }
+        .capture2 {
+        background-color: Violet;
         }
     </style>
 </head>
@@ -39,7 +53,8 @@
         the rest for you.</p>
     <p><strong>Wider Application</strong>. At the router's core is an algorithm that matches and
         transforms phone numbers - each digit can be individually matched and re-arranged into a new
-        sequence.</p>
+        sequence. Can be used whenever a destination has to be reached through a 3rd party, such
+        as using a calling card, dialing into a conference, or calling an office extension while outside office.</p>
 </div>
 <div>
     <h2 class="expand" id="expand-3">Definitions</h2>
@@ -158,24 +173,26 @@
     <h2 class="expand" id="expand-5">Sample scenarios and rules</h2>
 </div>
 <div class="expandable" id="expandable-5">
+    <p>A character in the original number will be either <span class="capture">matched and captured</span>, or <span class="discard">matched and discarded</span></p>
+    <p>A character in the new number can be from either <span class="capture">matched and captured in original number</span>, or <span class="literal">literals in formula</span></p>
     <p>1. dial the original US number</p>
     <table border="1">
         <tbody>
         <tr>
+            <td>original number</td>
+            <td><span class="discard">+1</span><span class="capture">8008008888</span></td>
+        </tr>
+        <tr>
             <td>pattern</td>
-            <td>+1{X%}</td>
+            <td><span class="discard">+1</span><span class="capture">{X%}</span></td>
         </tr>
         <tr>
             <td>formula</td>
-            <td>1{M1}</td>
-        </tr>
-        <tr>
-            <td>original number</td>
-            <td>+18008008888</td>
+            <td><span class="literal">1</span><span class="capture">{M1}</span></td>
         </tr>
         <tr>
             <td>new number</td>
-            <td>18008008888</td>
+            <td><span class="literal">1</span><span class="capture">8008008888</span></td>
         </tr>
         <tr>
             <td>explanation</td>
@@ -192,20 +209,20 @@
     <table border="1">
         <tbody>
         <tr>
+            <td>original number</td>
+            <td><span class="discard">+</span><span class="capture">86212323232323</span></td>
+        </tr>
+        <tr>
             <td>pattern</td>
-            <td>+{X%}</td>
+            <td><span class="discard">+</span><span class="capture">{X%}</span></td>
         </tr>
         <tr>
             <td>formula</td>
-            <td>1800 123 4567,56565656#, 011{M1}#</td>
-        </tr>
-        <tr>
-            <td>original number</td>
-            <td>+86212323232323</td>
+            <td><span class="literal">1800 123 4567,56565656#, 011</span><span class="capture">{M1}</span></td>
         </tr>
         <tr>
             <td>new number</td>
-            <td>1800 123 4567,56565656#, 01186212323232323#</td>
+            <td><span class="literal">1800 123 4567,56565656#, 011</span><span class="capture">86212323232323</span></td>
         </tr>
         <tr>
             <td>explanation</td>
@@ -224,20 +241,20 @@
     <table border="1">
         <tbody>
         <tr>
+            <td>original number</td>
+            <td><span class="discard">67</span><span class="capture">5656</span></td>
+        </tr>
+        <tr>
             <td>pattern</td>
-            <td>67{DDDD}</td>
+            <td><span class="discard">67</span><span class="capture">{DDDD}</span></td>
         </tr>
         <tr>
             <td>formula</td>
-            <td>1800 234 5567,78787878#,{M1}#</td>
-        </tr>
-        <tr>
-            <td>original number</td>
-            <td>675656</td>
+            <td><span class="literal">1800 234 5567,78787878#,</span><span class="capture">{M1}</span></td>
         </tr>
         <tr>
             <td>new number</td>
-            <td>1800 234 5567,78787878#,5656#</td>
+            <td><span class="literal">1800 234 5567,78787878#,</span><span class="capture">5656</span></td>
         </tr>
         <tr>
             <td>explanation</td>
@@ -250,24 +267,25 @@
         </tr>
         </tbody>
     </table>
-    <p>4. call into a conference using meeting ID and pin, by clicking meeting ID and pin in a meeting notification email.</p>
+    <p>4. call into a conference using meeting ID and pin, by clicking meeting ID and pin in a
+        meeting notification email.</p>
     <table border="1">
         <tbody>
         <tr>
+            <td>original number</td>
+            <td><span class="capture">54545454</span><span class="discard">,</span><span class="capture2">2323</span></td>
+        </tr>
+        <tr>
             <td>pattern</td>
-            <td>{DDDDDDDD},{DDDD}</td>
+            <td><span class="capture">{DDDDDDDD}</span><span class="discard">,</span><span class="capture2">{DDDD}</span></td>
         </tr>
         <tr>
             <td>formula</td>
-            <td>1800 234 7878,{M1}#,1,{M2}#</td>
-        </tr>
-        <tr>
-            <td>original number</td>
-            <td>54545454,2323</td>
+            <td><span class="literal">1800 234 7878,</span><span class="capture">{M1}</span><span class="literal">,1,</span><span class="capture2">{M2}</span></td>
         </tr>
         <tr>
             <td>new number</td>
-            <td>1800234 7878,54545454#,1,2323#</td>
+            <td><span class="literal">1800234 7878,</span><span class="capture">54545454</span><span class="literal">,1,</span><span class="capture2">2323</span></td>
         </tr>
         <tr>
             <td>explanation</td>
@@ -281,7 +299,7 @@
         </tr>
         </tbody>
     </table>
-    <p>5. a rule group for a user with the US carrier ABB and homed in New York.</p>
+    <p>5. a rule group with two rules for a user with the US carrier ABB and homed in New York.</p>
     <table border="1">
         <tbody>
         <tr>
@@ -301,7 +319,8 @@
         </tr>
         </tbody>
     </table>
-    <p>6. a rule group for a user with the Chinese (country code 86)&nbsp;carrier DCC&nbsp;and homed in Shanghai (area code 21).</p>
+    <p>6. a rule group with 3 rules for a user with the Chinese (country code 86)&nbsp;carrier DCC&nbsp;and
+        homed in Shanghai (area code 21).</p>
     <table border="1">
         <tbody>
         <tr>
@@ -333,8 +352,6 @@
     content_id = '#expandable-'.concat(target_num);
     $(content_id).slideToggle('fast');
 });
-
-
 </script>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
