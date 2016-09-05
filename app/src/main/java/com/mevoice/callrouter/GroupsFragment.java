@@ -132,7 +132,7 @@ public class GroupsFragment extends CommonFragment {
                 @Override
                 public void onClick(View v) {
                     ClickEvent ev = new ClickEvent();
-                    appdata.setGroupInEdit(holder.getAdapterPosition());
+                    appdata.setGroupInEdit(holder.getLayoutPosition());
                     ev.put("action", Constant.ACTION_EDIT_RULES);
                     bus.post(ev);
                 }
