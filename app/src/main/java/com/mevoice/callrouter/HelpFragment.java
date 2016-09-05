@@ -10,13 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.Toast;
 
 import com.mevoice.callrouter.R;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HelpFragment extends Fragment {
+public class HelpFragment extends CommonFragment {
 
 
     public HelpFragment() {
@@ -27,6 +28,7 @@ public class HelpFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        initAppData();
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_help, container, false);
     }
@@ -36,6 +38,13 @@ public class HelpFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         WebView webView = (WebView) view.findViewById(R.id.help_webview);
         WebSettings ws = webView.getSettings();
+        ws.setCacheMode(WebSettings.LOAD_NO_CACHE);
+        if (Build.VERSION.SDK_INT >= 19) {
+            webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        }
+        else {
+            webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
         ws.setJavaScriptEnabled(true);
         webView.loadUrl("file:///android_asset/help.html");
     }

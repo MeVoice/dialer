@@ -22,6 +22,7 @@ import com.mevoice.callrouter.events.ClickEvent;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,6 +30,7 @@ import java.util.List;
  */
 public class GroupsFragment extends CommonFragment {
     private int removePosition=-1;
+    private int lastRemoveTime=0;
     ContentAdapter adapter;
     private EventBus bus = EventBus.getDefault();
 
@@ -65,9 +67,11 @@ public class GroupsFragment extends CommonFragment {
     }
 
     public void removeGroup(int position){
-        if(removePosition!=position){
-            Toast.makeText(context, "click again to delete", Toast.LENGTH_SHORT).show();
+        int i = (int) (new Date().getTime()/1000);
+        if(removePosition!=position || i-lastRemoveTime>5){
+            Toast.makeText(context, "click again immediately to delete", Toast.LENGTH_SHORT).show();
             removePosition=position;
+            lastRemoveTime=i;
             return;
         }
         removePosition=-1;
@@ -127,11 +131,10 @@ public class GroupsFragment extends CommonFragment {
             holder.group_edit_rules.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    removePosition=-1;
                     ClickEvent ev = new ClickEvent();
-                    appdata.setGroupInEdit(position);
+                    appdata.setGroupInEdit(holder.getAdapterPosition());
                     ev.put("action", Constant.ACTION_EDIT_RULES);
-                    bus.postSticky(ev);
+                    bus.post(ev);
                 }
             });
             holder.group_edit_delete_button.setOnClickListener(new View.OnClickListener() {
@@ -156,7 +159,6 @@ public class GroupsFragment extends CommonFragment {
             holder.group_edit_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    removePosition=-1;
                     holder.group_name.setEnabled(true);
                     holder.group_inuse.setEnabled(true);
                     holder.group_edit_cancel.setVisibility(View.VISIBLE);
@@ -168,7 +170,6 @@ public class GroupsFragment extends CommonFragment {
             holder.group_edit_done.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    removePosition=-1;
                     RuleGroup currRG = mItems.get(holder.getLayoutPosition());
                     if(holder.group_inuse.isChecked()==currRG.isInUse() && holder.group_name.getText().toString().equals(currRG.getName())){
                         Toast.makeText(context, "no change detected", Toast.LENGTH_SHORT).show();
@@ -214,7 +215,6 @@ public class GroupsFragment extends CommonFragment {
             holder.group_edit_cancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    removePosition=-1;
                     holder.group_name.setText(mItems.get(holder.getLayoutPosition()).getName());
                     holder.group_inuse.setChecked(mItems.get(holder.getLayoutPosition()).isInUse());
                     holder.group_name.setEnabled(false);

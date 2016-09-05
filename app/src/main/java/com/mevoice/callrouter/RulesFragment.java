@@ -41,6 +41,7 @@ import java.util.List;
 public class RulesFragment extends CommonFragment  implements OnStartDragListener {
     public EditText test_reroute_number;
     private int removePosition=-1;
+    private int lastRemoveTime=0;
     private RuleGroup ruleGroup;
     private ItemTouchHelper mItemTouchHelper;
     private MatchNumber testNumber;
@@ -117,15 +118,17 @@ public class RulesFragment extends CommonFragment  implements OnStartDragListene
         return true;
     }
     public void removeRule(int position){
-        if(removePosition!=position){
-            Toast.makeText(context, "click again to delete", Toast.LENGTH_SHORT).show();
+        int i = (int) (new Date().getTime()/1000);
+        if(removePosition!=position || i-lastRemoveTime>5){
+            Toast.makeText(context, "click again immediately to delete", Toast.LENGTH_SHORT).show();
             removePosition=position;
+            lastRemoveTime=i;
             return;
         }
         removePosition=-1;
         ruleGroup.removeRule(position);
         adapter.notifyItemRemoved(position);
-        Toast.makeText(context, "rule removed", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "rule deleted", Toast.LENGTH_SHORT).show();
     }
 
     public class RuleViewHolder extends RecyclerView.ViewHolder implements ItemTouchHelperViewHolder {
@@ -213,7 +216,6 @@ public class RulesFragment extends CommonFragment  implements OnStartDragListene
             holder.rule_edit_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    removePosition=-1;
                     holder.rule_name.setEnabled(true);
                     holder.rule_pattern.setEnabled(true);
                     holder.rule_formula.setEnabled(true);
@@ -227,7 +229,6 @@ public class RulesFragment extends CommonFragment  implements OnStartDragListene
             holder.rule_edit_done.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    removePosition=-1;
                     Rule currRule = mItems.get(holder.getLayoutPosition());
                     if(holder.rule_inuse.isChecked()==currRule.isInUse() &&
                             holder.rule_name.getText().toString().equals(currRule.getName()) &&
@@ -259,7 +260,6 @@ public class RulesFragment extends CommonFragment  implements OnStartDragListene
             holder.rule_edit_cancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    removePosition=-1;
                     holder.rule_name.setText(mItems.get(holder.getLayoutPosition()).getName());
                     holder.rule_inuse.setChecked(mItems.get(holder.getLayoutPosition()).isInUse());
                     holder.rule_name.setEnabled(false);

@@ -37,6 +37,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Date;
 import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     private HashMap fragmentIDs = new HashMap();
     private HashMap option_menu_groups_hashmap = new HashMap();
     private String activeFragment;
+    private int lastResetTime = 0;
     private int[] option_menu_groups_array = {R.id.options_groups, R.id.options_help};
 
     @Override
@@ -123,6 +125,12 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.action_import) {
             importSettings();
         } else if (id == R.id.action_reset) {
+            int i = (int) (new Date().getTime()/1000);
+            if(i-lastResetTime>5){
+                Toast.makeText(this, "All your changes will be lost, click again immediately to reset", Toast.LENGTH_SHORT).show();
+                lastResetTime=i;
+                return false;
+            }
             resetSettings();
         } else {
             showFragment(fragmentName, false);
