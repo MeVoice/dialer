@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ebookfrenzy.dialerintent">
+    package="com.mevoice.callrouter">
 
     <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
@@ -15,7 +15,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/MyMaterialTheme">
-        <activity android:name=".EditDialedNumber">
+        <activity android:name="com.mevoice.callrouter.EditDialedNumber">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.DIAL" />
@@ -34,7 +34,7 @@
             </intent-filter>
         </activity>
         <receiver
-            android:name=".OutgoingCallRewrite"
+            android:name="com.mevoice.callrouter.OutgoingCallRewrite"
             android:enabled="true"
             android:exported="true">
             <intent-filter android:priority="2147483646">
@@ -42,7 +42,7 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".MainActivity"
+        <activity android:name="com.mevoice.callrouter.MainActivity"
             android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

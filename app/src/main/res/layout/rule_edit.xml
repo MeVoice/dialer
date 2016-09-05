@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:context=".RuleAddFragment">
+    tools:context="com.mevoice.callrouter.RuleAddFragment">
 
     <View
         android:layout_width="200dip"
@@ -27,7 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        tools:context=".RuleAddFragment">
+        tools:context="com.mevoice.callrouter.RuleAddFragment">
 
         <!-- TODO: Update blank fragment layout -->
         <EditText
@@ -52,7 +52,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        tools:context=".RuleAddFragment">
+        tools:context="com.mevoice.callrouter.RuleAddFragment">
 
         <EditText
             android:id="@+id/rule_edit_name"
