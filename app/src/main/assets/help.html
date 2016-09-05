@@ -1,7 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="jquery-1.12.4.js"></script>
+    <script>
+    function toggle(a){
+        var e=document.getElementById(a);
+        if(!e) return true;
+        if(e.style.display=="block"){
+            e.style.display="none"
+        }else{
+            e.style.display="block"
+        }
+        return true;
+    }
+    </script>
     <style>
         strong {
         font-style: italic;
@@ -36,7 +47,7 @@
 <body>
 
 <div>
-    <h2 class="expand" id="expand-1">What does this app do?</h2>
+    <a href="#" id="expand-1" onclick="return toggle('expandable-1');">What does this app do?</a>
 </div>
 <div class="expandable" id="expandable-1">
     <p>The router matches&nbsp;any outgoing call's number against&nbsp;a list of patterns. If there
@@ -44,17 +55,20 @@
         generate a new phone number, then dials this new number instead.</p>
 </div>
 <div>
-    <h2 class="expand" id="expand-2">Why another dialer?</h2>
+    <a href="#" id="expand-2" onclick="return toggle('expandable-2');">Why another dialer?</a>
 </div>
 <div class="expandable" id="expandable-2">
     <p><strong>One-time setup</strong>. The app matches and re-generates phone numbers for every
-        outgoing call, in the background. The initial setup is the only time you need to see the app.</p>
-    <p><strong>Wide application</strong>. Each digit in a phone number can be individually matched and re-arranged into a new
-        sequence. Obvious applications include calling through a calling card, dialing into a conference, calling an office extension
+        outgoing call, in the background. The initial setup is the only time you need to see the
+        app.</p>
+    <p><strong>Wide application</strong>. Each digit in a phone number can be individually matched
+        and re-arranged into a new
+        sequence. Obvious applications include calling through a calling card, dialing into a
+        conference, calling an office extension
         while outside office.</p>
 </div>
 <div>
-    <h2 class="expand" id="expand-3">Definitions</h2>
+    <a href="#" id="expand-3" onclick="return toggle('expandable-3');">Definitions</a>
 </div>
 <div class="expandable" id="expandable-3">
     <p><strong>Pattern</strong>: specified part(s) to be searched for and extracted from the
@@ -73,11 +87,12 @@
     <p><strong>E.164</strong>: A&nbsp;format for keeping&nbsp;phone numbers. In E.164, a number is
         hierachical, starts with "+", and typically has&nbsp;country code, area code, and local
         number. e.g. +1 212 234 5678, +86 21 212121212. A number in E.164 is global in that it does
-        not have to be updated&nbsp;with&nbsp;long distance dialing code as the user travels. Most samples
+        not have to be updated&nbsp;with&nbsp;long distance dialing code as the user travels. Most
+        samples
         are built with numbers in E.164.</p>
 </div>
 <div>
-    <h2 class="expand" id="expand-4">Pattern and formula syntax</h2>
+    <a href="#" id="expand-4" onclick="return toggle('expandable-4');">Pattern and formula syntax</a>
 </div>
 <div class="expandable" id="expandable-4">
     <table border="1">
@@ -167,11 +182,14 @@
     </table>
 </div>
 <div>
-    <h2 class="expand" id="expand-5">Sample scenarios and rules</h2>
+    <a href="#" id="expand-5" onclick="return toggle('expandable-5');">Sample scenarios and rules</a>
 </div>
 <div class="expandable" id="expandable-5">
-    <p>A character in the original number will be either <span class="capture">matched and captured</span>, or <span class="discard">matched and discarded</span></p>
-    <p>A character in the new number can be from either <span class="capture">matched and captured in original number</span>, or <span class="literal">literals in formula</span></p>
+    <p>A character in the original number will be either <span
+            class="capture">matched and captured</span>, or <span class="discard">matched and discarded</span>
+    </p>
+    <p>A character in the new number can be from either <span class="capture">matched and captured in original number</span>,
+        or <span class="literal">literals in formula</span></p>
     <p>1. dial the original US number</p>
     <table border="1">
         <tbody>
@@ -215,11 +233,13 @@
         </tr>
         <tr>
             <td>formula</td>
-            <td><span class="literal">1800 123 4567,56565656#, 011</span><span class="capture">{M1}</span></td>
+            <td><span class="literal">1800 123 4567,56565656#, 011</span><span
+                    class="capture">{M1}</span></td>
         </tr>
         <tr>
             <td>new number</td>
-            <td><span class="literal">1800 123 4567,56565656#, 011</span><span class="capture">86212323232323</span></td>
+            <td><span class="literal">1800 123 4567,56565656#, 011</span><span class="capture">86212323232323</span>
+            </td>
         </tr>
         <tr>
             <td>explanation</td>
@@ -247,11 +267,13 @@
         </tr>
         <tr>
             <td>formula</td>
-            <td><span class="literal">1800 234 5567,78787878#,</span><span class="capture">{M1}</span></td>
+            <td><span class="literal">1800 234 5567,78787878#,</span><span
+                    class="capture">{M1}</span></td>
         </tr>
         <tr>
             <td>new number</td>
-            <td><span class="literal">1800 234 5567,78787878#,</span><span class="capture">5656</span></td>
+            <td><span class="literal">1800 234 5567,78787878#,</span><span
+                    class="capture">5656</span></td>
         </tr>
         <tr>
             <td>explanation</td>
@@ -270,19 +292,23 @@
         <tbody>
         <tr>
             <td>original number</td>
-            <td><span class="capture">54545454</span><span class="discard">,</span><span class="capture2">2323</span></td>
+            <td><span class="capture">54545454</span><span class="discard">,</span><span
+                    class="capture2">2323</span></td>
         </tr>
         <tr>
             <td>pattern</td>
-            <td><span class="capture">{DDDDDDDD}</span><span class="discard">,</span><span class="capture2">{DDDD}</span></td>
+            <td><span class="capture">{DDDDDDDD}</span><span class="discard">,</span><span
+                    class="capture2">{DDDD}</span></td>
         </tr>
         <tr>
             <td>formula</td>
-            <td><span class="literal">1800 234 7878,</span><span class="capture">{M1}</span><span class="literal">,1,</span><span class="capture2">{M2}</span></td>
+            <td><span class="literal">1800 234 7878,</span><span class="capture">{M1}</span><span
+                    class="literal">,1,</span><span class="capture2">{M2}</span></td>
         </tr>
         <tr>
             <td>new number</td>
-            <td><span class="literal">1800234 7878,</span><span class="capture">54545454</span><span class="literal">,1,</span><span class="capture2">2323</span></td>
+            <td><span class="literal">1800234 7878,</span><span class="capture">54545454</span><span
+                    class="literal">,1,</span><span class="capture2">2323</span></td>
         </tr>
         <tr>
             <td>explanation</td>
@@ -345,28 +371,26 @@
 </div>
 
 <div>
-    <h2 class="expand" id="expand-6">How-tos</h2>
+    <a href="#" id="expand-6" onclick="return toggle('expandable-6');">How-tos</a>
 </div>
 
 <div id="expandable-6" class="expandable">
     <p><strong>How to get started?</strong></p>
-    <p>In "Groups", copy a pre-loaded group; build your own rules inside the copied group; test your rules; enable your group; done!</p>
+    <p>In "Groups", copy a pre-loaded group; build your own rules inside the copied group; test your
+        rules; enable your group; done!</p>
     <p><strong>How to disable the app?</strong></p>
     <p>Just disable all groups.</p>
     <p><strong>How to transfer settings&nbsp;to another device?</strong></p>
     <p>Use "Export" and "Import" when in "Groups"</p>
     <p><strong>How to check call log for matched phone calls?</strong></p>
-    <p>A&nbsp;matched call can create&nbsp;up to&nbsp;3 call log entries: a 0 length call to the original number, an actual length call to the phone number portion of the new&nbsp;number, and&nbsp;a 0 length call to the full new number if there is a "," or ";" in the new number.</p>
+    <p>A&nbsp;matched call can create&nbsp;up to&nbsp;3 call log entries: a 0 length call to the
+        original number, an actual length call to the phone number portion of the new&nbsp;number,
+        and&nbsp;a 0 length call to the full new number if there is a "," or ";" in the new
+        number.</p>
     <p><strong>How to reset the pre-loaded groups</strong></p>
     <p>Use "Reset" when in "Groups"</p>
 </div>
 
-<script>$('.expand').click(function(){
-    target_num = $(this).attr('id').split('-')[1];
-    content_id = '#expandable-'.concat(target_num);
-    $(content_id).slideToggle('fast');
-});
-</script>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
