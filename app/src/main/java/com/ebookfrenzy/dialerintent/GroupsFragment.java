@@ -17,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.ebookfrenzy.dialerintent.events.ClickEvent;
-import com.ebookfrenzy.dialerintent.model.AppData;
 import com.ebookfrenzy.dialerintent.model.RuleGroup;
 
 import org.greenrobot.eventbus.EventBus;

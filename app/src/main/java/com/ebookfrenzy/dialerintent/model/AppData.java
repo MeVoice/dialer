@@ -13,6 +13,16 @@ public class AppData {
     private int groupInEdit=-1;
     private int ruleInEdit=-1;
 
+    public int getLoadTimes() {
+        return loadTimes;
+    }
+
+    public void setLoadTimes(int loadTimes) {
+        this.loadTimes = loadTimes;
+    }
+
+    private int loadTimes=0;
+
     public List<TransformLog> getTransformLog() {
         return transformLog;
     }

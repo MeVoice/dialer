@@ -33,6 +33,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
@@ -93,11 +94,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        for(int i=0; i<option_menu_groups_array.length;i++){
+        for (int i = 0; i < option_menu_groups_array.length; i++) {
             Integer groupID = (Integer) option_menu_groups_hashmap.get(activeFragment);
-            if(groupID ==null || groupID.intValue()!=option_menu_groups_array[i]){
+            if (groupID == null || groupID.intValue() != option_menu_groups_array[i]) {
                 menu.setGroupVisible(option_menu_groups_array[i], false);
-            }else{
+            } else {
                 menu.setGroupVisible(option_menu_groups_array[i], true);
             }
         }
@@ -120,6 +121,8 @@ public class MainActivity extends AppCompatActivity {
             exportSettings();
         } else if (id == R.id.action_import) {
             importSettings();
+        } else if (id == R.id.action_reset) {
+            resetSettings();
         } else {
             showFragment(fragmentName, false);
         }
@@ -164,6 +167,26 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent, OPEN_REQUEST_CODE);
     }
 
+    public void resetSettings() {
+        try {
+            InputStream inputStream = getResources().getAssets().open("preload_sample_groups.json");
+            importSettingsFromInputStream(inputStream);
+            Toast.makeText(getApplicationContext(), "settings successfully reset, restarting app", Toast.LENGTH_SHORT).show();
+            recreate();
+        } catch (IOException e) {
+            Toast.makeText(getApplicationContext(), "cannot find preload_sample_groups.json file", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void importSettingsFromInputStream(InputStream inputStream) {
+        final Gson gson = new Gson();
+        final BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        appdata = gson.fromJson(reader, AppData.class);
+        appdata.setLoadTimes(1);
+        appDataAccess.setAppdata(appdata);
+        appDataAccess.saveAppData(appdata);
+    }
+
     public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
         Uri currentUri;
         if (resultCode == Activity.RESULT_OK) {
@@ -172,15 +195,11 @@ public class MainActivity extends AppCompatActivity {
                     currentUri = resultData.getData();
                     try {
                         InputStream inputStream = getContentResolver().openInputStream(currentUri);
-                        final Gson gson = new Gson();
-                        final BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-                        appdata = gson.fromJson(reader, AppData.class);
-                        appDataAccess.setAppdata(appdata);
-                        appDataAccess.saveAppData(appdata);
+                        importSettingsFromInputStream(inputStream);
                         Toast.makeText(getApplicationContext(), "settings successfully imported, restarting app", Toast.LENGTH_SHORT).show();
                         recreate();
                     } catch (FileNotFoundException e) {
-                        e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), "cannot find file: " + currentUri.toString(), Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -188,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private DrawerLayout mDrawerLayout;
-    private int backStackCount=0, lastBackStackCount=0;
+    private int backStackCount = 0, lastBackStackCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -196,7 +215,9 @@ public class MainActivity extends AppCompatActivity {
         context = getApplicationContext();
         appDataAccess = AppDataAccess.getInstance(context);
         appdata = appDataAccess.getAppdata();
-
+        if(appdata.getLoadTimes()==0){
+            resetSettings();
+        }
         setContentView(R.layout.activity_main);
         // Adding Toolbar to Main screen
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -251,14 +272,14 @@ public class MainActivity extends AppCompatActivity {
                     public void onBackStackChanged() {
                         backStackCount = getSupportFragmentManager().getBackStackEntryCount();
                         System.out.println("backStackCount: " + backStackCount);
-                        if(lastBackStackCount==backStackCount+1) {
+                        if (lastBackStackCount == backStackCount + 1) {
                             onFragmentBack();
                         }
-                        lastBackStackCount=backStackCount;
+                        lastBackStackCount = backStackCount;
                         //Toast.makeText(getApplicationContext(), "onBackStackChanged", Toast.LENGTH_SHORT).show();
                     }
                 });
-        activeFragment=Constant.FRAGMENT_KEY_GROUPS;
+        activeFragment = Constant.FRAGMENT_KEY_GROUPS;
         showFragment(Constant.FRAGMENT_KEY_GROUPS, false);
     }
 
@@ -285,7 +306,7 @@ public class MainActivity extends AppCompatActivity {
         System.out.println(key);
         String title = (String) fragmentTitles.get(key);
         System.out.println("found title:" + title);
-        activeFragment=key;
+        activeFragment = key;
         showFab(key);
         getSupportActionBar().setTitle(title);
         System.out.println("onFragmentBack title is:" + title);
@@ -297,11 +318,11 @@ public class MainActivity extends AppCompatActivity {
             FragmentManager.BackStackEntry first = fm.getBackStackEntryAt(0);
             fm.popBackStack(first.getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
-        lastBackStackCount=0;
+        lastBackStackCount = 0;
     }
 
     public void showFragment(String key, boolean addToStack) {
-        activeFragment=key;
+        activeFragment = key;
         invalidateOptionsMenu();
         String title = (String) fragmentTitles.get(key);
         getSupportActionBar().setTitle(title);

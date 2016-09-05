@@ -19,7 +19,6 @@
         margin: 10px;
         }
         .discard {
-        text-decoration: line-through;
         background-color: lightgrey;
         }
         .literal {
@@ -48,13 +47,11 @@
     <h2 class="expand" id="expand-2">Why another dialer?</h2>
 </div>
 <div class="expandable" id="expandable-2">
-    <p><strong>Better Efficiency</strong>. The router does the match and re-generation for every
-        outgoing call, behind the scene. After the initial setup, you can leave the app and it does
-        the rest for you.</p>
-    <p><strong>Wider Application</strong>. At the router's core is an algorithm that matches and
-        transforms phone numbers - each digit can be individually matched and re-arranged into a new
-        sequence. Can be used whenever a destination has to be reached through a 3rd party, such
-        as using a calling card, dialing into a conference, or calling an office extension while outside office.</p>
+    <p><strong>One-time setup</strong>. The app matches and re-generates phone numbers for every
+        outgoing call, in the background. The initial setup is the only time you need to see the app.</p>
+    <p><strong>Wide application</strong>. Each digit in a phone number can be individually matched and re-arranged into a new
+        sequence. Obvious applications include calling through a calling card, dialing into a conference, calling an office extension
+        while outside office.</p>
 </div>
 <div>
     <h2 class="expand" id="expand-3">Definitions</h2>
@@ -63,8 +60,7 @@
     <p><strong>Pattern</strong>: specified part(s) to be searched for and extracted from the
         original number</p>
     <p><strong>Formula</strong>: how to generate a new number</p>
-    <p><strong>Original number</strong>:&nbsp;The number saved with a contact or initially dialed by
-        user</p>
+    <p><strong>Original number</strong>:&nbsp;The number initially dialed by user</p>
     <p><strong>Rule</strong>: The combination of a pattern and a formula. If the pattern matches the
         original number, then the formula generates a new number.</p>
     <p><strong>Group</strong>: A list of rules. Matching is attempted from top to bottom. The
@@ -77,7 +73,8 @@
     <p><strong>E.164</strong>: A&nbsp;format for keeping&nbsp;phone numbers. In E.164, a number is
         hierachical, starts with "+", and typically has&nbsp;country code, area code, and local
         number. e.g. +1 212 234 5678, +86 21 212121212. A number in E.164 is global in that it does
-        not have to be updated&nbsp;with&nbsp;long distance dialing code as the user travels.</p>
+        not have to be updated&nbsp;with&nbsp;long distance dialing code as the user travels. Most samples
+        are built with numbers in E.164.</p>
 </div>
 <div>
     <h2 class="expand" id="expand-4">Pattern and formula syntax</h2>
@@ -237,7 +234,7 @@
         </tr>
         </tbody>
     </table>
-    <p>3. dial an office extension through an gateway</p>
+    <p>3. dial an office extension through a gateway</p>
     <table border="1">
         <tbody>
         <tr>
@@ -345,6 +342,23 @@
         </tr>
         </tbody>
     </table>
+</div>
+
+<div>
+    <h2 class="expand" id="expand-6">How-tos</h2>
+</div>
+
+<div id="expandable-6" class="expandable">
+    <p><strong>How to get started?</strong></p>
+    <p>In "Groups", copy a pre-loaded group; build your own rules inside the copied group; test your rules; enable your group; done!</p>
+    <p><strong>How to disable the app?</strong></p>
+    <p>Just disable all groups.</p>
+    <p><strong>How to transfer settings&nbsp;to another device?</strong></p>
+    <p>Use "Export" and "Import" when in "Groups"</p>
+    <p><strong>How to check call log for matched phone calls?</strong></p>
+    <p>A&nbsp;matched call can create&nbsp;up to&nbsp;3 call log entries: a 0 length call to the original number, an actual length call to the phone number portion of the new&nbsp;number, and&nbsp;a 0 length call to the full new number if there is a "," or ";" in the new number.</p>
+    <p><strong>How to reset the pre-loaded groups</strong></p>
+    <p>Use "Reset" when in "Groups"</p>
 </div>
 
 <script>$('.expand').click(function(){

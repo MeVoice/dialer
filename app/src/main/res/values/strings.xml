@@ -26,4 +26,5 @@
     <string name="help_definition">Definitions</string>
     <string name="help_syntax">Syntax</string>
     <string name="help_sample">Samples</string>
+    <string name="action_reset">Reset</string>
 </resources>
