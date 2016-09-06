@@ -15,7 +15,8 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/MyMaterialTheme">
+        android:theme="@style/MyMaterialTheme"
+        android:name=".CRApp">
         <activity android:name="com.mevoice.callrouter.EditDialedNumber">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

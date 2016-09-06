@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GroupsFragment extends CommonFragment {
+public class GroupsFragment extends Fragment {
     private int removePosition=-1;
     private int lastRemoveTime=0;
     ContentAdapter adapter;
@@ -40,12 +40,11 @@ public class GroupsFragment extends CommonFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        initAppData();
         View v = inflater.inflate(R.layout.fragment_group, container, false);
 
         // Inflate the layout for this fragment
         RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.my_recycler_view);
-        adapter = new ContentAdapter(recyclerView.getContext(), appdata.getRuleGroups());
+        adapter = new ContentAdapter(recyclerView.getContext(), CRApp.appdata.getRuleGroups());
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -53,12 +52,12 @@ public class GroupsFragment extends CommonFragment {
     }
 
     public boolean validateGroup(RuleGroup rg, int position){
-        switch(appdata.validateRuleGroup(rg, position)) {
+        switch(CRApp.appdata.validateRuleGroup(rg, position)) {
             case Constant.ERROR_GROUPNAME_TOOSHORT:
-                Toast.makeText(context, R.string.message_validation_group_name_too_short, Toast.LENGTH_SHORT).show();
+                Toast.makeText(CRApp.context, R.string.message_validation_group_name_too_short, Toast.LENGTH_SHORT).show();
                 return false;
             case Constant.ERROR_GROUPNAME_DUP:
-                Toast.makeText(context, R.string.message_validation_group_name_in_use, Toast.LENGTH_SHORT).show();
+                Toast.makeText(CRApp.context, R.string.message_validation_group_name_in_use, Toast.LENGTH_SHORT).show();
                 return false;
             default:
                 return true;
@@ -68,15 +67,15 @@ public class GroupsFragment extends CommonFragment {
     public void removeGroup(int position){
         int i = (int) (new Date().getTime()/1000);
         if(removePosition!=position || i-lastRemoveTime>5){
-            Toast.makeText(context, R.string.message_delete_group_clickagain, Toast.LENGTH_SHORT).show();
+            Toast.makeText(CRApp.context, R.string.message_delete_group_clickagain, Toast.LENGTH_SHORT).show();
             removePosition=position;
             lastRemoveTime=i;
             return;
         }
         removePosition=-1;
-        appdata.removeGroup(position);
+        CRApp.appdata.removeGroup(position);
         adapter.notifyItemRemoved(position);
-        Toast.makeText(context, R.string.message_delete_group_deleted, Toast.LENGTH_SHORT).show();
+        Toast.makeText(CRApp.context, R.string.message_delete_group_deleted, Toast.LENGTH_SHORT).show();
     }
 
     public class GroupViewHolder extends RecyclerView.ViewHolder {
@@ -131,7 +130,7 @@ public class GroupsFragment extends CommonFragment {
                 @Override
                 public void onClick(View v) {
                     ClickEvent ev = new ClickEvent();
-                    appdata.setGroupInEdit(holder.getLayoutPosition());
+                    CRApp.appdata.setGroupInEdit(holder.getLayoutPosition());
                     ev.put(Constant.EVENT_TYPE_ACTION, Constant.ACTION_EDIT_RULES);
                     bus.post(ev);
                 }
@@ -140,19 +139,19 @@ public class GroupsFragment extends CommonFragment {
                 @Override
                 public void onClick(View v) {
                     removeGroup(holder.getLayoutPosition());
-                    appdataaccess.saveAppData(appdata);
+                    CRApp.appdataaccess.saveAppData();
                 }
             });
             holder.group_edit_copy.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (appdata.getRuleGroups().size() >= Constant.MAX_GROUPS) {
-                        Toast.makeText(context, String.format(getResources().getString(R.string.message_add_group_max_groups), Constant.MAX_GROUPS), Toast.LENGTH_SHORT).show();
+                    if (CRApp.appdata.getRuleGroups().size() >= Constant.MAX_GROUPS) {
+                        Toast.makeText(CRApp.context, String.format(getResources().getString(R.string.message_add_group_max_groups), Constant.MAX_GROUPS), Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    String rgName = appdata.copyRuleGroup(holder.getLayoutPosition());
-                    Toast.makeText(context, String.format(getResources().getString(R.string.message_copy_group_copied_to), rgName), Toast.LENGTH_SHORT).show();
-                    adapter.notifyItemInserted(appdata.getRuleGroups().size()-1);
+                    String rgName = CRApp.appdata.copyRuleGroup(holder.getLayoutPosition());
+                    Toast.makeText(CRApp.context, String.format(getResources().getString(R.string.message_copy_group_copied_to), rgName), Toast.LENGTH_SHORT).show();
+                    adapter.notifyItemInserted(CRApp.appdata.getRuleGroups().size()-1);
                 }
             });
             holder.group_edit_button.setOnClickListener(new View.OnClickListener() {
@@ -171,7 +170,7 @@ public class GroupsFragment extends CommonFragment {
                 public void onClick(View v) {
                     RuleGroup currRG = mItems.get(holder.getLayoutPosition());
                     if(holder.group_inuse.isChecked()==currRG.isInUse() && holder.group_name.getText().toString().equals(currRG.getName())){
-                        Toast.makeText(context, R.string.message_after_save_no_change, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CRApp.context, R.string.message_after_save_no_change, Toast.LENGTH_SHORT).show();
                         return;
                     }
                     RuleGroup rg = new RuleGroup(holder.group_name.getText().toString());
@@ -180,13 +179,13 @@ public class GroupsFragment extends CommonFragment {
                         return;
                     }
                     rg.setRules(currRG.getRules());
-                    int inUseIndex = appdata.getRuleGroupInUse();
+                    int inUseIndex = CRApp.appdata.getRuleGroupInUse();
                     if(rg.isInUse() && inUseIndex>=0 && inUseIndex!=holder.getLayoutPosition()){
                         mItems.get(inUseIndex).setInUse(false);
                         notifyItemChanged(inUseIndex);
                     }
-                    appdata.setGroup(holder.getLayoutPosition(), rg);
-                    int newInUseIndex = appdata.getRuleGroupInUse();
+                    CRApp.appdata.setGroup(holder.getLayoutPosition(), rg);
+                    int newInUseIndex = CRApp.appdata.getRuleGroupInUse();
                     boolean wasInUse = inUseIndex>=0;
                     boolean nowInUse = newInUseIndex>=0;
                     if(wasInUse != nowInUse) {
@@ -199,8 +198,8 @@ public class GroupsFragment extends CommonFragment {
                         }
                         bus.post(ev);
                     }
-                    appdataaccess.saveAppData(appdata);
-                    Toast.makeText(context, R.string.message_edit_group_saved, Toast.LENGTH_SHORT).show();
+                    CRApp.appdataaccess.saveAppData();
+                    Toast.makeText(CRApp.context, R.string.message_edit_group_saved, Toast.LENGTH_SHORT).show();
 
                     holder.group_name.setEnabled(false);
                     holder.group_inuse.setEnabled(false);

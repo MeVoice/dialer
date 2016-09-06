@@ -17,7 +17,7 @@ import com.mevoice.callrouter.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HelpFragment extends CommonFragment {
+public class HelpFragment extends Fragment {
 
 
     public HelpFragment() {
@@ -28,7 +28,6 @@ public class HelpFragment extends CommonFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        initAppData();
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_help, container, false);
     }

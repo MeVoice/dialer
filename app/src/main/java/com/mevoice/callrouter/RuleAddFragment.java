@@ -17,7 +17,7 @@ import com.mevoice.callrouter.model.RuleGroup;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RuleAddFragment extends CommonFragment {
+public class RuleAddFragment extends Fragment {
 
     public EditText rule_add_name;
     public EditText rule_add_pattern;
@@ -32,7 +32,6 @@ public class RuleAddFragment extends CommonFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        initAppData();
         View rootView = inflater.inflate(R.layout.fragment_rule_add, container, false);
         // Inflate the layout for this fragment
         rule_add_name = (EditText) rootView.findViewById(R.id.rule_add_name);
@@ -48,9 +47,9 @@ public class RuleAddFragment extends CommonFragment {
         return rootView;
     }
     public void addRule(){
-        RuleGroup ruleGroup = appdata.getRuleGroup(appdata.getGroupInEdit());
+        RuleGroup ruleGroup = CRApp.appdata.getRuleGroup(CRApp.appdata.getGroupInEdit());
         if(ruleGroup.getRules().size()>=Constant.MAX_RULES){
-            Toast.makeText(context, String.format(getString(R.string.message_add_rule_max_rules), Constant.MAX_RULES), Toast.LENGTH_SHORT).show();
+            Toast.makeText(CRApp.context, String.format(getString(R.string.message_add_rule_max_rules), Constant.MAX_RULES), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -59,16 +58,16 @@ public class RuleAddFragment extends CommonFragment {
                 rule_add_formula.getText().toString());
         if(validateRule(rule, -1)){
             ruleGroup.addRule(rule);
-            appdataaccess.saveAppData(appdata);
+            CRApp.appdataaccess.saveAppData();
             rule_add_name.setText("");
             rule_add_pattern.setText("");
             rule_add_formula.setText("");
-            Toast.makeText(context, R.string.message_add_rule_success, Toast.LENGTH_SHORT).show();
+            Toast.makeText(CRApp.context, R.string.message_add_rule_success, Toast.LENGTH_SHORT).show();
         }
     }
     public boolean validateRule(Rule rule, int position){
         if(!rule.validate()){
-            Toast.makeText(context, rule.getValidationResult(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(CRApp.context, rule.getValidationResult(), Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;

@@ -52,9 +52,9 @@ public class AppDataAccess {
         }
         return instance;
     }
-    public void saveAppData(AppData appdata){
+    public void saveAppData(){
         Gson gson = new Gson();
-        String json = gson.toJson(appdata);
+        String json = gson.toJson(this.appdata);
         prefEditor.putString(appDataName, json);
         prefEditor.commit();
     }

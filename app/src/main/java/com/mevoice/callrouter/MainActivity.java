@@ -24,7 +24,6 @@ import android.widget.Toast;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import com.mevoice.callrouter.R;
 import com.mevoice.callrouter.events.ClickEvent;
 import com.mevoice.callrouter.model.AppData;
 import com.mevoice.callrouter.model.RuleGroup;
@@ -42,12 +41,9 @@ import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Context context;
-    private AppData appdata;
 
     private FloatingActionButton fab;
 
-    private AppDataAccess appDataAccess;
     private EventBus bus = EventBus.getDefault();
     private HashMap fragments = new HashMap();
     private HashMap fragmentTitles = new HashMap();
@@ -72,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
     @Subscribe
     public void onClickEvent(ClickEvent event) {
         if (event.get(Constant.EVENT_TYPE_ACTION).equals(Constant.ACTION_EDIT_RULES)) {
-            RuleGroup rg = appdata.getRuleGroups().get(appdata.getGroupInEdit());
+            RuleGroup rg = CRApp.appdata.getRuleGroups().get(CRApp.appdata.getGroupInEdit());
             if (rg.getRules().size() > 0) {
                 fragmentTitles.put(Constant.FRAGMENT_KEY_RULES, String.format(getString(R.string.title_rules), rg.getName()));
                 showFragment(Constant.FRAGMENT_KEY_RULES, true);
@@ -139,11 +135,11 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean exportSettings() {
         try {
-            File outputFile = File.createTempFile("call_router", ".json", context.getExternalCacheDir());
+            File outputFile = File.createTempFile("call_router", ".json", CRApp.context.getExternalCacheDir());
             String fileName = outputFile.getAbsolutePath();
             Gson gson = new Gson();
             FileOutputStream fOut = new FileOutputStream(fileName);
-            String str = gson.toJson(appdata);
+            String str = gson.toJson(CRApp.appdata);
             fOut.write(str.getBytes());
             fOut.close();
             //invoke email with attachment intent
@@ -157,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         catch (IOException e){
-            Toast.makeText(context, R.string.message_export_settings_error, Toast.LENGTH_SHORT).show();
+            Toast.makeText(CRApp.context, R.string.message_export_settings_error, Toast.LENGTH_SHORT).show();
         }
         return false;
     }
@@ -185,10 +181,10 @@ public class MainActivity extends AppCompatActivity {
     public void importSettingsFromInputStream(InputStream inputStream) {
         final Gson gson = new Gson();
         final BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        appdata = gson.fromJson(reader, AppData.class);
-        appdata.setLoadTimes(1);
-        appDataAccess.setAppdata(appdata);
-        appDataAccess.saveAppData(appdata);
+        CRApp.appdata = gson.fromJson(reader, AppData.class);
+        CRApp.appdata.setLoadTimes(1);
+        CRApp.appdataaccess.setAppdata(CRApp.appdata);
+        CRApp.appdataaccess.saveAppData();
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
@@ -216,10 +212,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context = getApplicationContext();
-        appDataAccess = AppDataAccess.getInstance(context);
-        appdata = appDataAccess.getAppdata();
-        if(appdata.getLoadTimes()==0){
+        if(CRApp.appdata.getLoadTimes()==0){
             resetSettings();
         }
         setContentView(R.layout.activity_main);
@@ -339,8 +332,8 @@ public class MainActivity extends AppCompatActivity {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (appdata.getRuleGroups().size() >= Constant.MAX_GROUPS) {
-                        Toast.makeText(context, String.format(getResources().getString(R.string.message_add_group_max_groups), Constant.MAX_GROUPS), Toast.LENGTH_SHORT).show();
+                    if (CRApp.appdata.getRuleGroups().size() >= Constant.MAX_GROUPS) {
+                        Toast.makeText(CRApp.context, String.format(getResources().getString(R.string.message_add_group_max_groups), Constant.MAX_GROUPS), Toast.LENGTH_SHORT).show();
                         return;
                     }
                     showFragment(Constant.FRAGMENT_KEY_GROUP_ADD, true);
@@ -353,9 +346,9 @@ public class MainActivity extends AppCompatActivity {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    RuleGroup rg = appdata.getRuleGroups().get(appdata.getGroupInEdit());
+                    RuleGroup rg = CRApp.appdata.getRuleGroups().get(CRApp.appdata.getGroupInEdit());
                     if (rg.getRules().size() >= Constant.MAX_RULES) {
-                        Toast.makeText(context, String.format(getString(R.string.message_add_rule_max_rules), Constant.MAX_RULES), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CRApp.context, String.format(getString(R.string.message_add_rule_max_rules), Constant.MAX_RULES), Toast.LENGTH_SHORT).show();
                         return;
                     }
                     fragmentTitles.put(Constant.FRAGMENT_KEY_RULE_ADD, String.format(getString(R.string.title_rule_add), rg.getName()));
@@ -370,12 +363,12 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void updateReceiverStatus(boolean enable) {
-        PackageManager pm = context.getPackageManager();
+        PackageManager pm = CRApp.context.getPackageManager();
         if (enable) {
-            pm.setComponentEnabledSetting(new ComponentName(context, OutgoingCallRewrite.class),
+            pm.setComponentEnabledSetting(new ComponentName(CRApp.context, OutgoingCallRewrite.class),
                     PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
         } else {
-            pm.setComponentEnabledSetting(new ComponentName(context, OutgoingCallRewrite.class),
+            pm.setComponentEnabledSetting(new ComponentName(CRApp.context, OutgoingCallRewrite.class),
                     PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
         }
     }
