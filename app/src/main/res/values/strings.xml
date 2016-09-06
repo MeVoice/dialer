@@ -64,4 +64,18 @@
     <string name="title_group_add">+ Rule Group</string>
     <string name="title_help">Help</string>
 
+    <string name="message_validate_rule_invalid_character">invalid character found in %s</string>
+    <string name="message_validate_rule_invalid_format">invalid format found in %s</string>
+    <string name="message_validate_rule_more_match_in_formula">maximum match index in %s exceeded number of matches in pattern</string>
+    <string name="literal_validate_rule_pattern">pattern</string>
+    <string name="literal_validate_rule_formula">formula</string>
+    <string name="message_validate_rule_too_short">%s is too short</string>
+    <string name="message_validate_rule_plus_first">\'+\' can only be the first character in %s</string>
+    <string name="message_validate_rule_percent_last">\'%%\' should be at the end of %s</string>
+    <string name="message_validate_rule_percent_not_first">\'%%\' should not be at the beginning of %s</string>
+    <string name="message_validate_rule_pair_brackets">curly brackets should be in pairs in %s</string>
+    <string name="message_validate_rule_bracket_before_percent">\'%%\' is not valid following a bracket in %s</string>
+    <string name="message_validate_rule_empty_brackets">empty brackets in %s</string>
+
+
 </resources>

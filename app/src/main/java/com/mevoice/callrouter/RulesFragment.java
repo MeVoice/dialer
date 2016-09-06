@@ -110,7 +110,7 @@ public class RulesFragment extends Fragment  implements OnStartDragListener {
 
     public boolean validateRule(Rule rule, int position){
         if(!rule.validate()){
-            Toast.makeText(CRApp.context, rule.getValidationResult(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(CRApp.context, String.format(getString(rule.getValidationResult()), getString(rule.getValidationResultErrorField())), Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;

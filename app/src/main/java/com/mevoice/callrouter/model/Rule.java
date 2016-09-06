@@ -22,7 +22,14 @@ public class Rule {
 
     private boolean validated=false;
     private int sequence;
-    private String validationResult;
+    private int validationResult;
+
+    public int getValidationResultErrorField() {
+        return validationResultErrorField;
+    }
+
+    private int validationResultErrorField;
+
 
     public List<String> getFormulaParts() {
         return formulaParts;
@@ -30,7 +37,7 @@ public class Rule {
 
     private List<String> formulaParts;
 
-    public String getValidationResult() {
+    public int getValidationResult() {
         return validationResult;
     }
 
@@ -83,42 +90,44 @@ public class Rule {
     private static final String FormulaMatchFormat = "\\{M\\d+\\}";
 
     public boolean validate(){
-        // % has to be the last token in pattern
-        //only valid characters are allowed
+        validationResult=0;
         String patternCharacters = PhoneCharacters.concat(PatternCharacters);
         String formularCharacters = PhoneCharacters.concat(FormulaCharacters);
         Pattern r;
-        Matcher m;
         for(int i=0; i<pattern.length(); i++){
             if(patternCharacters.indexOf(pattern.charAt(i))<0){
-                validationResult="invalid character found in pattern";
+                validationResult= R.string.message_validate_rule_invalid_character;
+                validationResultErrorField=R.string.literal_validate_rule_pattern;
                 return false;
             }
         }
         for(int i=0; i<formula.length(); i++){
             if(formularCharacters.indexOf(formula.charAt(i))<0){
-                validationResult="invalid character found in formula";
+                validationResult= R.string.message_validate_rule_invalid_character;
+                validationResultErrorField=R.string.literal_validate_rule_formula;
                 return false;
             }
         }
         String[][] errorPatterns = {
-                {"^.{0,2}$", "both", "%s is too short"},
-                {"^[^\\{]+\\+", "both", "'+' can only be the first character in %s"},
-                {"%[^\\}]+.*$", "pattern", "'%%' should be at the end of %s"},
-                {"^[\\+\\{]%", "pattern", "'%' should not be at the beginning of %s"},
-                {"\\{[^\\}]?\\{", "both", "'curly brackets should be in pairs in %s"},
-                {"\\}[^\\{]?\\}", "both", "'curly brackets should be in pairs in %s"},
-                {"[\\}\\{]{2}", "both", "'curly brackets should be in pairs in %s"},
-                {"[\\{|\\}]%", "pattern", "bracket is not valid before '%%' in %s"},
+                {"^.{0,2}$", "both", String.valueOf(R.string.message_validate_rule_too_short)},
+                {"^[^\\{]+\\+", "both", String.valueOf(R.string.message_validate_rule_plus_first)},
+                {"%[^\\}]+.*$", "pattern", String.valueOf(R.string.message_validate_rule_percent_last)},
+                {"^[\\+\\{]%", "pattern", String.valueOf(R.string.message_validate_rule_percent_not_first)},
+                {"\\{[^\\}]?\\{", "both", String.valueOf(R.string.message_validate_rule_pair_brackets)},
+                {"\\}[^\\{]?\\}", "both", String.valueOf(R.string.message_validate_rule_pair_brackets)},
+                {"\\{\\}", "both", String.valueOf(R.string.message_validate_rule_empty_brackets)},
+                {"[\\{|\\}]%", "pattern", String.valueOf(R.string.message_validate_rule_bracket_before_percent)}
         };
         for(int i=0; i<errorPatterns.length;i++){
             r = Pattern.compile(errorPatterns[i][0]);
             if((errorPatterns[i][1].equals("both") || errorPatterns[i][1].equals("pattern")) && r.matcher(pattern).find()){
-                validationResult=String.format(errorPatterns[i][2], "pattern");
+                validationResult=Integer.parseInt(errorPatterns[i][2]);
+                validationResultErrorField=R.string.literal_validate_rule_pattern;
                 return false;
             }
             if((errorPatterns[i][1].equals("both") || errorPatterns[i][1].equals("formula")) && r.matcher(formula).find()){
-                validationResult=String.format(errorPatterns[i][2], "formula");
+                validationResult=Integer.parseInt(errorPatterns[i][2]);
+                validationResultErrorField=R.string.literal_validate_rule_formula;
                 return false;
             }
         }
@@ -127,13 +136,15 @@ public class Rule {
         int pCount1 = pattern.length() - pattern.replace("{", "").length();
         int pCount2 = pattern.length() - pattern.replace("}", "").length();
         if(pCount1!=pCount2) {
-            validationResult = "'curly brackets should be in pairs in pattern";
+            validationResult = R.string.message_validate_rule_pair_brackets;
+            validationResultErrorField=R.string.literal_validate_rule_pattern;
             return false;
         }
         int fCount1 = formula.length() - formula.replace("{", "").length();
         int fCount2 = formula.length() - formula.replace("}", "").length();
         if(fCount1!=fCount2) {
-            validationResult = "'curly brackets should be in pairs in formula";
+            validationResult = R.string.message_validate_rule_pair_brackets;
+            validationResultErrorField=R.string.literal_validate_rule_formula;
             return false;
         }
         //only {M\d+} in formula
@@ -142,7 +153,8 @@ public class Rule {
         for(int i=0;i<matches.length;i++) {
             for (int j = 0; j < matches[i].length(); j++) {
                 if (temp.indexOf(matches[i].charAt(j)) < 0) {
-                    validationResult = "invalid format found in formula";
+                    validationResult = R.string.message_validate_rule_invalid_format;
+                    validationResultErrorField=R.string.literal_validate_rule_formula;
                     return false;
                 }
             }
@@ -157,7 +169,8 @@ public class Rule {
             }
         }
         if(max_idx_match>pCount1){
-            validationResult = "max match index in formula exceeded number of matches in pattern";
+            validationResult = R.string.message_validate_rule_more_match_in_formula;
+            validationResultErrorField=R.string.literal_validate_rule_formula;
             return false;
         }
         validated = true;
