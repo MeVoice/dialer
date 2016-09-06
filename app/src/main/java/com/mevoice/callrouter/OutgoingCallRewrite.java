@@ -30,11 +30,9 @@ public class OutgoingCallRewrite extends BroadcastReceiver {
             if(rg.transform(number)){
                 new_phoneNumber = number.getResult();
                 String rule_comment = number.getMatchingRule().getName();
-                Toast.makeText(context, "Dialed: " + phoneNumber + "\nCalled: " + new_phoneNumber, Toast.LENGTH_LONG).show();
+                Toast.makeText(context, String.format(context.getString(R.string.message_rewrite_result_numbers), phoneNumber, new_phoneNumber), Toast.LENGTH_LONG).show();
                 if(!new_phoneNumber.equals(phoneNumber)){
                     setResultData(new_phoneNumber);
-                    //TransformLog log = new TransformLog(phoneNumber, new_phoneNumber, new Date());
-                    //appdata.addTransformLog(log);
                     if(new_phoneNumber.indexOf(",")>=0 || new_phoneNumber.indexOf(";")>=0) {
                         AddNumToCallLog(context.getContentResolver(), new_phoneNumber, CallLog.Calls.OUTGOING_TYPE, System.currentTimeMillis(), rule_comment);
                     }

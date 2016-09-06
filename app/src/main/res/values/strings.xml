@@ -27,4 +27,41 @@
     <string name="help_syntax">Syntax</string>
     <string name="help_sample">Samples</string>
     <string name="action_reset">Reset</string>
+    <string name="message_before_reset">All your changes will be lost, click again immediately to reset</string>
+    <string name="message_after_add_group">group added</string>
+    <string name="message_validation_group_name_too_short">group name at least 5 characters long</string>
+    <string name="message_validation_group_name_in_use">group name already in use</string>
+    <string name="message_after_save_no_change">no change detected</string>
+    <string name="message_add_group_max_groups">maximum %d groups</string>
+    <string name="message_delete_group_clickagain">click again immediately to delete</string>
+    <string name="message_delete_group_deleted">group deleted</string>
+    <string name="message_copy_group_copied_to">group copied to %s</string>
+    <string name="message_edit_group_saved">group change saved</string>
+    <string name="message_export_settings_error">an error occurred while exporting settings</string>
+    <string name="message_export_settings_chooser_title">Sending email...</string>
+    <string name="message_import_settings_success">settings successfully imported, restarting app</string>
+    <string name="message_import_settings_cannot_find_file">cannot find file: %s</string>
+    <string name="literal_preload_settings_filename">preload_sample_groups.json</string>
+    <string name="literal_export_settings_email_subject">setting export</string>
+    <string name="literal_export_settings_email_body">setting export</string>
+    <string name="message_reset_settings_success">settings successfully reset, restarting app</string>
+    <string name="message_reset_settings_cannot_find_file">cannot find file: preload_sample_groups.json</string>
+    <string name="message_add_rule_success">rule added</string>
+    <string name="message_add_rule_max_rules">maximum %d rules per group</string>
+    <string name="message_delete_rule_clickagain">click again immediately to delete</string>
+    <string name="message_delete_rule_deleted">rule deleted</string>
+    <string name="message_rewrite_result_numbers">Dialed: %1$s\nCalled: %2$s</string>
+    <string name="message_test_result_numbers">matching pattern: %1$s\nresult: %2$s</string>
+    <string name="message_test_result_none_match">none</string>
+
+    <string name="message_edit_rule_saved">rule change saved</string>
+    <string name="message_copy_rule_copied_to">rule copied to %s</string>
+
+
+    <string name="title_rules">Rules - %s</string>
+    <string name="title_rule_add">+ Rule - %s</string>
+    <string name="title_groups">Rule Groups</string>
+    <string name="title_group_add">+ Rule Group</string>
+    <string name="title_help">Help</string>
+
 </resources>

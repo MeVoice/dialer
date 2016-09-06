@@ -50,7 +50,7 @@ public class RuleAddFragment extends CommonFragment {
     public void addRule(){
         RuleGroup ruleGroup = appdata.getRuleGroup(appdata.getGroupInEdit());
         if(ruleGroup.getRules().size()>=Constant.MAX_RULES){
-            Toast.makeText(context, "maximum " + Constant.MAX_RULES + " rules per group", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, String.format(getString(R.string.message_add_rule_max_rules), Constant.MAX_RULES), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -63,7 +63,7 @@ public class RuleAddFragment extends CommonFragment {
             rule_add_name.setText("");
             rule_add_pattern.setText("");
             rule_add_formula.setText("");
-            Toast.makeText(context, "rule added", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.message_add_rule_success, Toast.LENGTH_SHORT).show();
         }
     }
     public boolean validateRule(Rule rule, int position){

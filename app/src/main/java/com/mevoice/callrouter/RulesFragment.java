@@ -79,16 +79,15 @@ public class RulesFragment extends CommonFragment  implements OnStartDragListene
             @Override
             public void onClick(View v) {
                 testNumber = new MatchNumber(test_reroute_number.getText().toString());
-                String matching_pattern = "None";
+                String matching_pattern = getString(R.string.message_test_result_none_match);
                 String result = testNumber.getNumber();
                 if(ruleGroup.transform(testNumber)){
                     matching_pattern = testNumber.getMatchingRule().getPattern();
                     result = testNumber.getResult();
                     test_call_button.setVisibility(View.VISIBLE);
                 }
-                String message = "Matching pattern: " + matching_pattern + "\nresult: " + result;
+                String message = String.format(getString(R.string.message_test_result_numbers), matching_pattern, result);
                 Snackbar.make(v, message, Snackbar.LENGTH_INDEFINITE).show();
-                //Toast.makeText(context, "Matching pattern: " + matching_pattern + "\nresult: " + result, Toast.LENGTH_SHORT).show();
             }
         });
         test_call_button.setOnClickListener(new View.OnClickListener(){
@@ -120,7 +119,7 @@ public class RulesFragment extends CommonFragment  implements OnStartDragListene
     public void removeRule(int position){
         int i = (int) (new Date().getTime()/1000);
         if(removePosition!=position || i-lastRemoveTime>5){
-            Toast.makeText(context, "click again immediately to delete", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.message_delete_rule_clickagain, Toast.LENGTH_SHORT).show();
             removePosition=position;
             lastRemoveTime=i;
             return;
@@ -128,7 +127,7 @@ public class RulesFragment extends CommonFragment  implements OnStartDragListene
         removePosition=-1;
         ruleGroup.removeRule(position);
         adapter.notifyItemRemoved(position);
-        Toast.makeText(context, "rule deleted", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, R.string.message_delete_rule_deleted, Toast.LENGTH_SHORT).show();
     }
 
     public class RuleViewHolder extends RecyclerView.ViewHolder implements ItemTouchHelperViewHolder {
@@ -186,7 +185,6 @@ public class RulesFragment extends CommonFragment  implements OnStartDragListene
 
         public ContentAdapter(Context context, List<Rule> rules) {
             mItems = rules;
-            System.out.println("rule count: " + rules.size());
         }
 
         @Override
@@ -234,7 +232,7 @@ public class RulesFragment extends CommonFragment  implements OnStartDragListene
                             holder.rule_name.getText().toString().equals(currRule.getName()) &&
                             holder.rule_pattern.getText().toString().equals(currRule.getPattern()) &&
                             holder.rule_formula.getText().toString().equals(currRule.getFormula())){
-                        Toast.makeText(context, "no change detected", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, R.string.message_after_save_no_change, Toast.LENGTH_SHORT).show();
                         return;
                     }
                     Rule rule = new Rule(holder.rule_name.getText().toString(), holder.rule_pattern.getText().toString(), holder.rule_formula.getText().toString());
@@ -244,7 +242,7 @@ public class RulesFragment extends CommonFragment  implements OnStartDragListene
                     }
                     ruleGroup.setRule(holder.getLayoutPosition(), rule);
                     appdataaccess.saveAppData(appdata);
-                    Toast.makeText(context, "rule changed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.message_edit_rule_saved, Toast.LENGTH_SHORT).show();
 
                     holder.rule_name.setEnabled(false);
                     holder.rule_pattern.setEnabled(false);
@@ -276,7 +274,7 @@ public class RulesFragment extends CommonFragment  implements OnStartDragListene
                 @Override
                 public void onClick(View v) {
                     if(ruleGroup.getRules().size()>=Constant.MAX_RULES){
-                        Toast.makeText(context, "maximum " + Constant.MAX_RULES + " rules per group", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, String.format(getString(R.string.message_add_rule_max_rules), Constant.MAX_RULES), Toast.LENGTH_SHORT).show();
                         return;
                     }
                     Rule currRule = mItems.get(holder.getLayoutPosition());
@@ -287,7 +285,7 @@ public class RulesFragment extends CommonFragment  implements OnStartDragListene
                             currRule.getFormula());
                     ruleGroup.addRule(rule);
                     appdataaccess.saveAppData(appdata);
-                    Toast.makeText(context, "rule copied to " + newRuleName, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, String.format(getString(R.string.message_copy_rule_copied_to), newRuleName), Toast.LENGTH_SHORT).show();
                     adapter.notifyItemInserted(ruleGroup.getRules().size()-1);
                 }
             });

@@ -47,9 +47,6 @@ public class AppDataAccess {
         prefEditor = sharedPref.edit();
     }
     public static AppDataAccess getInstance(Context context){
-        if(context==null){
-            System.out.println("context is null");
-        }
         if(instance == null){
             instance = new AppDataAccess(context);
         }
@@ -67,7 +64,6 @@ public class AppDataAccess {
         appdata = gson.fromJson(json, AppData.class);
         if(appdata==null){
             appdata = new AppData();
-            appdata.addRuleGroup(new RuleGroup("group1"));
         }
         return appdata;
     }

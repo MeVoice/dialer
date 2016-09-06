@@ -1,5 +1,7 @@
 package com.mevoice.callrouter.model;
 
+import com.mevoice.callrouter.R;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -21,6 +23,7 @@ public class Rule {
     private boolean validated=false;
     private int sequence;
     private String validationResult;
+
     public List<String> getFormulaParts() {
         return formulaParts;
     }

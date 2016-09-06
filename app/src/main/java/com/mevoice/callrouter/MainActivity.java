@@ -71,19 +71,18 @@ public class MainActivity extends AppCompatActivity {
 
     @Subscribe
     public void onClickEvent(ClickEvent event) {
-        if (event.get("action").equals(Constant.ACTION_EDIT_RULES)) {
+        if (event.get(Constant.EVENT_TYPE_ACTION).equals(Constant.ACTION_EDIT_RULES)) {
             RuleGroup rg = appdata.getRuleGroups().get(appdata.getGroupInEdit());
             if (rg.getRules().size() > 0) {
-                fragmentTitles.put(Constant.FRAGMENT_KEY_RULES, "Rules - " + rg.getName());
+                fragmentTitles.put(Constant.FRAGMENT_KEY_RULES, String.format(getString(R.string.title_rules), rg.getName()));
                 showFragment(Constant.FRAGMENT_KEY_RULES, true);
             } else {
-                fragmentTitles.put(Constant.FRAGMENT_KEY_RULE_ADD, "+ Rule - " + rg.getName());
+                fragmentTitles.put(Constant.FRAGMENT_KEY_RULE_ADD, String.format(getString(R.string.title_rule_add), rg.getName()));
                 showFragment(Constant.FRAGMENT_KEY_RULE_ADD, true);
             }
-            //Toast.makeText(getApplicationContext(), "show rules for group " + appdata.getGroupInEdit(), Toast.LENGTH_SHORT).show();
         }
-        if (event.get("action").equals(Constant.ACTION_ROUTER_ON_OFF)) {
-            Boolean on_off = (Boolean) event.get("ON_OFF");
+        if (event.get(Constant.EVENT_TYPE_ACTION).equals(Constant.ACTION_ROUTER_ON_OFF)) {
+            Boolean on_off = (Boolean) event.get(Constant.EVENT_ACTION_RECEIVER_ONOFF);
             updateReceiverStatus(on_off.booleanValue());
         }
     }
@@ -127,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.action_reset) {
             int i = (int) (new Date().getTime()/1000);
             if(i-lastResetTime>5){
-                Toast.makeText(this, "All your changes will be lost, click again immediately to reset", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.message_before_reset, Toast.LENGTH_SHORT).show();
                 lastResetTime=i;
                 return false;
             }
@@ -150,21 +149,17 @@ public class MainActivity extends AppCompatActivity {
             //invoke email with attachment intent
             Intent intent = new Intent(Intent.ACTION_SEND);
             intent.setType("text/plain");
-            intent.putExtra(Intent.EXTRA_SUBJECT, "setting export");
-            intent.putExtra(Intent.EXTRA_TEXT, "setting export");
+            intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.literal_export_settings_email_subject));
+            intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.literal_export_settings_email_body));
             File file = new File(fileName);
-            if (!file.exists() || !file.canRead()) {
-                Toast.makeText(this, "Attachment Error", Toast.LENGTH_SHORT).show();
-            } else {
-                intent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + file));
-                this.startActivity(Intent.createChooser(intent,
-                        "Sending email..."));
-            }
+            intent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + file));
+            this.startActivity(Intent.createChooser(intent, getString(R.string.message_export_settings_chooser_title)));
             return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
         }
+        catch (IOException e){
+            Toast.makeText(context, R.string.message_export_settings_error, Toast.LENGTH_SHORT).show();
+        }
+        return false;
     }
 
     private static final int OPEN_REQUEST_CODE = 41;
@@ -178,12 +173,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void resetSettings() {
         try {
-            InputStream inputStream = getResources().getAssets().open("preload_sample_groups.json");
+            InputStream inputStream = getResources().getAssets().open(getString(R.string.literal_preload_settings_filename));
             importSettingsFromInputStream(inputStream);
-            Toast.makeText(getApplicationContext(), "settings successfully reset, restarting app", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.message_reset_settings_success, Toast.LENGTH_SHORT).show();
             recreate();
         } catch (IOException e) {
-            Toast.makeText(getApplicationContext(), "cannot find preload_sample_groups.json file", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.message_reset_settings_cannot_find_file, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -205,10 +200,10 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         InputStream inputStream = getContentResolver().openInputStream(currentUri);
                         importSettingsFromInputStream(inputStream);
-                        Toast.makeText(getApplicationContext(), "settings successfully imported, restarting app", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), R.string.message_import_settings_success, Toast.LENGTH_SHORT).show();
                         recreate();
                     } catch (FileNotFoundException e) {
-                        Toast.makeText(getApplicationContext(), "cannot find file: " + currentUri.toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), String.format(getResources().getString(R.string.message_import_settings_cannot_find_file), currentUri.toString()), Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -257,11 +252,11 @@ public class MainActivity extends AppCompatActivity {
 
         fragments.put(Constant.FRAGMENT_KEY_GROUPS, new GroupsFragment());
         fragmentIDs.put(R.id.action_groups, Constant.FRAGMENT_KEY_GROUPS);
-        fragmentTitles.put(Constant.FRAGMENT_KEY_GROUPS, "Rule Groups");
+        fragmentTitles.put(Constant.FRAGMENT_KEY_GROUPS, getString(R.string.title_groups));
         option_menu_groups_hashmap.put(Constant.FRAGMENT_KEY_GROUPS, new Integer(R.id.options_groups));
 
         fragments.put(Constant.FRAGMENT_KEY_GROUP_ADD, new GroupAddFragment());
-        fragmentTitles.put(Constant.FRAGMENT_KEY_GROUP_ADD, "+ Rule Group");
+        fragmentTitles.put(Constant.FRAGMENT_KEY_GROUP_ADD, getString(R.string.title_group_add));
         option_menu_groups_hashmap.put(Constant.FRAGMENT_KEY_GROUP_ADD, new Integer(R.id.options_groups));
 
         fragments.put(Constant.FRAGMENT_KEY_RULES, new RulesFragment());
@@ -273,19 +268,16 @@ public class MainActivity extends AppCompatActivity {
 
         fragments.put(Constant.FRAGMENT_KEY_HELP, new HelpFragment());
         fragmentIDs.put(R.id.action_help, Constant.FRAGMENT_KEY_HELP);
-        fragmentTitles.put(Constant.FRAGMENT_KEY_HELP, "Help & Feedback");
-        //option_menu_groups_hashmap.put(Constant.FRAGMENT_KEY_HELP, new Integer(R.id.options_help));
+        fragmentTitles.put(Constant.FRAGMENT_KEY_HELP, getString(R.string.title_help));
 
         getSupportFragmentManager().addOnBackStackChangedListener(
                 new FragmentManager.OnBackStackChangedListener() {
                     public void onBackStackChanged() {
                         backStackCount = getSupportFragmentManager().getBackStackEntryCount();
-                        System.out.println("backStackCount: " + backStackCount);
                         if (lastBackStackCount == backStackCount + 1) {
                             onFragmentBack();
                         }
                         lastBackStackCount = backStackCount;
-                        //Toast.makeText(getApplicationContext(), "onBackStackChanged", Toast.LENGTH_SHORT).show();
                     }
                 });
         activeFragment = Constant.FRAGMENT_KEY_GROUPS;
@@ -294,7 +286,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void onFragmentBack() {
         //reset title text and fab visibility based on fragment key
-        System.out.println("onFragmentBack");
         Fragment f = getSupportFragmentManager().findFragmentById(R.id.content);
         String key = "";
         if (f instanceof HelpFragment) {
@@ -312,13 +303,10 @@ public class MainActivity extends AppCompatActivity {
         if (f instanceof RuleAddFragment) {
             key = Constant.FRAGMENT_KEY_RULE_ADD;
         }
-        System.out.println(key);
         String title = (String) fragmentTitles.get(key);
-        System.out.println("found title:" + title);
         activeFragment = key;
         showFab(key);
         getSupportActionBar().setTitle(title);
-        System.out.println("onFragmentBack title is:" + title);
     }
 
     public void clearBackStack() {
@@ -335,7 +323,6 @@ public class MainActivity extends AppCompatActivity {
         invalidateOptionsMenu();
         String title = (String) fragmentTitles.get(key);
         getSupportActionBar().setTitle(title);
-        System.out.println("title is:" + title);
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.content, (Fragment) fragments.get(key));
@@ -353,7 +340,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     if (appdata.getRuleGroups().size() >= Constant.MAX_GROUPS) {
-                        Toast.makeText(context, "maximum " + Constant.MAX_GROUPS + " groups", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, String.format(getResources().getString(R.string.message_add_group_max_groups), Constant.MAX_GROUPS), Toast.LENGTH_SHORT).show();
                         return;
                     }
                     showFragment(Constant.FRAGMENT_KEY_GROUP_ADD, true);
@@ -368,10 +355,10 @@ public class MainActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     RuleGroup rg = appdata.getRuleGroups().get(appdata.getGroupInEdit());
                     if (rg.getRules().size() >= Constant.MAX_RULES) {
-                        Toast.makeText(context, "maximum " + Constant.MAX_RULES + " rules per group", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, String.format(getString(R.string.message_add_rule_max_rules), Constant.MAX_RULES), Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    fragmentTitles.put(Constant.FRAGMENT_KEY_RULE_ADD, "+ Rule - " + rg.getName());
+                    fragmentTitles.put(Constant.FRAGMENT_KEY_RULE_ADD, String.format(getString(R.string.title_rule_add), rg.getName()));
                     showFragment(Constant.FRAGMENT_KEY_RULE_ADD, true);
                 }
             });
