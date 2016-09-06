@@ -21,7 +21,6 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.mevoice.callrouter.model.Rule;
-import com.mevoice.callrouter.R;
 import com.mevoice.callrouter.helper.ItemTouchHelperAdapter;
 import com.mevoice.callrouter.helper.ItemTouchHelperViewHolder;
 import com.mevoice.callrouter.helper.OnStartDragListener;
