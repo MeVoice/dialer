@@ -52,7 +52,6 @@ public class RuleUnitTest extends TestCase{
         assertEquals(rule001.getValidationResult(), R.string.message_validate_rule_bracket_before_percent);
         rule001=new Rule("empty brackets", "1212D{}", "+123");
         assertFalse(rule001.validate());
-        System.out.println(rule001.getValidationResult());
         assertEquals(rule001.getValidationResult(), R.string.message_validate_rule_empty_brackets);
         rule001=new Rule("bad capture char", "1212D{123}", "+123{M12M3}");
         assertFalse(rule001.validate());
