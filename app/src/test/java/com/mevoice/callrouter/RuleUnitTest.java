@@ -24,7 +24,7 @@ public class RuleUnitTest extends TestCase{
         assertEquals(rule001.getValidationResult(), R.string.message_validate_rule_invalid_character);
         rule001=new Rule("+ not in beginning", "12+12", "+123");
         assertFalse(rule001.validate());
-        assertEquals(rule001.getValidationResult(), R.string.message_validate_rule_plus_first);
+        assertEquals(rule001.getValidationResult(), R.string.message_validate_rule_invalid_character);
         rule001=new Rule("+ not in beginning", "{+1212}", "+123");
         assertTrue(rule001.validate());
         rule001=new Rule("D% not at end", "1212D%1", "+123");
