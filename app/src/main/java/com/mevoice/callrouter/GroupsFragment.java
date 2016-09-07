@@ -88,9 +88,8 @@ public class GroupsFragment extends Fragment {
         public ImageButton group_edit_done;
         public ImageButton group_edit_cancel;
         public LinearLayout group_edit_layout;
-        public GroupViewHolder(LayoutInflater inflater, ViewGroup parent) {
-            super(inflater.inflate(R.layout.group_edit, parent, false));
-            //itemView is from Parent class, represent any view within the holder
+        public GroupViewHolder(View itemView) {
+            super(itemView);
             group_name = (EditText) itemView.findViewById(R.id.group_edit_name);
             group_inuse = (CheckBox) itemView.findViewById(R.id.group_edit_inuse);
             group_edit_rules = (ImageButton) itemView.findViewById(R.id.group_edit_rules);
@@ -114,7 +113,9 @@ public class GroupsFragment extends Fragment {
 
         @Override
         public GroupViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new GroupViewHolder(LayoutInflater.from(parent.getContext()), parent);
+            View view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.group_edit, parent, false);
+            return new GroupViewHolder(view);
         }
 
         @Override

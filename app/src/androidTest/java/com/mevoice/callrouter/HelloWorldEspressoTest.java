@@ -9,8 +9,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 /**
@@ -22,9 +24,12 @@ public class HelloWorldEspressoTest {
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule(MainActivity.class);
+    //Espresso.onView(Matchers.allOf(ViewMatchers.withId(R.id.drawerItemNameTextView), ViewMatchers.hasSibling(ViewMatchers.withText(((NavDrawerItem)item).getItemName())))).perform(ViewActions.click());
 
     @Test
-    public void listGoesOverTheFold() {
-        onView(withText("Rule Grou1ps")).check(matches(isDisplayed()));
+    public void test_group_view_fab_displayed() {
+        onView(withId(R.id.fab)).check(matches(isDisplayed()));
+        onView(withId(R.id.fab)).perform(click());
+        onView(withId(R.id.group_add_button)).check(matches(isDisplayed()));
     }
 }

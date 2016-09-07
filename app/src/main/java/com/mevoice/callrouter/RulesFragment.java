@@ -140,16 +140,8 @@ public class RulesFragment extends Fragment  implements OnStartDragListener {
         public ImageButton rule_edit_cancel;
         public LinearLayout rule_edit_layout;
         public boolean isActive;
-        public RuleViewHolder(LayoutInflater inflater, ViewGroup parent) {
-            super(inflater.inflate(R.layout.rule_edit, parent, false));
-            //itemView is from Parent class, represent any view within the holder
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Context context = v.getContext();
-
-                }
-            });
+        public RuleViewHolder(View itemView) {
+            super(itemView);
             rule_name = (EditText) itemView.findViewById(R.id.rule_edit_name);
             rule_inuse = (CheckBox) itemView.findViewById(R.id.rule_edit_inuse);
             rule_pattern = (EditText) itemView.findViewById(R.id.rule_edit_pattern);
@@ -187,7 +179,9 @@ public class RulesFragment extends Fragment  implements OnStartDragListener {
 
         @Override
         public RuleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new RuleViewHolder(LayoutInflater.from(parent.getContext()), parent);
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.rule_edit, parent, false);
+            return new RuleViewHolder(view);
         }
 
         @Override
