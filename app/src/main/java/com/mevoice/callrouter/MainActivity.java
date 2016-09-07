@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private HashMap option_menu_groups_hashmap = new HashMap();
     private String activeFragment;
     private int lastResetTime = 0;
-    private int[] option_menu_groups_array = {R.id.options_groups, R.id.options_help};
+    private int[] option_menu_groups_array = {R.id.options_groups};
 
     @Override
     public void onStart() {

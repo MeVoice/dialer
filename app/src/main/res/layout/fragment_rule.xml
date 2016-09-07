@@ -18,7 +18,7 @@
             android:ems="10"
             android:id="@+id/test_reroute_number"
             android:layout_weight="1"
-            android:hint="enter a test number"
+            android:hint="@string/literal_hint_group_test_enter_number"
             android:layout_margin="8dp" />
 
         <ImageButton

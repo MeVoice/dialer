@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+    function toggle(a){
+        var max_index = 6
+        for (i = 1; i <= max_index; i++) {
+            var e=document.getElementById("expandable-".concat(i.toString()));
+            if(i==a){
+                if(e.style.display=="block"){
+                    e.style.display="none"
+                }else{
+                    e.style.display="block"
+                }
+            }else{
+                e.style.display="none"
+            }
+        }
+        return true;
+    }
+    </script>
+    <style>
+        strong {
+        font-style: italic;
+        font-size: 12px;
+        }
+        .expand {
+        font-weight: bold;
+        font-size: 18px;
+        cursor: pointer;
+        }
+        .expandable {
+        display:none;
+        }
+        div {
+        margin: 10px;
+        }
+        .discard {
+        background-color: lightgrey;
+        }
+        .literal {
+        background-color: lightgreen;
+        text-decoration: underline;
+        }
+        .capture {
+        background-color: pink;
+        }
+        .capture2 {
+        background-color: Violet;
+        }
+    </style>
+</head>
+<body>
+
+<div>
+    <a href="#" id="expand-1" onclick="return toggle(1);">如何工作</a>
+</div>
+<div class="expandable" id="expandable-1">
+    <p>您拨打电话时，省心拨号自动将您所拨打的号码和一组您定义的模板进行比较，如有符合，就用您定义的相关公式进行改号后继续拨号。可在使用长途电话卡时使用。</p>
+</div>
+<div>
+    <a href="#" id="expand-2" onclick="return toggle(2);">这个拨号器有何不同？</a>
+</div>
+<div class="expandable" id="expandable-2">
+    <p><strong>一次性设置</strong>. 在使用前一次性设置和测试，从此使用电话卡和直拨的体验基本一样。</p>
+    <p><strong>更多的用处</strong>. 原号码可被任意拆解重组，除在使用电话卡时外，还可以在拨打电话会议时，在办公室外拨打分机时为您省时省心。</p>
+</div>
+<div>
+    <a href="#" id="expand-3" onclick="return toggle(3);">词汇表</a>
+</div>
+<div class="expandable" id="expandable-3">
+    <p><strong>模式</strong>: 用来匹配原号码，从中抽取部分全部或部分号码</p>
+    <p><strong>公式</strong>: 用来组成新号码</p>
+    <p><strong>规则</strong>: 一个模式和公式的组合。如果模式成功匹配了原号码，公式就会生成新号码.</p>
+    <p><strong>规则组</strong>: 一组按序排列的规则。对原号码的试匹配在组里按序进行，直到第一次匹配成功。如无匹配则使用原号码。可以定义多个规则组，但只能使用其中的一个。
+        通常规则组是和用户所在的地区或者运营商相关。比如在上海时使用“移动-上海”组，在纽约时用“ATT-NY”组。</p>
+    <p><strong>网关</strong>: an intermediate phone number the user calls in order to reach the
+        final destination. e.g. a calling card provider's local access number.</p>
+    <p><strong>E.164</strong>: 一种记录电话号码的格式。每个号码以+开始，通常依次为国家代码，地区代码，和区内号码。比如+1 212 234 5678, +86 21 212121212。
+        用E.164格式存放的电话号码不包含呼叫者自己的长途区号，适合经常需要长途旅行的人群用来和智能型拨号软件配合使用。以下的例子里大多使用E.164格式。</p>
+</div>
+<div>
+    <a href="#" id="expand-4" onclick="return toggle(4);">模式和公式的说明</a>
+</div>
+<div class="expandable" id="expandable-4">
+    <table border="1">
+        <tbody>
+        <tr>
+            <td><strong>characters</strong></td>
+            <td><strong>explanation</strong></td>
+        </tr>
+        <tr>
+            <td>0123456789#*,;+</td>
+            <td>
+                <p>这些是手机上的“可拨字符”. 其中“,”表示暂停，“；”表示等待用户确认。“+”只能出现在开始，表示号码使用E.164格式。任何其他字符，比如".",
+                    "-", " "都是为了格式。它们在拨号前会被清除。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>可拨字符和“{}DX% ”</td>
+            <td>这些可用在模式里。“D”和“X”只能是大写。</td>
+        </tr>
+        <tr>
+            <td>可拨字符和“{}M ”</td>
+            <td>这些可用在公式里。“M”只能是大写。</td>
+        </tr>
+        <tr>
+            <td>" "</td>
+            <td>可以在模式和公式里使用空格，但如已经提到的那样，空格只是为了显示格式，在匹配开始前模式里的空格会被清楚。 “+1 800 800 8080”和“+18008008080”是完全等效的。
+            </td>
+        </tr>
+        <tr>
+            <td>D</td>
+            <td>代表任何一个数字</td>
+        </tr>
+        <tr>
+            <td>X</td>
+            <td>代表任何一个可拨字符</td>
+        </tr>
+        <tr>
+            <td>{ 和 }</td>
+            <td>
+                <p>在模式里，大括号将匹配到的字符保存下来，以便在公式里使用。</p>
+                <p>在公式里，大括号和M一起使用，代表来自原号码的被保留字符串。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>M</td>
+            <td>在公式里出现，用{M1}，{M2}这样的格式来表示第一个被保留的字符串，第二个被保留的字符串。
+                {M0}代表完整的原号码.
+            </td>
+        </tr>
+        <tr>
+            <td>%</td>
+            <td>代表前一个字符重复任意次。包括0次。直到原号码结束。只能出现在模式的最后。
+            </td>
+        </tr>
+        <tr>
+            <td>D%</td>
+            <td>
+                <p>匹配所有的数字直到原号码结束</p>
+                <p>"12D%" 不能匹配 "12"，因为D本身也是一位数字</p>
+                <p>"12D%" 匹配 "122"</p>
+                <p>"12D%" 匹配 "122334"</p>
+                <p>"12D%" 不能匹配 "1223,34"，因为","不是一个数字。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>X%</td>
+            <td>
+                <p>匹配任意字符直到原号码结束</p>
+                <p>"12X%" 匹配 "122334", 也匹配 "1223,34"</p>
+            </td>
+        </tr>
+        <tr>
+            <td>2%</td>
+            <td>
+                <p>匹配一串“2”直到原号码结束</p>
+                <p>"12%" 匹配 "12222", 但不匹配 "12223".</p>
+                <p>"12%" 匹配 "12"</p>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div>
+    <a href="#" id="expand-5" onclick="return toggle(5);">Sample scenarios and rules</a>
+</div>
+<div class="expandable" id="expandable-5">
+    <p>A character in the original number will be either <span
+            class="capture">matched and captured</span>, or <span class="discard">matched and discarded</span>
+    </p>
+    <p>A character in the new number can be from either <span class="capture">matched and captured in original number</span>,
+        or <span class="literal">literals in formula</span></p>
+    <p>1. dial the original US number</p>
+    <table border="1">
+        <tbody>
+        <tr>
+            <td>original number</td>
+            <td><span class="discard">+1</span><span class="capture">8008008888</span></td>
+        </tr>
+        <tr>
+            <td>pattern</td>
+            <td><span class="discard">+1</span><span class="capture">{X%}</span></td>
+        </tr>
+        <tr>
+            <td>formula</td>
+            <td><span class="literal">1</span><span class="capture">{M1}</span></td>
+        </tr>
+        <tr>
+            <td>new number</td>
+            <td><span class="literal">1</span><span class="capture">8008008888</span></td>
+        </tr>
+        <tr>
+            <td>explanation</td>
+            <td>
+                <p>X matches any ONE character</p>
+                <p>X% matches any character til the end</p>
+                <p>{} in pattern captures the matched characters ("8008008888")</p>
+                <p>{M1} in formula represents the captured characters</p>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <p>2. make an international call via a calling card</p>
+    <table border="1">
+        <tbody>
+        <tr>
+            <td>original number</td>
+            <td><span class="discard">+</span><span class="capture">86212323232323</span></td>
+        </tr>
+        <tr>
+            <td>pattern</td>
+            <td><span class="discard">+</span><span class="capture">{X%}</span></td>
+        </tr>
+        <tr>
+            <td>formula</td>
+            <td><span class="literal">1800 123 4567,56565656#, 011</span><span
+                    class="capture">{M1}</span></td>
+        </tr>
+        <tr>
+            <td>new number</td>
+            <td><span class="literal">1800 123 4567,56565656#, 011</span><span class="capture">86212323232323</span>
+            </td>
+        </tr>
+        <tr>
+            <td>explanation</td>
+            <td>
+                <p>"1800 123 4567" is the gateway number</p>
+                <p>"," is a pause in dialing</p>
+                <p>"56565656#" is the user's pin code.</p>
+                <p>"011" is internation dialing sequence from the US.</p>
+                <p>"{%X}" in pattern captures "86212323232323" from original number</p>
+                <p>"{M1}" in formula refers to the captured sequence</p>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <p>3. dial an office extension through a gateway</p>
+    <table border="1">
+        <tbody>
+        <tr>
+            <td>original number</td>
+            <td><span class="discard">67</span><span class="capture">5656</span></td>
+        </tr>
+        <tr>
+            <td>pattern</td>
+            <td><span class="discard">67</span><span class="capture">{DDDD}</span></td>
+        </tr>
+        <tr>
+            <td>formula</td>
+            <td><span class="literal">1800 234 5567,78787878#,</span><span
+                    class="capture">{M1}</span></td>
+        </tr>
+        <tr>
+            <td>new number</td>
+            <td><span class="literal">1800 234 5567,78787878#,</span><span
+                    class="capture">5656</span></td>
+        </tr>
+        <tr>
+            <td>explanation</td>
+            <td>
+                <p>"1800 234 5567" is the gateway number</p>
+                <p>"78787878#" is user's pin code</p>
+                <p>{DDDD} in pattern captures any 4 digits</p>
+                <p>{M1} in formula refers to the captured sequence</p>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <p>4. call into a conference using meeting ID and pin, by clicking meeting ID and pin in a
+        meeting notification email.</p>
+    <table border="1">
+        <tbody>
+        <tr>
+            <td>original number</td>
+            <td><span class="capture">54545454</span><span class="discard">,</span><span
+                    class="capture2">2323</span></td>
+        </tr>
+        <tr>
+            <td>pattern</td>
+            <td><span class="capture">{DDDDDDDD}</span><span class="discard">,</span><span
+                    class="capture2">{DDDD}</span></td>
+        </tr>
+        <tr>
+            <td>formula</td>
+            <td><span class="literal">1800 234 7878,</span><span class="capture">{M1}</span><span
+                    class="literal">,1,</span><span class="capture2">{M2}</span></td>
+        </tr>
+        <tr>
+            <td>new number</td>
+            <td><span class="literal">1800234 7878,</span><span class="capture">54545454</span><span
+                    class="literal">,1,</span><span class="capture2">2323</span></td>
+        </tr>
+        <tr>
+            <td>explanation</td>
+            <td>
+                <p>"1800 234 7878" is conference system's main number.</p>
+                <p>{DDDDDD} matches and captures 8 digit conference ID</p>
+                <p>{DDDD} matches and captures the pin code</p>
+                <p>{M1} refers to the first captured sequence, which is the conference ID</p>
+                <p>{M2} refers to the second captured sequence, which is the pin</p>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <p>5. a rule group with two rules for a user with the US carrier ABB and homed in New York.</p>
+    <table border="1">
+        <tbody>
+        <tr>
+            <td>pattern</td>
+            <td>formula</td>
+            <td>comment</td>
+        </tr>
+        <tr>
+            <td>+1{X%}</td>
+            <td>1{M1}</td>
+            <td>dial original US number</td>
+        </tr>
+        <tr>
+            <td>+{X%}</td>
+            <td>18001234567,12121212#,011{M1}#</td>
+            <td>dial international number through a gateway</td>
+        </tr>
+        </tbody>
+    </table>
+    <p>6. a rule group with 3 rules for a user with the Chinese (country code 86)&nbsp;carrier DCC&nbsp;and
+        homed in Shanghai (area code 21).</p>
+    <table border="1">
+        <tbody>
+        <tr>
+            <td>pattern</td>
+            <td>formula</td>
+            <td>comment</td>
+        </tr>
+        <tr>
+            <td>+8621{X%}</td>
+            <td>{M1}</td>
+            <td>dial Shanghai&nbsp;local number</td>
+        </tr>
+        <tr>
+            <td>+86{X%}</td>
+            <td>17910,232323231212#,0{M1}#</td>
+            <td>use a calling card&nbsp;for domestic long distance in China</td>
+        </tr>
+        <tr>
+            <td>+{X%}</td>
+            <td>17910,232323231212#,00{M1}#</td>
+            <td>use a calling card for intl&nbsp;long distance</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div>
+    <a href="#" id="expand-6" onclick="return toggle(6);">怎么干？</a>
+</div>
+
+<div id="expandable-6" class="expandable">
+    <p><strong>如何开始？</strong></p>
+    <p>省心拨号已为您准备了规则组的示例，从中复制一个，修改规则，测试规则，最后激活规则组就可以了。</p>
+    <p><strong>如何中止？</strong></p>
+    <p>卸载，或者把所有的规则组都删除或关闭。</p>
+    <p><strong>如何把设置在不同的手机间传送？</strong></p>
+    <p>使用“导出”，“导入”功能</p>
+    <p><strong>如何查看改拨的记录？</strong></p>
+    <p>一个被改拨的电话会留下多至三个通话记录。一个长度为0的记录，被叫号码为原号码；一个真实长度的记录，被叫号码为新号码中的电话号码部分（比如说电话卡的网关电话，或者17910之类）；
+        如果新号码中包含暂停，就还会生成一个被叫号码为全部新号码，长度为0的通话记录。</p>
+    <p><strong>如何恢复一开始的示例组？</strong></p>
+    <p>使用“重置”功能"</p>
+</div>
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+</body>
+</html>

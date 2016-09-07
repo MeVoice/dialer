@@ -1,32 +1,15 @@
 <resources>
     <string name="app_name">Call Router</string>
-    <string name="call">Call</string>
-    <string name="enable">enable</string>
-    <string name="label_prefix">prefix</string>
-    <string name="label_enable_edit">edit number</string>
-    <string name="label_enable_reroute">reroute call</string>
-    <string name="value_prefix">prefix</string>
-    <string name="value_enable_edit">enable_edit</string>
-    <string name="value_enable_reroute">enable_reroute</string>
-    <string name="shared_pref">app_data</string>
-    <string name="settings">settings</string>
+    <string name="label_editcall_call">Call</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="save">Save</string>
-    <string name="confirm_reroute">confirm reroute</string>
-    <string name="action_groups">Groups</string>
-    <string name="action_features">Features</string>
-    <string name="action_help">Help</string>
-    <string name="action_add_groups">add group</string>
-    <string name="action_send_email">Export</string>
-    <string name="action_import">Import</string>
-    <string name="navigation_drawer_open">drawer_open</string>
-    <string name="navigation_drawer_close">drawer_close</string>
-    <string name="help_summary">Summary</string>
-    <string name="help_definition">Definitions</string>
-    <string name="help_syntax">Syntax</string>
-    <string name="help_sample">Samples</string>
-    <string name="action_reset">Reset</string>
+    <string name="menu_item_groups">Groups</string>
+    <string name="menu_item_help">Help</string>
+    <string name="menu_item_export">Export</string>
+    <string name="menu_item_import">Import</string>
+    <string name="menu_item_reset">Reset</string>
+    <string name="navigation_drawer_open">drawer open</string>
+    <string name="navigation_drawer_close">drawer close</string>
     <string name="message_before_reset">All your changes will be lost, click again immediately to reset</string>
     <string name="message_after_add_group">group added</string>
     <string name="message_validation_group_name_too_short">group name at least 5 characters long</string>
@@ -77,5 +60,12 @@
     <string name="message_validate_rule_bracket_before_percent">\'%%\' is not valid following a bracket in %s</string>
     <string name="message_validate_rule_empty_brackets">empty brackets in %s</string>
 
+    <string name="literal_locale">en</string>
+
+    <string name="literal_hint_group_name">Group Name</string>
+    <string name="literal_hint_group_test_enter_number">enter a test number</string>
+    <string name="literal_hint_rule_pattern">pattern</string>
+    <string name="literal_hint_rule_formula">formula</string>
+    <string name="literal_hint_rule_name">Comment</string>
 
 </resources>

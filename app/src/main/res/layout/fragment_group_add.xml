@@ -14,7 +14,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="top|center_vertical"
             android:layout_weight="1"
-            android:hint="Group Name"
+            android:hint="@string/literal_hint_group_name"
             android:width="60dp" />
 
 

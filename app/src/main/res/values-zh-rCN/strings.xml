@@ -1,0 +1,69 @@
+<resources>
+    <string name="app_name">省心拨号</string>
+    <string name="label_editcall_call">拨出</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="menu_item_groups">规则组</string>
+    <string name="menu_item_help">帮助</string>
+    <string name="menu_item_export">导出</string>
+    <string name="menu_item_import">导入</string>
+    <string name="menu_item_reset">重置</string>
+    <string name="navigation_drawer_open">打开应用主菜单</string>
+    <string name="navigation_drawer_close">关闭应用主菜单</string>
+    <string name="message_before_reset">所有设置将被清空。如果继续，请立刻再按一次。</string>
+    <string name="message_after_add_group">规则组已新增</string>
+    <string name="message_validation_group_name_too_short">组名应使用至少五个字符</string>
+    <string name="message_validation_group_name_in_use">同名组已存在</string>
+    <string name="message_after_save_no_change">未检测到变化</string>
+    <string name="message_add_group_max_groups">最多可有%d组</string>
+    <string name="message_delete_group_clickagain">如想删除，请立刻再按一次</string>
+    <string name="message_delete_group_deleted">已删除规则组</string>
+    <string name="message_copy_group_copied_to">已复制规则组到： %s</string>
+    <string name="message_edit_group_saved">已记录修改</string>
+    <string name="message_export_settings_error">导出时出错</string>
+    <string name="message_export_settings_chooser_title">发送电邮。。。</string>
+    <string name="message_import_settings_success">已成功导入，自动重启应用。。。</string>
+    <string name="message_import_settings_cannot_find_file">无法读取要导入的文件：%s</string>
+    <string name="literal_preload_settings_filename">preload_sample_groups.json</string>
+    <string name="literal_export_settings_email_subject">导出设置</string>
+    <string name="literal_export_settings_email_body">导出设置</string>
+    <string name="message_reset_settings_success">已成功重置，自动重启应用。。。</string>
+    <string name="message_reset_settings_cannot_find_file">无法读取初始设置文件： preload_sample_groups.json</string>
+    <string name="message_add_rule_success">新规则已保存</string>
+    <string name="message_add_rule_max_rules">每组最多可有%d条规则</string>
+    <string name="message_delete_rule_clickagain">如想删除规则，请立刻再按一次</string>
+    <string name="message_delete_rule_deleted">已删除规则</string>
+    <string name="message_rewrite_result_numbers">原号: %1$s\n新号: %2$s</string>
+    <string name="message_test_result_numbers">匹配到的规则: %1$s\n改号的结果: %2$s</string>
+    <string name="message_test_result_none_match">没有匹配</string>
+
+    <string name="message_edit_rule_saved">已记录修改</string>
+    <string name="message_copy_rule_copied_to">已复制规则到： %s</string>
+
+
+    <string name="title_rules">规则 - %s</string>
+    <string name="title_rule_add">+ 规则 - %s</string>
+    <string name="title_groups">规则组</string>
+    <string name="title_group_add">+ 规则组</string>
+    <string name="title_help">帮助</string>
+
+    <string name="message_validate_rule_invalid_character">在%s中发现非法字符</string>
+    <string name="message_validate_rule_invalid_format">%s的格式错误</string>
+    <string name="message_validate_rule_more_match_in_formula">%s中匹配串的序号大于模版能提供的匹配串数量</string>
+    <string name="literal_validate_rule_pattern">模板</string>
+    <string name="literal_validate_rule_formula">公式</string>
+    <string name="message_validate_rule_too_short">%s太短</string>
+    <string name="message_validate_rule_plus_first">\'+\'只能在%s的开始使用</string>
+    <string name="message_validate_rule_percent_last">\'%%\'只能在%s的最后使用</string>
+    <string name="message_validate_rule_percent_not_first">\'%%\'不应出现在%s的开始</string>
+    <string name="message_validate_rule_pair_brackets">大括号在%s应成对使用</string>
+    <string name="message_validate_rule_bracket_before_percent">在%s里\'%%\'不能在紧跟在大括号后</string>
+    <string name="message_validate_rule_empty_brackets">在%s里大括号内容为空</string>
+
+    <string name="literal_hint_group_name">规则组名</string>
+    <string name="literal_hint_group_test_enter_number">请输入一个测试电话号码</string>
+    <string name="literal_hint_rule_pattern">请输入模式</string>
+    <string name="literal_hint_rule_formula">请输入公式</string>
+    <string name="literal_hint_rule_name">注释</string>
+
+</resources>

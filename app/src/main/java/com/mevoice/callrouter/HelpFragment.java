@@ -10,9 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.Toast;
-
-import com.mevoice.callrouter.R;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,6 +42,6 @@ public class HelpFragment extends Fragment {
             webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
         ws.setJavaScriptEnabled(true);
-        webView.loadUrl("file:///android_asset/help.html");
+        webView.loadUrl("file:///android_asset/" + getString(R.string.literal_locale) + "/help.html");
     }
 }
