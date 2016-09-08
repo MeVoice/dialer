@@ -4,6 +4,7 @@ import com.mevoice.callrouter.Constant;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -12,6 +13,46 @@ import java.util.List;
 public class AppData {
     private int groupInEdit=-1;
     private int ruleInEdit=-1;
+    private int loadTimes=0;
+    private List<RuleGroup> ruleGroups=new ArrayList();;
+    private boolean moreLog=false;
+    private int groups_loadTimes=0;
+    private int rules_loadTimes=0;
+
+    public int getGroups_loadTimes() {
+        return groups_loadTimes;
+    }
+
+    public void setGroups_loadTimes(int groups_loadTimes) {
+        this.groups_loadTimes = groups_loadTimes;
+    }
+
+    public int getRules_loadTimes() {
+        return rules_loadTimes;
+    }
+
+    public void setRules_loadTimes(int rules_loadTimes) {
+        this.rules_loadTimes = rules_loadTimes;
+    }
+
+    public boolean isNumberRewrite() {
+        return numberRewrite;
+    }
+
+    public void setNumberRewrite(boolean numberRewrite) {
+        this.numberRewrite = numberRewrite;
+    }
+
+    private boolean numberRewrite=false;
+
+    public boolean isMoreLog() {
+        return moreLog;
+    }
+
+    public void setMoreLog(boolean moreLog) {
+        this.moreLog = moreLog;
+    }
+
 
     public int getLoadTimes() {
         return loadTimes;
@@ -21,7 +62,6 @@ public class AppData {
         this.loadTimes = loadTimes;
     }
 
-    private int loadTimes=0;
 
     public List<TransformLog> getTransformLog() {
         return transformLog;
@@ -48,7 +88,6 @@ public class AppData {
         this.ruleInEdit = ruleInEdit;
     }
 
-    private List<RuleGroup> ruleGroups=new ArrayList();;
 
     public AppData(){
     }

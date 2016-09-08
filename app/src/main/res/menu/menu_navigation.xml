@@ -3,13 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/action_help"
-            android:title="@string/menu_item_help"
+            android:id="@+id/action_settings"
+            android:title="@string/menu_item_settings"
             android:orderInCategory="100"
             app:showAsAction="never" />
         <item
             android:id="@+id/action_groups"
             android:title="@string/menu_item_groups"
+            android:orderInCategory="100"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/action_help"
+            android:title="@string/menu_item_help"
             android:orderInCategory="100"
             app:showAsAction="never" />
     </group>

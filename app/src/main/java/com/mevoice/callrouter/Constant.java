@@ -10,6 +10,7 @@ public class Constant {
     public static final String ACTION_ROUTER_ON_OFF="ACTION_ROUTER_ON_OFF";
     public static final int MAX_GROUPS=10;
     public static final int MAX_RULES=30;
+
     public static final String ACTION_GROUP_VALIDATE = "ACTION_GROUP_VALIDATE";
     public static final String ACTION_GROUP_VALIDATE_RESULT = "ACTION_GROUP_VALIDATE_RESULT";
     public static final String FRAGMENT_KEY_GROUPS="groups";
@@ -17,6 +18,8 @@ public class Constant {
     public static final String FRAGMENT_KEY_RULES="rules";
     public static final String FRAGMENT_KEY_RULE_ADD="rule_add";
     public static final String FRAGMENT_KEY_HELP="help";
+    public static final String FRAGMENT_KEY_SETTINGS ="settings" ;
+
     public static final String EVENT_TYPE_ACTION ="action";
     public static final String EVENT_ACTION_RECEIVER_ONOFF ="ON_OFF";
 

@@ -2,7 +2,6 @@ package com.mevoice.callrouter;
 
 import android.app.Activity;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -78,8 +77,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         if (event.get(Constant.EVENT_TYPE_ACTION).equals(Constant.ACTION_ROUTER_ON_OFF)) {
-            Boolean on_off = (Boolean) event.get(Constant.EVENT_ACTION_RECEIVER_ONOFF);
-            updateReceiverStatus(on_off.booleanValue());
+            updateReceiverStatus(CRApp.appdata.getRuleGroupInUse()>=0 && CRApp.appdata.isNumberRewrite());
         }
     }
 
@@ -181,9 +179,8 @@ public class MainActivity extends AppCompatActivity {
     public void importSettingsFromInputStream(InputStream inputStream) {
         final Gson gson = new Gson();
         final BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        CRApp.appdata = gson.fromJson(reader, AppData.class);
-        CRApp.appdata.setLoadTimes(1);
-        CRApp.appdataaccess.setAppdata(CRApp.appdata);
+        AppData appDataFromFile = gson.fromJson(reader, AppData.class);
+        CRApp.appdata.setRuleGroups(appDataFromFile.getRuleGroups());
         CRApp.appdataaccess.saveAppData();
     }
 
@@ -215,6 +212,7 @@ public class MainActivity extends AppCompatActivity {
         if(CRApp.appdata.getLoadTimes()==0){
             resetSettings();
         }
+        CRApp.appdata.setLoadTimes(CRApp.appdata.getLoadTimes()+1);
         setContentView(R.layout.activity_main);
         // Adding Toolbar to Main screen
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -248,6 +246,11 @@ public class MainActivity extends AppCompatActivity {
         fragmentTitles.put(Constant.FRAGMENT_KEY_GROUPS, getString(R.string.title_groups));
         option_menu_groups_hashmap.put(Constant.FRAGMENT_KEY_GROUPS, new Integer(R.id.options_groups));
 
+        fragments.put(Constant.FRAGMENT_KEY_SETTINGS, new SettingsFragment());
+        fragmentIDs.put(R.id.action_settings, Constant.FRAGMENT_KEY_SETTINGS);
+        fragmentTitles.put(Constant.FRAGMENT_KEY_SETTINGS, getString(R.string.title_settings));
+
+
         fragments.put(Constant.FRAGMENT_KEY_GROUP_ADD, new GroupAddFragment());
         fragmentTitles.put(Constant.FRAGMENT_KEY_GROUP_ADD, getString(R.string.title_group_add));
         option_menu_groups_hashmap.put(Constant.FRAGMENT_KEY_GROUP_ADD, new Integer(R.id.options_groups));
@@ -273,8 +276,8 @@ public class MainActivity extends AppCompatActivity {
                         lastBackStackCount = backStackCount;
                     }
                 });
-        activeFragment = Constant.FRAGMENT_KEY_GROUPS;
-        showFragment(Constant.FRAGMENT_KEY_GROUPS, false);
+        activeFragment = Constant.FRAGMENT_KEY_SETTINGS;
+        showFragment(Constant.FRAGMENT_KEY_SETTINGS, false);
     }
 
     public void onFragmentBack() {
@@ -364,11 +367,15 @@ public class MainActivity extends AppCompatActivity {
 
     public void updateReceiverStatus(boolean enable) {
         PackageManager pm = CRApp.context.getPackageManager();
-        if (enable) {
-            pm.setComponentEnabledSetting(new ComponentName(CRApp.context, OutgoingCallRewrite.class),
+        ComponentName cn = new ComponentName(CRApp.context, OutgoingCallRewrite.class);
+        int currentComponentEnabledSetting = pm.getComponentEnabledSetting(cn);
+        if (enable && currentComponentEnabledSetting==PackageManager.COMPONENT_ENABLED_STATE_DISABLED) {
+            pm.setComponentEnabledSetting(cn,
                     PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
-        } else {
-            pm.setComponentEnabledSetting(new ComponentName(CRApp.context, OutgoingCallRewrite.class),
+        }
+        if (!enable && (currentComponentEnabledSetting==PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+            || currentComponentEnabledSetting==PackageManager.COMPONENT_ENABLED_STATE_DEFAULT)){
+            pm.setComponentEnabledSetting(cn,
                     PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
         }
     }

@@ -45,20 +45,28 @@ public class RulesFragment extends Fragment  implements OnStartDragListener {
     private ItemTouchHelper mItemTouchHelper;
     private MatchNumber testNumber;
     ContentAdapter adapter;
+    private View rootView;
     private EventBus bus = EventBus.getDefault();
 
 
     public RulesFragment() {
         // Required empty public constructor
     }
-
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if(CRApp.appdata.getRules_loadTimes()==0){
+            Snackbar.make(rootView, getString(R.string.greeting_rules), Snackbar.LENGTH_INDEFINITE).show();
+        }
+        CRApp.appdata.setRules_loadTimes(CRApp.appdata.getRules_loadTimes()+1);
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_rule, container, false);
+        rootView = inflater.inflate(R.layout.fragment_rule, container, false);
 
-        RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.rules_recycler_view);
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.rules_recycler_view);
         ruleGroup = CRApp.appdata.getRuleGroup(CRApp.appdata.getGroupInEdit());
         adapter = new ContentAdapter(recyclerView.getContext(), ruleGroup.getRules());
         recyclerView.setAdapter(adapter);
@@ -69,9 +77,9 @@ public class RulesFragment extends Fragment  implements OnStartDragListener {
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
 
-        test_reroute_number = (EditText) v.findViewById(R.id.test_reroute_number);
-        final ImageButton test_reroute_button = (ImageButton) v.findViewById(R.id.test_reroute_button);
-        final ImageButton test_call_button = (ImageButton) v.findViewById(R.id.test_call_button);
+        test_reroute_number = (EditText) rootView.findViewById(R.id.test_reroute_number);
+        final ImageButton test_reroute_button = (ImageButton) rootView.findViewById(R.id.test_reroute_button);
+        final ImageButton test_call_button = (ImageButton) rootView.findViewById(R.id.test_call_button);
 
         test_reroute_button.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -99,7 +107,7 @@ public class RulesFragment extends Fragment  implements OnStartDragListener {
                 test_call_button.setVisibility(View.GONE);
             }
         });
-        return v;
+        return rootView;
     }
 
     @Override

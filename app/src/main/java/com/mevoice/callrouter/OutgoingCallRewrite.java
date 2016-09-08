@@ -20,8 +20,7 @@ public class OutgoingCallRewrite extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        AppData appdata = AppDataAccess.getInstance(context).getAppdata();
-        RuleGroup rg = appdata.getRuleGroup(appdata.getRuleGroupInUse());
+        RuleGroup rg = CRApp.appdata.getRuleGroup(CRApp.appdata.getRuleGroupInUse());
         String phoneNumber;
         String new_phoneNumber;
         phoneNumber = getResultData();
@@ -46,6 +45,7 @@ public class OutgoingCallRewrite extends BroadcastReceiver {
     }
     public  void  AddNumToCallLog(ContentResolver resolver , String strNum, int type, long timeInMiliSecond, String rule_comment)
     {
+        if(!CRApp.appdata.isMoreLog()) return;
         ContentValues values = new ContentValues();
         values.put(CallLog.Calls.NUMBER, strNum);
         values.put(CallLog.Calls.DATE, timeInMiliSecond);

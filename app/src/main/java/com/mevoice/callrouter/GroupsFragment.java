@@ -4,6 +4,7 @@ package com.mevoice.callrouter;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,6 +32,7 @@ public class GroupsFragment extends Fragment {
     private int removePosition=-1;
     private int lastRemoveTime=0;
     ContentAdapter adapter;
+    View rootView;
     private EventBus bus = EventBus.getDefault();
 
     public GroupsFragment() {
@@ -40,17 +42,24 @@ public class GroupsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_group, container, false);
+        rootView = inflater.inflate(R.layout.fragment_group, container, false);
 
         // Inflate the layout for this fragment
-        RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.my_recycler_view);
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
         adapter = new ContentAdapter(recyclerView.getContext(), CRApp.appdata.getRuleGroups());
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        return v;
+        return rootView;
     }
-
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if(CRApp.appdata.getGroups_loadTimes()==0){
+            Snackbar.make(rootView, getString(R.string.greeting_groups), Snackbar.LENGTH_INDEFINITE).show();
+        }
+        CRApp.appdata.setGroups_loadTimes(CRApp.appdata.getGroups_loadTimes()+1);
+    }
     public boolean validateGroup(RuleGroup rg, int position){
         switch(CRApp.appdata.validateRuleGroup(rg, position)) {
             case Constant.ERROR_GROUPNAME_TOOSHORT:
@@ -192,11 +201,6 @@ public class GroupsFragment extends Fragment {
                     if(wasInUse != nowInUse) {
                         ClickEvent ev = new ClickEvent();
                         ev.put(Constant.EVENT_TYPE_ACTION, Constant.ACTION_ROUTER_ON_OFF);
-                        if (nowInUse) {
-                            ev.put(Constant.EVENT_ACTION_RECEIVER_ONOFF, new Boolean(true));
-                        }else{
-                            ev.put(Constant.EVENT_ACTION_RECEIVER_ONOFF, new Boolean(false));
-                        }
                         bus.post(ev);
                     }
                     CRApp.appdataaccess.saveAppData();

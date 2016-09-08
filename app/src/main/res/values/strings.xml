@@ -68,4 +68,12 @@
     <string name="literal_hint_rule_formula">formula</string>
     <string name="literal_hint_rule_name">Comment</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="label_settings_more_call_log">Create more log for managed calls</string>
+    <string name="menu_item_settings">Settings</string>
+    <string name="title_settings">Settings</string>
+    <string name="label_settings_enable_rewrite">Manage outgoing calls</string>
+
+    <string name="greeting_groups">Find out what a button does by clicking it.</string>
+    <string name="greeting_rules">Adjust a rule\'s position with a long click, then drag-and-drop.</string>
 </resources>
