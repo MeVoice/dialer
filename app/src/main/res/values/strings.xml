@@ -3,7 +3,7 @@
     <string name="label_editcall_call">Call</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="menu_item_groups">Groups</string>
+    <string name="menu_item_groups">Rule Groups</string>
     <string name="menu_item_help">Help</string>
     <string name="menu_item_export">Export</string>
     <string name="menu_item_import">Import</string>

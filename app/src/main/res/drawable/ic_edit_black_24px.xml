@@ -10,7 +10,6 @@
         />
     <path
         android:pathData="M0,20h24v4H0z"
-        android:strokeColor="#FF000000"
-        android:strokeWidth="0.6"
+        android:fillColor="#FF000000"
         />
 </vector>

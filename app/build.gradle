@@ -6,7 +6,7 @@ android {
     defaultConfig {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         applicationId "com.mevoice.callrouter"
-        minSdkVersion 19
+        minSdkVersion 14
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
@@ -25,7 +25,6 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:1.10.19'
-
     androidTestCompile 'com.android.support:support-annotations:22.2.1'
     androidTestCompile('com.android.support.test:runner:0.4.1') {
         exclude module: 'support-annotations'
@@ -36,7 +35,6 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.1') {
         exclude module: 'support-annotations'
     }
-    androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
     compile 'com.google.code.gson:gson:2.7'
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.android.support:appcompat-v7:22.2.1'
