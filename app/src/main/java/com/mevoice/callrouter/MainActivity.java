@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private HashMap fragmentTitles = new HashMap();
     private HashMap fragmentIDs = new HashMap();
     private HashMap option_menu_groups_hashmap = new HashMap();
+    int selectedMenuItemID;
     private String activeFragment;
     private int lastResetTime = 0;
     private int[] option_menu_groups_array = {R.id.options_groups};
@@ -107,17 +108,17 @@ public class MainActivity extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        selectedMenuItemID = item.getItemId();
         //noinspection SimplifiableIfStatement
-        String fragmentName = (String) fragmentIDs.get(id);
+        String fragmentName = (String) fragmentIDs.get(selectedMenuItemID);
         //user should use either menu OR back button, not both
         clearBackStack();
-        if (id == R.id.action_send_email) {
+        if (selectedMenuItemID == R.id.action_send_email) {
             //save setting to file and email the file
             exportSettings();
-        } else if (id == R.id.action_import) {
+        } else if (selectedMenuItemID == R.id.action_import) {
             importSettings();
-        } else if (id == R.id.action_reset) {
+        } else if (selectedMenuItemID == R.id.action_reset) {
             int i = (int) (new Date().getTime()/1000);
             if(i-lastResetTime>5){
                 Toast.makeText(this, R.string.message_before_reset, Toast.LENGTH_SHORT).show();
@@ -203,6 +204,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void checkEULA(){
+        if(!CRApp.appdata.isEULA()) {
+            FragmentManager fm = getSupportFragmentManager();
+            EULAFragment dialogFragment = new EULAFragment();
+            dialogFragment.setCancelable(false);
+            dialogFragment.show(fm, "Sample Fragment");
+        }
+    }
     private DrawerLayout mDrawerLayout;
     private int backStackCount = 0, lastBackStackCount = 0;
 
@@ -211,6 +220,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         if(CRApp.appdata.getLoadTimes()==0){
             resetSettings();
+        }else{
+            checkEULA();
         }
         CRApp.appdata.setLoadTimes(CRApp.appdata.getLoadTimes()+1);
         setContentView(R.layout.activity_main);
@@ -265,6 +276,8 @@ public class MainActivity extends AppCompatActivity {
         fragments.put(Constant.FRAGMENT_KEY_HELP, new HelpFragment());
         fragmentIDs.put(R.id.action_help, Constant.FRAGMENT_KEY_HELP);
         fragmentTitles.put(Constant.FRAGMENT_KEY_HELP, getString(R.string.title_help));
+
+        fragmentIDs.put(R.id.action_about, Constant.FRAGMENT_KEY_HELP);
 
         getSupportFragmentManager().addOnBackStackChangedListener(
                 new FragmentManager.OnBackStackChangedListener() {

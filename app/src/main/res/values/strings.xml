@@ -76,4 +76,13 @@
 
     <string name="greeting_groups">Find out what a button does by clicking it.</string>
     <string name="greeting_rules">Adjust a rule\'s position with a long click, then drag-and-drop.</string>
+
+    <string name="message_EULA">By downloading, installing or using this application, you expressly understand and agree:\n
+\nTHAT YOUR USE OF THE APPLICATION IS AT YOUR SOLE DISCRETION AND RISK AND THAT THE APPLICATION IS PROVIDED AS IS AND AS AVAILABLE WITHOUT WARRANTY OF ANY KIND.
+\nTHAT THE AUTHOR IS NOT LIABLE TO YOU UNDER ANY THEORY OF LIABILITY FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL CONSEQUENTIAL OR EXEMPLARY DAMAGES THAT MAY BE INCURRED BY YOU THROUGH YOUR USE OF THE APPLICATION.
+</string>
+    <string name="literal_eula_agree">I Agree</string>
+    <string name="title_eula">End User Agreement</string>
+    <string name="menu_item_about">About</string>
+    <!-- TODO: Remove or change this placeholder text -->
 </resources>

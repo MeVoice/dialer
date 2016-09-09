@@ -16,8 +16,19 @@ public class AppData {
     private int loadTimes=0;
     private List<RuleGroup> ruleGroups=new ArrayList();;
     private boolean moreLog=false;
+    private boolean numberRewrite=false;
     private int groups_loadTimes=0;
     private int rules_loadTimes=0;
+
+    public boolean isEULA() {
+        return EULA;
+    }
+
+    public void setEULA(boolean EULA) {
+        this.EULA = EULA;
+    }
+
+    private boolean EULA=false;
 
     public int getGroups_loadTimes() {
         return groups_loadTimes;
@@ -43,7 +54,6 @@ public class AppData {
         this.numberRewrite = numberRewrite;
     }
 
-    private boolean numberRewrite=false;
 
     public boolean isMoreLog() {
         return moreLog;
