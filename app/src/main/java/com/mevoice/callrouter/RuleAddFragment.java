@@ -47,7 +47,7 @@ public class RuleAddFragment extends Fragment {
         return rootView;
     }
     public void addRule(){
-        RuleGroup ruleGroup = CRApp.appdata.getRuleGroup(CRApp.appdata.getGroupInEdit());
+        RuleGroup ruleGroup = CRApp.appdata.getRuleGroup((int) CRApp.appdataaccess.getRuntimeData(Constant.RUNTIME_DATA_GROUPINEDIT));
         if(ruleGroup.getRules().size()>=Constant.MAX_RULES){
             Toast.makeText(CRApp.context, String.format(getString(R.string.message_add_rule_max_rules), Constant.MAX_RULES), Toast.LENGTH_SHORT).show();
             return;

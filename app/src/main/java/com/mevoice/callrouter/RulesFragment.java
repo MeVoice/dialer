@@ -67,7 +67,7 @@ public class RulesFragment extends Fragment  implements OnStartDragListener {
         rootView = inflater.inflate(R.layout.fragment_rule, container, false);
 
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.rules_recycler_view);
-        ruleGroup = CRApp.appdata.getRuleGroup(CRApp.appdata.getGroupInEdit());
+        ruleGroup = CRApp.appdata.getRuleGroup((int) CRApp.appdataaccess.getRuntimeData(Constant.RUNTIME_DATA_GROUPINEDIT));
         adapter = new ContentAdapter(recyclerView.getContext(), ruleGroup.getRules());
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);

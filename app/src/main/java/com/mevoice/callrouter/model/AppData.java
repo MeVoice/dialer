@@ -11,8 +11,6 @@ import java.util.List;
  * Created by Admin on 8/10/2016.
  */
 public class AppData {
-    private int groupInEdit=-1;
-    private int ruleInEdit=-1;
     private int loadTimes=0;
     private List<RuleGroup> ruleGroups=new ArrayList();;
     private boolean moreLog=false;
@@ -81,23 +79,6 @@ public class AppData {
     public void addTransformLog(TransformLog log){
         transformLog.add(log);
     }
-
-    public int getGroupInEdit() {
-        return groupInEdit;
-    }
-
-    public void setGroupInEdit(int groupInEdit) {
-        this.groupInEdit = groupInEdit;
-    }
-
-    public int getRuleInEdit() {
-        return ruleInEdit;
-    }
-
-    public void setRuleInEdit(int ruleInEdit) {
-        this.ruleInEdit = ruleInEdit;
-    }
-
 
     public AppData(){
     }

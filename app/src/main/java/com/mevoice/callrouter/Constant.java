@@ -21,7 +21,6 @@ public class Constant {
     public static final String FRAGMENT_KEY_SETTINGS ="settings" ;
 
     public static final String EVENT_TYPE_ACTION ="action";
-    public static final String EVENT_ACTION_RECEIVER_ONOFF ="ON_OFF";
 
-    public static final String ACTION_CHANGE_URL = "url_change";
+    public static final String RUNTIME_DATA_GROUPINEDIT = "GROUPINEDIT";
 }

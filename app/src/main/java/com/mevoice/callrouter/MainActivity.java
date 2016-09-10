@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
     @Subscribe
     public void onClickEvent(ClickEvent event) {
         if (event.get(Constant.EVENT_TYPE_ACTION).equals(Constant.ACTION_EDIT_RULES)) {
-            RuleGroup rg = CRApp.appdata.getRuleGroups().get(CRApp.appdata.getGroupInEdit());
+            RuleGroup rg = CRApp.appdata.getRuleGroups().get((int) CRApp.appdataaccess.getRuntimeData(Constant.RUNTIME_DATA_GROUPINEDIT));
             if (rg.getRules().size() > 0) {
                 fragmentTitles.put(Constant.FRAGMENT_KEY_RULES, String.format(getString(R.string.title_rules), rg.getName()));
                 showFragment(Constant.FRAGMENT_KEY_RULES, true);
@@ -353,7 +353,7 @@ public class MainActivity extends AppCompatActivity {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    RuleGroup rg = CRApp.appdata.getRuleGroups().get(CRApp.appdata.getGroupInEdit());
+                    RuleGroup rg = CRApp.appdata.getRuleGroups().get((int) CRApp.appdataaccess.getRuntimeData(Constant.RUNTIME_DATA_GROUPINEDIT));
                     if (rg.getRules().size() >= Constant.MAX_RULES) {
                         Toast.makeText(CRApp.context, String.format(getString(R.string.message_add_rule_max_rules), Constant.MAX_RULES), Toast.LENGTH_SHORT).show();
                         return;

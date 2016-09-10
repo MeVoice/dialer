@@ -1,5 +1,4 @@
 {
-  "groupInEdit":0,
   "ruleGroups":[
     {
       "inUse":false,
@@ -105,7 +104,6 @@
       ]
     }
   ],
-  "ruleInEdit":-1,
   "transformLog":[
 
   ]

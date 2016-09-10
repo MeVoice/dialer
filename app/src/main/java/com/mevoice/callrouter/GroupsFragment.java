@@ -140,7 +140,7 @@ public class GroupsFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     ClickEvent ev = new ClickEvent();
-                    CRApp.appdata.setGroupInEdit(holder.getLayoutPosition());
+                    CRApp.appdataaccess.setRuntimeData(Constant.RUNTIME_DATA_GROUPINEDIT, holder.getLayoutPosition());
                     ev.put(Constant.EVENT_TYPE_ACTION, Constant.ACTION_EDIT_RULES);
                     bus.post(ev);
                 }
