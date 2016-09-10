@@ -45,7 +45,7 @@ public class GroupsFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_group, container, false);
 
         // Inflate the layout for this fragment
-        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.group_recycler_view);
         adapter = new ContentAdapter(recyclerView.getContext(), CRApp.appdata.getRuleGroups());
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
