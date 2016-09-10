@@ -74,4 +74,5 @@
     <string name="greeting_groups">点击按钮可知其用途</string>
     <string name="greeting_rules">长按一条规则，再拖动可改变其位置</string>
     <string name="menu_item_about">About</string>
+    <string name="message_export_settings_error_noemail">no email program found on device, cannot export settings</string>
 </resources>

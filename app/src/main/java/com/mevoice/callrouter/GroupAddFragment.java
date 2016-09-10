@@ -51,6 +51,8 @@ public class GroupAddFragment extends Fragment {
             return;
         }
         RuleGroup rg = new RuleGroup(group_add_name.getText().toString());
+        //remove the line below
+        rg.getRules().get(2).setInUse(false);
         if (validateGroup(rg, -1)) {
             CRApp.appdata.addRuleGroup(rg);
             //ft.adapter.notifyItemInserted(appdata.getRuleGroups().size() - 1);

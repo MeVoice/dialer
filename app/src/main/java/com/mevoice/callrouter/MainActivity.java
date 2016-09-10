@@ -2,6 +2,7 @@ package com.mevoice.callrouter;
 
 import android.app.Activity;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -24,6 +25,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import com.mevoice.callrouter.events.ClickEvent;
+import com.mevoice.callrouter.helper.CustomExceptionHandler;
+import com.mevoice.callrouter.helper.Utlis;
 import com.mevoice.callrouter.model.AppData;
 import com.mevoice.callrouter.model.RuleGroup;
 import com.google.gson.Gson;
@@ -132,29 +135,16 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public boolean exportSettings() {
-        try {
-            File outputFile = File.createTempFile("call_router", ".json", CRApp.context.getExternalCacheDir());
-            String fileName = outputFile.getAbsolutePath();
-            Gson gson = new Gson();
-            FileOutputStream fOut = new FileOutputStream(fileName);
-            String str = gson.toJson(CRApp.appdata);
-            fOut.write(str.getBytes());
-            fOut.close();
-            //invoke email with attachment intent
-            Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.setType("text/plain");
-            intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.literal_export_settings_email_subject));
-            intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.literal_export_settings_email_body));
-            File file = new File(fileName);
-            intent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + file));
-            this.startActivity(Intent.createChooser(intent, getString(R.string.message_export_settings_chooser_title)));
-            return true;
-        }
-        catch (IOException e){
+    public void exportSettings() {
+        String fileName = Utlis.saveStringToTempFile(".json", (new Gson()).toJson(CRApp.appdata));
+        if(fileName==null){
             Toast.makeText(CRApp.context, R.string.message_export_settings_error, Toast.LENGTH_SHORT).show();
         }
-        return false;
+        if(!Utlis.startSendEmailWithAttachment(this, getString(R.string.literal_export_settings_email_recipient), getString(R.string.literal_export_settings_email_subject),
+                    getString(R.string.literal_export_settings_email_body), fileName,
+                    getString(R.string.message_export_settings_chooser_title))){
+            Toast.makeText(CRApp.context, R.string.message_export_settings_error_noemail, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private static final int OPEN_REQUEST_CODE = 41;
@@ -217,6 +207,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Thread.currentThread().setUncaughtExceptionHandler(new CustomExceptionHandler(this));
         super.onCreate(savedInstanceState);
         if(CRApp.appdata.getLoadTimes()==0){
             resetSettings();

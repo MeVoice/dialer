@@ -3,6 +3,7 @@ package com.mevoice.callrouter;
 import android.app.Application;
 import android.content.Context;
 import android.content.res.Resources;
+import android.database.DatabaseUtils;
 
 import com.mevoice.callrouter.model.AppData;
 

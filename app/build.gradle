@@ -3,6 +3,15 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 22
     buildToolsVersion "23.0.3"
+
+    def Properties versionProps = new Properties()
+    def versionPropsFile = file('src/main/assets/version.properties')
+    if(versionPropsFile.exists())
+        versionProps.load(new FileInputStream(versionPropsFile))
+    def buildNumber = (versionProps['buildNumber'] ?: "0").toInteger() + 1
+    versionProps['buildNumber'] = buildNumber.toString()
+    versionProps.store(versionPropsFile.newWriter(), null)
+
     defaultConfig {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         applicationId "com.mevoice.callrouter"
