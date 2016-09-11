@@ -14,7 +14,7 @@ android {
 
     defaultConfig {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        applicationId "com.mevoice.callrouter"
+        applicationId "com.demitive.callrouter"
         minSdkVersion 14
         targetSdkVersion 22
         versionCode 1
