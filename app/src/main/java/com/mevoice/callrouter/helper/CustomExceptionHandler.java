@@ -27,10 +27,10 @@ public class CustomExceptionHandler implements Thread.UncaughtExceptionHandler {
         e.printStackTrace(printWriter);
         String stacktrace = result.toString();
         printWriter.close();
-        //String fileName = Utlis.saveStringToTempFile(".stacktrace", stacktrace);
-        int buildNumber = Utlis.getBuildNumber();
+        //String fileName = Utils.saveStringToTempFile(".stacktrace", stacktrace);
+        int buildNumber = Utils.getBuildNumber();
 
-        Utlis.startSendEmailWithAttachment(mContext,
+        Utils.startSendEmailWithAttachment(mContext,
                 CRApp.context.getString(R.string.literal_stacktrace_email_recipient),
                 String.format(CRApp.context.getString(R.string.literal_stacktrace_email_subject), CRApp.context.getString(R.string.app_name), buildNumber),
                 stacktrace, null,

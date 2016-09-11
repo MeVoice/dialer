@@ -37,7 +37,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RulesFragment extends Fragment  implements OnStartDragListener {
+public class RulesFragment extends GroupCommonFragment  implements OnStartDragListener {
     public EditText test_reroute_number;
     private int removePosition=-1;
     private int lastRemoveTime=0;

@@ -1,11 +1,7 @@
 package com.mevoice.callrouter;
 
-import android.app.Activity;
 import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -16,7 +12,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -26,20 +21,11 @@ import org.greenrobot.eventbus.Subscribe;
 
 import com.mevoice.callrouter.events.ClickEvent;
 import com.mevoice.callrouter.helper.CustomExceptionHandler;
-import com.mevoice.callrouter.helper.Utlis;
-import com.mevoice.callrouter.model.AppData;
 import com.mevoice.callrouter.model.RuleGroup;
-import com.google.gson.Gson;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Date;
 import java.util.HashMap;
+
+import static com.mevoice.callrouter.helper.Utils.resetSettings;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -52,9 +38,6 @@ public class MainActivity extends AppCompatActivity {
     private HashMap fragmentIDs = new HashMap();
     private HashMap option_menu_groups_hashmap = new HashMap();
     int selectedMenuItemID;
-    private String activeFragment;
-    private int lastResetTime = 0;
-    private int[] option_menu_groups_array = {R.id.options_groups};
 
     @Override
     public void onStart() {
@@ -83,114 +66,8 @@ public class MainActivity extends AppCompatActivity {
         if (event.get(Constant.EVENT_TYPE_ACTION).equals(Constant.ACTION_ROUTER_ON_OFF)) {
             updateReceiverStatus(CRApp.appdata.getRuleGroupInUse()>=0 && CRApp.appdata.isNumberRewrite());
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.options, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        for (int i = 0; i < option_menu_groups_array.length; i++) {
-            Integer groupID = (Integer) option_menu_groups_hashmap.get(activeFragment);
-            if (groupID == null || groupID.intValue() != option_menu_groups_array[i]) {
-                menu.setGroupVisible(option_menu_groups_array[i], false);
-            } else {
-                menu.setGroupVisible(option_menu_groups_array[i], true);
-            }
-        }
-        super.onPrepareOptionsMenu(menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        selectedMenuItemID = item.getItemId();
-        //noinspection SimplifiableIfStatement
-        String fragmentName = (String) fragmentIDs.get(selectedMenuItemID);
-        //user should use either menu OR back button, not both
-        clearBackStack();
-        if (selectedMenuItemID == R.id.action_send_email) {
-            //save setting to file and email the file
-            exportSettings();
-        } else if (selectedMenuItemID == R.id.action_import) {
-            importSettings();
-        } else if (selectedMenuItemID == R.id.action_reset) {
-            int i = (int) (new Date().getTime()/1000);
-            if(i-lastResetTime>5){
-                Toast.makeText(this, R.string.message_before_reset, Toast.LENGTH_SHORT).show();
-                lastResetTime=i;
-                return false;
-            }
-            resetSettings();
-        } else {
-            showFragment(fragmentName, false);
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    public void exportSettings() {
-        String fileName = Utlis.saveStringToTempFile(".json", (new Gson()).toJson(CRApp.appdata));
-        if(fileName==null){
-            Toast.makeText(CRApp.context, R.string.message_export_settings_error, Toast.LENGTH_SHORT).show();
-        }
-        if(!Utlis.startSendEmailWithAttachment(this, getString(R.string.literal_export_settings_email_recipient), getString(R.string.literal_export_settings_email_subject),
-                    getString(R.string.literal_export_settings_email_body), fileName,
-                    getString(R.string.message_export_settings_chooser_title))){
-            Toast.makeText(CRApp.context, R.string.message_export_settings_error_noemail, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private static final int OPEN_REQUEST_CODE = 41;
-
-    public void importSettings() {
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("*/*");
-        startActivityForResult(intent, OPEN_REQUEST_CODE);
-    }
-
-    public void resetSettings() {
-        try {
-            InputStream inputStream = getResources().getAssets().open(getString(R.string.literal_preload_settings_filename));
-            importSettingsFromInputStream(inputStream);
-            Toast.makeText(getApplicationContext(), R.string.message_reset_settings_success, Toast.LENGTH_SHORT).show();
-            recreate();
-        } catch (IOException e) {
-            Toast.makeText(getApplicationContext(), R.string.message_reset_settings_cannot_find_file, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    public void importSettingsFromInputStream(InputStream inputStream) {
-        final Gson gson = new Gson();
-        final BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        AppData appDataFromFile = gson.fromJson(reader, AppData.class);
-        CRApp.appdata.setRuleGroups(appDataFromFile.getRuleGroups());
-        CRApp.appdataaccess.saveAppData();
-    }
-
-    public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
-        Uri currentUri;
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == OPEN_REQUEST_CODE) {
-                if (resultData != null) {
-                    currentUri = resultData.getData();
-                    try {
-                        InputStream inputStream = getContentResolver().openInputStream(currentUri);
-                        importSettingsFromInputStream(inputStream);
-                        Toast.makeText(getApplicationContext(), R.string.message_import_settings_success, Toast.LENGTH_SHORT).show();
-                        recreate();
-                    } catch (FileNotFoundException e) {
-                        Toast.makeText(getApplicationContext(), String.format(getResources().getString(R.string.message_import_settings_cannot_find_file), currentUri.toString()), Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
+        if (event.get(Constant.EVENT_TYPE_ACTION).equals(Constant.ACTION_GROUPS_RESET)) {
+            showFragment(Constant.FRAGMENT_KEY_SETTINGS, false);
         }
     }
 
@@ -209,9 +86,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Thread.currentThread().setUncaughtExceptionHandler(new CustomExceptionHandler(this));
         super.onCreate(savedInstanceState);
+        System.out.println(CRApp.appdata.getLoadTimes() + " times");
         if(CRApp.appdata.getLoadTimes()==0){
-            resetSettings();
-        }else{
+            if(!resetSettings(this)){
+                Toast.makeText(this, R.string.message_reset_settings_cannot_find_file, Toast.LENGTH_SHORT).show();
+            }
             checkEULA();
         }
         CRApp.appdata.setLoadTimes(CRApp.appdata.getLoadTimes()+1);
@@ -233,8 +112,12 @@ public class MainActivity extends AppCompatActivity {
                         // Set item in checked state
                         menuItem.setChecked(true);
                         // TODO: handle navigation
-                        onOptionsItemSelected(menuItem);
-
+                        selectedMenuItemID = menuItem.getItemId();
+                        //noinspection SimplifiableIfStatement
+                        String fragmentName = (String) fragmentIDs.get(selectedMenuItemID);
+                        //user should use either menu OR back button, not both
+                        clearBackStack();
+                        showFragment(fragmentName, false);
                         // Closing drawer on item click
                         mDrawerLayout.closeDrawers();
                         return true;
@@ -280,7 +163,6 @@ public class MainActivity extends AppCompatActivity {
                         lastBackStackCount = backStackCount;
                     }
                 });
-        activeFragment = Constant.FRAGMENT_KEY_SETTINGS;
         showFragment(Constant.FRAGMENT_KEY_SETTINGS, false);
     }
 
@@ -304,7 +186,6 @@ public class MainActivity extends AppCompatActivity {
             key = Constant.FRAGMENT_KEY_RULE_ADD;
         }
         String title = (String) fragmentTitles.get(key);
-        activeFragment = key;
         showFab(key);
         getSupportActionBar().setTitle(title);
     }
@@ -319,7 +200,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showFragment(String key, boolean addToStack) {
-        activeFragment = key;
         invalidateOptionsMenu();
         String title = (String) fragmentTitles.get(key);
         getSupportActionBar().setTitle(title);

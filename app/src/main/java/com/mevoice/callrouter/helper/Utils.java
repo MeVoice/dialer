@@ -7,13 +7,17 @@ import android.content.pm.LabeledIntent;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 
+import com.google.gson.Gson;
 import com.mevoice.callrouter.CRApp;
 import com.mevoice.callrouter.R;
+import com.mevoice.callrouter.model.AppData;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -21,7 +25,7 @@ import java.util.Properties;
 /**
  * Created by Admin on 9/9/2016.
  */
-public class Utlis {
+public class Utils {
     public static String saveStringToTempFile(String extension, String content){
         try {
             File outputFile = File.createTempFile("temp", extension, CRApp.context.getExternalCacheDir());
@@ -56,7 +60,7 @@ public class Utlis {
             intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris); //ArrayList<Uri> of attachment Uri's
             intents.add(new LabeledIntent(intent, info.activityInfo.packageName, info.loadLabel(context.getPackageManager()), info.icon));
         }
-        Intent chooser = Intent.createChooser(intents.remove(intents.size() - 1), dialogTitle);
+        Intent chooser = Intent.createChooser(intents.remove(intents.size()-1), dialogTitle);
         chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, intents.toArray(new LabeledIntent[intents.size()]));
         context.startActivity(chooser);
         return true;
@@ -73,5 +77,22 @@ public class Utlis {
         catch (IOException e){
         }
         return -1;
+    }
+    static public void importSettingsFromInputStream(InputStream inputStream) {
+        final Gson gson = new Gson();
+        final BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        AppData appDataFromFile = gson.fromJson(reader, AppData.class);
+        CRApp.appdata.setRuleGroups(appDataFromFile.getRuleGroups());
+        CRApp.appdataaccess.saveAppData();
+    }
+
+    static public boolean resetSettings(Context context) {
+        try {
+            InputStream inputStream = context.getResources().getAssets().open(context.getString(R.string.literal_preload_settings_filename));
+            importSettingsFromInputStream(inputStream);
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
     }
 }

@@ -19,7 +19,7 @@ import java.util.Formatter;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GroupAddFragment extends Fragment {
+public class GroupAddFragment extends GroupCommonFragment {
     public EditText group_add_name;
     public ImageButton group_add_button;
 
@@ -32,7 +32,6 @@ public class GroupAddFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
         View rootView = inflater.inflate(R.layout.fragment_group_add, container, false);
         group_add_name = (EditText) rootView.findViewById(R.id.group_add_name);
         group_add_button = (ImageButton) rootView.findViewById(R.id.group_add_button);

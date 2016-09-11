@@ -28,12 +28,11 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GroupsFragment extends Fragment {
+public class GroupsFragment extends GroupCommonFragment {
     private int removePosition=-1;
     private int lastRemoveTime=0;
     ContentAdapter adapter;
     View rootView;
-    private EventBus bus = EventBus.getDefault();
 
     public GroupsFragment() {
         // Required empty public constructor

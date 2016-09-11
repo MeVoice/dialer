@@ -17,7 +17,7 @@ import com.mevoice.callrouter.model.RuleGroup;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RuleAddFragment extends Fragment {
+public class RuleAddFragment extends GroupCommonFragment {
 
     public EditText rule_add_name;
     public EditText rule_add_pattern;
