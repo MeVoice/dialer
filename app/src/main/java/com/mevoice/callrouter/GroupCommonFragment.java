@@ -1,6 +1,7 @@
 package com.mevoice.callrouter;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -87,10 +88,11 @@ public abstract class GroupCommonFragment extends Fragment {
         if(fileName==null){
             Toast.makeText(CRApp.context, R.string.message_export_settings_error, Toast.LENGTH_SHORT).show();
         }
-        if(!Utils.startSendEmailWithAttachment(getActivity(), getString(R.string.literal_export_settings_email_recipient), getString(R.string.literal_export_settings_email_subject),
-                getString(R.string.literal_export_settings_email_body), fileName,
+        if(!Utils.startSendEmailWithAttachment(getActivity(), null,
+                getString(R.string.literal_export_settings_email_subject),
+                getString(R.string.literal_export_settings_email_body), new String[] {fileName},
                 getString(R.string.message_export_settings_chooser_title))){
-            Toast.makeText(CRApp.context, R.string.message_export_settings_error_noemail, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.message_export_settings_error_noemail, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -98,7 +100,12 @@ public abstract class GroupCommonFragment extends Fragment {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("*/*");
-        startActivityForResult(intent, OPEN_REQUEST_CODE);
+        try {
+            startActivityForResult(intent, OPEN_REQUEST_CODE);
+        }
+        catch (ActivityNotFoundException e){
+            Toast.makeText(getActivity(), R.string.message_import_settings_error_no_document_opener, Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent resultData) {

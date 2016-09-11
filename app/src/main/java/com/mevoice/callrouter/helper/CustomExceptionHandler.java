@@ -31,7 +31,7 @@ public class CustomExceptionHandler implements Thread.UncaughtExceptionHandler {
         int buildNumber = Utils.getBuildNumber();
 
         Utils.startSendEmailWithAttachment(mContext,
-                CRApp.context.getString(R.string.literal_stacktrace_email_recipient),
+                new String[] {CRApp.context.getString(R.string.literal_stacktrace_email_recipient)},
                 String.format(CRApp.context.getString(R.string.literal_stacktrace_email_subject), CRApp.context.getString(R.string.app_name), buildNumber),
                 stacktrace, null,
                 CRApp.context.getString(R.string.message_stacktrace_chooser_title));

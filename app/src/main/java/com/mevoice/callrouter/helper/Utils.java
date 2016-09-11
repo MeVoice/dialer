@@ -40,27 +40,40 @@ public class Utils {
         }
     }
 
-    public static boolean startSendEmailWithAttachment(Context context, String recipient, String subject, String body, String attachmentFilename, String dialogTitle){
+    public static boolean startSendEmailWithAttachment(Context context,
+                               String[] recipients, String subject, String body,
+                               String[] attachmentFilenames, String dialogTitle){
         ArrayList<Uri> uris = new ArrayList<>();
-        if(attachmentFilename!=null) {
-            uris.add(Uri.parse("file://" + attachmentFilename));
+        if(attachmentFilenames!=null) {
+            for(String filename : attachmentFilenames) {
+                uris.add(Uri.parse("file://" + filename));
+            }
         }
         Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                "mailto", recipient, null));
+                "mailto", context.getString(R.string.literal_dummy_email_recipient), null));
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
 
         List<ResolveInfo> resolveInfos = context.getPackageManager().queryIntentActivities(emailIntent, 0);
+        if(resolveInfos==null || resolveInfos.size()==0){
+            return false;
+        }
         List<LabeledIntent> intents = new ArrayList<>();
-        for (ResolveInfo info : resolveInfos) {
+        for (int i = resolveInfos.size()-1; i >= 0; i--) {
+            ResolveInfo info = resolveInfos.get(i);
             Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
             intent.setComponent(new ComponentName(info.activityInfo.packageName, info.activityInfo.name));
-            intent.putExtra(Intent.EXTRA_EMAIL, new String[]{recipient});
+            System.out.println(info.activityInfo.packageName);
+            if(recipients!=null) {
+                intent.putExtra(Intent.EXTRA_EMAIL, recipients);
+            }
             intent.putExtra(Intent.EXTRA_SUBJECT, subject);
             intent.putExtra(Intent.EXTRA_TEXT, body);
-            intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris); //ArrayList<Uri> of attachment Uri's
+            if(attachmentFilenames!=null) {
+                intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris); //ArrayList<Uri> of attachment Uri's
+            }
             intents.add(new LabeledIntent(intent, info.activityInfo.packageName, info.loadLabel(context.getPackageManager()), info.icon));
         }
-        Intent chooser = Intent.createChooser(intents.remove(intents.size()-1), dialogTitle);
+        Intent chooser = Intent.createChooser(intents.remove(0), dialogTitle);
         chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, intents.toArray(new LabeledIntent[intents.size()]));
         context.startActivity(chooser);
         return true;
