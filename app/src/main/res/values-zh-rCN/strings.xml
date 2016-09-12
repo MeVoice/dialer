@@ -80,15 +80,15 @@
 </string>
     <string name="literal_eula_agree">I Agree</string>
     <string name="title_eula">End User Agreement</string>
-    <string name="menu_item_about">About</string>
+    <string name="menu_item_about">关于</string>
     <!-- TODO: Remove or change this placeholder text -->
 
     <string name="literal_stacktrace_email_recipient">callrouter@demitive.com</string>
-    <string name="literal_stacktrace_email_subject">crash report: %1$s/build %2$d</string>
+    <string name="literal_stacktrace_email_subject">事故报告: %1$s/build %2$d</string>
     <string name="literal_version_properties_filename">version.properties</string>
-    <string name="message_stacktrace_chooser_title">A report has been generated about the recent crash. please help improve the app by sending the report to developer. Thank you!</string>
-    <string name="message_export_settings_error_noemail">no email program found on device, cannot export settings</string>
-    <string name="message_import_settings_error_no_document_opener">The device does not have an App to choose an import file with</string>
+    <string name="message_stacktrace_chooser_title">请将生成的事故报告发送给开发者，这将有助于我们提高产品质量。谢谢！</string>
+    <string name="message_export_settings_error_noemail">因设备上没有可以发送电邮的应用，无法导出设置。</string>
+    <string name="message_import_settings_error_no_document_opener">因设备上没有可以选择文件的应用，无法导入设置。</string>
     <string name="literal_dummy_email_recipient">someone@somewhere.com</string>
 
 </resources>
