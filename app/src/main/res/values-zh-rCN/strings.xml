@@ -60,6 +60,8 @@
     <string name="message_validate_rule_bracket_before_percent">在%s里\'%%\'不能在紧跟在大括号后</string>
     <string name="message_validate_rule_empty_brackets">在%s里大括号内容为空</string>
 
+    <string name="literal_locale">en</string>
+
     <string name="literal_hint_group_name">规则组名</string>
     <string name="literal_hint_group_test_enter_number">请输入一个测试电话号码</string>
     <string name="literal_hint_rule_pattern">请输入模式</string>
@@ -73,7 +75,20 @@
 
     <string name="greeting_groups">点击按钮可知其用途</string>
     <string name="greeting_rules">长按一条规则，再拖动可改变其位置</string>
+    <string name="message_EULA">By downloading, installing or using this software, you expressly understand and agree:\n
+\nTHAT TO THE EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR ANYONE DISTRIBUTING THE SOFTWARE BE LIABLE FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+</string>
+    <string name="literal_eula_agree">I Agree</string>
+    <string name="title_eula">End User Agreement</string>
     <string name="menu_item_about">About</string>
+    <!-- TODO: Remove or change this placeholder text -->
+
+    <string name="literal_stacktrace_email_recipient">callrouter@demitive.com</string>
+    <string name="literal_stacktrace_email_subject">crash report: %1$s/build %2$d</string>
+    <string name="literal_version_properties_filename">version.properties</string>
+    <string name="message_stacktrace_chooser_title">A report has been generated about the recent crash. please help improve the app by sending the report to developer. Thank you!</string>
     <string name="message_export_settings_error_noemail">no email program found on device, cannot export settings</string>
-    <string name="message_import_settings_error_no_document_opener">device has no app to pick a file with</string>
+    <string name="message_import_settings_error_no_document_opener">The device does not have an App to choose an import file with</string>
+    <string name="literal_dummy_email_recipient">someone@somewhere.com</string>
+
 </resources>

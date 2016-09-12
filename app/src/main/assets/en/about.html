@@ -3,7 +3,7 @@
 <head>
     <script>
     function toggle(a){
-        var max_index = 1
+        var max_index = 2
         for (i = 1; i <= max_index; i++) {
             var e=document.getElementById("expandable-".concat(i.toString()));
             if(i==a){
@@ -21,8 +21,7 @@
     </script>
     <style>
         strong {
-        font-style: italic;
-        font-size: 12px;
+        font-size: 18px;
         }
         .expand {
         font-weight: bold;
@@ -65,6 +64,13 @@
     <br>2.gson by Google Inc.
     <br>3.EventBus by Markus Junginger, greenrobot (http://greenrobot.org)
     A copy of Apache V2 license can be viewed <A href="../license-apache-v2.0.txt">here</A> or <A href="https://www.apache.org/licenses/LICENSE-2.0">online</A>.</p>
+</div>
+
+<div>
+    <a href="#" id="expand-2" onclick="return toggle(2);">Feedback and support:</a>
+</div>
+<div class="expandable" id="expandable-2">
+    <p>Please leave message in the rating area or <A href="mailto:callrouter@demitive.com">email</A> with any feedback or suggestions.</p>
 </div>
 
 <p>&nbsp;</p>

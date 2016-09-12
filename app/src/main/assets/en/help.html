@@ -21,8 +21,7 @@
     </script>
     <style>
         strong {
-        font-style: italic;
-        font-size: 12px;
+        font-size: 18px;
         }
         .expand {
         font-weight: bold;
@@ -36,11 +35,8 @@
         margin: 10px;
         }
         .discard {
-        background-color: lightgrey;
         }
         .literal {
-        background-color: lightgreen;
-        text-decoration: underline;
         }
         .capture {
         background-color: pink;
@@ -57,15 +53,14 @@
 </div>
 <div class="expandable" id="expandable-1">
     <p>Whenever you make a phone call, the router checks the number against a list of patterns. If it
-        finds a match, it extracts parts from the original phone number, and use a formula to
-        generate a new phone number, then dials this new number instead.
+        finds a match, it use a formula to generate a new phone number, then dials this new number instead.
         Typically used when you are calling someone using a calling card.</p>
 </div>
 <div>
     <a href="#" id="expand-2" onclick="return toggle(2);">Why another dialer?</a>
 </div>
 <div class="expandable" id="expandable-2">
-    <p><strong>One-time setup</strong>. Once set up, the app matches and re-generates phone numbers in the background.</p>
+    <p><strong>Uninterrupted experience</strong>. Once set up, the app decides whether to use a calling card, or which calling card to use, for each call, in the background, giving user an uninterrupted calling experience.</p>
     <p><strong>Wide application</strong>. Each digit in a phone number can be individually matched
         and re-arranged into a new sequence. Obvious applications include calling with a calling card, dialing into a
         conference, calling an office extension while outside office.</p>
@@ -89,7 +84,7 @@
         final destination. e.g. a calling card provider's local access number.</p>
     <p><strong>E.164</strong>: A&nbsp;format for keeping&nbsp;phone numbers. In E.164, a number is
         hierachical, starts with "+", and typically has&nbsp;country code, area code, and local
-        number. e.g. +1 212 234 5678, +86 21 212121212. A number in E.164 is global in that it does
+        number. e.g. +1 212 234 5678, +86 32 212121212. A number in E.164 is global in that it does
         not have to be updated&nbsp;with&nbsp;long distance dialing code as the user travels. Most
         samples
         are built with numbers in E.164.</p>
@@ -124,7 +119,7 @@
         <tr>
             <td>" "</td>
             <td>white space is permitted in pattern and formula, it's used for formatting only and
-                is dropped&nbsp;before matching. i.e. "+1 800 800 8080" and "+18008008080" are the
+                is dropped&nbsp;before matching. i.e. "+1 230 800 8080" and "+12308008080" are the
                 same.
             </td>
         </tr>
@@ -188,17 +183,13 @@
     <a href="#" id="expand-5" onclick="return toggle(5);">Sample scenarios and rules</a>
 </div>
 <div class="expandable" id="expandable-5">
-    <p>A character in the original number will be either <span
-            class="capture">matched and captured</span>, or <span class="discard">matched and discarded</span>
-    </p>
-    <p>A character in the new number can be from either <span class="capture">matched and captured in original number</span>,
-        or <span class="literal">literals in formula</span></p>
-    <p>1. dial the original US number</p>
+    <p><span class="capture">colorized characters</span> are matched and captured from the original number, then re-used in the new number.</p>
+    <p>1. dial a US number from inside US</p>
     <table border="1">
         <tbody>
         <tr>
             <td>original number</td>
-            <td><span class="discard">+1</span><span class="capture">8008008888</span></td>
+            <td><span class="discard">+1</span><span class="capture">2308008888</span></td>
         </tr>
         <tr>
             <td>pattern</td>
@@ -210,14 +201,14 @@
         </tr>
         <tr>
             <td>new number</td>
-            <td><span class="literal">1</span><span class="capture">8008008888</span></td>
+            <td><span class="literal">1</span><span class="capture">2308008888</span></td>
         </tr>
         <tr>
             <td>explanation</td>
             <td>
                 <p>X matches any ONE character</p>
                 <p>X% matches any character til the end</p>
-                <p>{} in pattern captures the matched characters ("8008008888")</p>
+                <p>{} in pattern captures the matched characters ("2308008888")</p>
                 <p>{M1} in formula represents the captured characters</p>
             </td>
         </tr>
@@ -228,7 +219,7 @@
         <tbody>
         <tr>
             <td>original number</td>
-            <td><span class="discard">+</span><span class="capture">86212323232323</span></td>
+            <td><span class="discard">+</span><span class="capture">86322323232323</span></td>
         </tr>
         <tr>
             <td>pattern</td>
@@ -236,22 +227,22 @@
         </tr>
         <tr>
             <td>formula</td>
-            <td><span class="literal">1800 123 4567,56565656#, 011</span><span
+            <td><span class="literal">1230 123 4567,56565656#, 011</span><span
                     class="capture">{M1}</span></td>
         </tr>
         <tr>
             <td>new number</td>
-            <td><span class="literal">1800 123 4567,56565656#, 011</span><span class="capture">86212323232323</span>
+            <td><span class="literal">1230 123 4567,56565656#, 011</span><span class="capture">86322323232323</span>
             </td>
         </tr>
         <tr>
             <td>explanation</td>
             <td>
-                <p>"1800 123 4567" is the gateway number</p>
+                <p>"1230 123 4567" is the gateway number</p>
                 <p>"," is a pause in dialing</p>
                 <p>"56565656#" is the user's pin code.</p>
                 <p>"011" is internation dialing sequence from the US.</p>
-                <p>"{%X}" in pattern captures "86212323232323" from original number</p>
+                <p>"{%X}" in pattern captures "86322323232323" from original number</p>
                 <p>"{M1}" in formula refers to the captured sequence</p>
             </td>
         </tr>
@@ -270,18 +261,18 @@
         </tr>
         <tr>
             <td>formula</td>
-            <td><span class="literal">1800 234 5567,78787878#,</span><span
+            <td><span class="literal">1230 234 5567,78787878#,</span><span
                     class="capture">{M1}</span></td>
         </tr>
         <tr>
             <td>new number</td>
-            <td><span class="literal">1800 234 5567,78787878#,</span><span
+            <td><span class="literal">1230 234 5567,78787878#,</span><span
                     class="capture">5656</span></td>
         </tr>
         <tr>
             <td>explanation</td>
             <td>
-                <p>"1800 234 5567" is the gateway number</p>
+                <p>"1230 234 5567" is the gateway number</p>
                 <p>"78787878#" is user's pin code</p>
                 <p>{DDDD} in pattern captures any 4 digits</p>
                 <p>{M1} in formula refers to the captured sequence</p>
@@ -305,18 +296,18 @@
         </tr>
         <tr>
             <td>formula</td>
-            <td><span class="literal">1800 234 7878,</span><span class="capture">{M1}</span><span
+            <td><span class="literal">1230 234 7878,</span><span class="capture">{M1}</span><span
                     class="literal">,1,</span><span class="capture2">{M2}</span></td>
         </tr>
         <tr>
             <td>new number</td>
-            <td><span class="literal">1800234 7878,</span><span class="capture">54545454</span><span
+            <td><span class="literal">1230234 7878,</span><span class="capture">54545454</span><span
                     class="literal">,1,</span><span class="capture2">2323</span></td>
         </tr>
         <tr>
             <td>explanation</td>
             <td>
-                <p>"1800 234 7878" is conference system's main number.</p>
+                <p>"1230 234 7878" is conference system's main number.</p>
                 <p>{DDDDDD} matches and captures 8 digit conference ID</p>
                 <p>{DDDD} matches and captures the pin code</p>
                 <p>{M1} refers to the first captured sequence, which is the conference ID</p>
@@ -340,7 +331,7 @@
         </tr>
         <tr>
             <td>+{X%}</td>
-            <td>18001234567,12121212#,011{M1}#</td>
+            <td>12301234567,12121212#,011{M1}#</td>
             <td>dial international number through a gateway</td>
         </tr>
         </tbody>

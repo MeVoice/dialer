@@ -109,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
                     // This method will trigger on item Click of navigation menu
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        mDrawerLayout.closeDrawers();
                         // Set item in checked state
                         menuItem.setChecked(true);
                         // TODO: handle navigation
@@ -119,7 +120,6 @@ public class MainActivity extends AppCompatActivity {
                         clearBackStack();
                         showFragment(fragmentName, false);
                         // Closing drawer on item click
-                        mDrawerLayout.closeDrawers();
                         return true;
                     }
                 });

@@ -1,17 +1,31 @@
 apply plugin: 'com.android.application'
 
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+
+// Initialize a new Properties() object called keystoreProperties.
+def keystoreProperties = new Properties()
+
+// Load your keystore.properties file into the keystoreProperties object.
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
+    signingConfigs {
+         config {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+        }
+    }
     compileSdkVersion 22
     buildToolsVersion "23.0.3"
-
     def Properties versionProps = new Properties()
     def versionPropsFile = file('src/main/assets/version.properties')
-    if(versionPropsFile.exists())
+    if (versionPropsFile.exists())
         versionProps.load(new FileInputStream(versionPropsFile))
     def buildNumber = (versionProps['buildNumber'] ?: "0").toInteger() + 1
     versionProps['buildNumber'] = buildNumber.toString()
     versionProps.store(versionPropsFile.newWriter(), null)
-
     defaultConfig {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         applicationId "com.demitive.callrouter"
@@ -24,6 +38,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
     }
     productFlavors {
@@ -49,7 +64,6 @@ dependencies {
         exclude module: 'recyclerview-v7'
         exclude module: 'support-v4'
     }
-
     compile 'com.google.code.gson:gson:2.7'
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.android.support:appcompat-v7:22.2.1'

@@ -17,6 +17,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import java.net.URISyntaxException;
 import java.util.HashMap;
 
 /**
@@ -58,7 +59,15 @@ public class HelpFragment extends Fragment {
                 if (url != null && (url.startsWith("http://") || url.startsWith("https://"))) {
                     view.getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
                     return true;
-                } else {
+                } else if (url.startsWith("mailto:")) {
+                    try {
+                        Intent intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME);
+                        view.getContext().startActivity(intent);
+                    }
+                    catch(URISyntaxException e){
+                    }
+                    return true;
+                } else{
                     return false;
                 }
             }
