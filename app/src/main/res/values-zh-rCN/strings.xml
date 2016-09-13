@@ -90,5 +90,6 @@
     <string name="message_export_settings_error_noemail">因设备上没有可以发送电邮的应用，无法导出设置。</string>
     <string name="message_import_settings_error_no_document_opener">因设备上没有可以选择文件的应用，无法导入设置。</string>
     <string name="literal_dummy_email_recipient">someone@somewhere.com</string>
+    <string name="label_settings_show_number_change">Display changed phone number</string>
 
 </resources>

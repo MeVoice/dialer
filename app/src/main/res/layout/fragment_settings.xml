@@ -55,4 +55,29 @@
             android:gravity="center" />
 
     </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:padding="@dimen/abc_button_padding_horizontal_material" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_settings_show_number_change"
+            android:layout_weight="0.7"
+            android:layout_gravity="center_vertical"
+            android:gravity="left|center_vertical"
+            android:textSize="@dimen/abc_text_size_medium_material" />
+        <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:layout_weight="0.3"
+            android:id="@+id/settings_show_number_change"
+            android:layout_gravity="center_vertical|right"
+            android:gravity="center" />
+
+    </LinearLayout>
 </LinearLayout>

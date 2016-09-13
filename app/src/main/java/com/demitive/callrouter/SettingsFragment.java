@@ -55,6 +55,15 @@ public class SettingsFragment extends Fragment {
                 bus.post(ev);
             }
         });
+        Switch settings_show_number_change = (Switch) rootView.findViewById(R.id.settings_show_number_change);
+        settings_show_number_change.setChecked(CRApp.appdata.isShowRewrite());
+        settings_show_number_change.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                CRApp.appdata.setShowRewrite(isChecked);
+                CRApp.appdataaccess.saveAppData();
+            }
+        });
         return rootView;
     }
 }

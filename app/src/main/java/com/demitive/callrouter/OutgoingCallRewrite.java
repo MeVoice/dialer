@@ -29,7 +29,9 @@ public class OutgoingCallRewrite extends BroadcastReceiver {
             if(rg.transform(number)){
                 new_phoneNumber = number.getResult();
                 String rule_comment = number.getMatchingRule().getName();
-                Toast.makeText(context, String.format(context.getString(R.string.message_rewrite_result_numbers), phoneNumber, new_phoneNumber), Toast.LENGTH_LONG).show();
+                if(CRApp.appdata.isShowRewrite()) {
+                    Toast.makeText(context, String.format(context.getString(R.string.message_rewrite_result_numbers), phoneNumber, new_phoneNumber), Toast.LENGTH_LONG).show();
+                }
                 if(!new_phoneNumber.equals(phoneNumber)){
                     setResultData(new_phoneNumber);
                     if(new_phoneNumber.indexOf(",")>=0 || new_phoneNumber.indexOf(";")>=0) {

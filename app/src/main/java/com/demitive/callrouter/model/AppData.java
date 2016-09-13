@@ -15,8 +15,19 @@ public class AppData {
     private List<RuleGroup> ruleGroups=new ArrayList();;
     private boolean moreLog=false;
     private boolean numberRewrite=false;
+    private boolean showRewrite=true;
     private int groups_loadTimes=0;
     private int rules_loadTimes=0;
+
+
+    public boolean isShowRewrite() {
+        return showRewrite;
+    }
+
+    public void setShowRewrite(boolean showRewrite) {
+        this.showRewrite = showRewrite;
+    }
+
 
     public boolean isEULA() {
         return EULA;
